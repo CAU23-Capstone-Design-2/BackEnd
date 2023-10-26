@@ -1,11 +1,18 @@
 package com.cau.vostom.user.domain;
 
+import com.cau.vostom.team.domain.TeamUser;
+import com.cau.vostom.music.domain.Music;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -14,4 +21,23 @@ public class User {
     private String nickname;
 
     private String profileImage;
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
+    private List<Likes> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user" , cascade = {CascadeType.REMOVE})
+    private List<Music> musics = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
+    private List<TeamUser> teamUsers = new ArrayList<>();
+
+    public static User createUser(String nickname , String profileImage) {
+        User user = new User();
+        user.nickname = nickname;
+        user.profileImage = profileImage;
+        return user;
+    }
 }
