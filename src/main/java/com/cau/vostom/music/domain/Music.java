@@ -18,6 +18,8 @@ public class Music {
 
     private String singerName;
 
+    private String musicImage;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
