@@ -19,6 +19,8 @@ public class Team {
 
     private String groupName;
 
+    private String groupImage;
+
     @CreatedDate
     private LocalDateTime createDate;
 
