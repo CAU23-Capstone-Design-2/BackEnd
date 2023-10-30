@@ -3,15 +3,19 @@ package com.cau.vostom.user.service;
 import com.cau.vostom.music.repository.MusicRepository;
 import com.cau.vostom.team.repository.TeamMusicRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
+import com.cau.vostom.user.domain.User;
+import com.cau.vostom.user.dto.request.UpdateUserDto;
 import com.cau.vostom.user.repository.CommentRepository;
 import com.cau.vostom.user.repository.LikesRepository;
 import com.cau.vostom.user.repository.UserRepository;
+import com.cau.vostom.util.api.ResponseCode;
+import com.cau.vostom.util.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-@Service @RequiredArgsConstructor
+@RequiredArgsConstructor
+@Service
 public class UserService {
 
     private final CommentRepository commentRepository;
@@ -28,7 +32,10 @@ public class UserService {
 
     //회원 정보 수정
     @Transactional
-    public void updateUser() {
+    public void updateUser(UpdateUserDto updateUserDto) {
+        User user = userRepository.findById(updateUserDto.getUserId()).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
+        user.updateUser(updateUserDto.getNickname());
+        userRepository.save(user);
     }
 
     //회원 탈퇴

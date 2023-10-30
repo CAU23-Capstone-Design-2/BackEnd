@@ -43,4 +43,8 @@ public class User {
         user.modelPath = modelPath;
         return user;
     }
+
+    public void updateUser(String nickname) {
+        this.nickname = nickname;
+    }
 }
