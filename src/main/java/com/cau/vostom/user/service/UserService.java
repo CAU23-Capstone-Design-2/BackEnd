@@ -60,4 +60,9 @@ public class UserService {
     @Transactional(readOnly = true)
     public void getMyMusic() {
     }
+
+    //학습 데이터 삭제
+    @Transactional
+    public void deleteData() {
+    }
 }
