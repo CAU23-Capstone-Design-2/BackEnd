@@ -21,6 +21,8 @@ public class Team {
 
     private String groupImage;
 
+    private String groupInfo;
+
     @CreatedDate
     private LocalDateTime createDate;
 
@@ -30,9 +32,11 @@ public class Team {
     @OneToMany(mappedBy = "team", cascade = {CascadeType.REMOVE})
     private List<TeamUser> teamUsers = new ArrayList<>();
 
-    public static Team createGroup(String groupName) {
+    public static Team createGroup(String groupName, String groupImage, String groupInfo) {
         Team team = new Team();
         team.groupName = groupName;
+        team.groupImage = groupImage;
+        team.groupInfo = groupInfo;
         return team;
     }
 }

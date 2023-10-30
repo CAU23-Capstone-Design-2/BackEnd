@@ -28,10 +28,10 @@ public class Likes {
     @CreatedDate
     private LocalDateTime likesDate;
 
-    public static Likes createLikes(User user, TeamMusic groupmusic) {
+    public static Likes createLikes(User user, TeamMusic teamMusic) {
         Likes likes = new Likes();
         likes.user = user;
-        likes.teamMusic = groupmusic;
+        likes.teamMusic = teamMusic;
         return likes;
     }
 }
