@@ -20,4 +20,14 @@ public class TeamService {
     public void createTeam() {
     }
 
+    //그룹 이미지 변경
+    @Transactional
+    public void updateTeamImage() {
+    }
+
+    //그룹 이름 변경
+    @Transactional
+    public void updateTeamName() {
+    }
+
 }
