@@ -29,10 +29,10 @@ public class Comment {
     @CreatedDate
     private LocalDateTime commentDate;
 
-    public static Comment createComment(User user, TeamMusic teammusic, String content) {
+    public static Comment createComment(User user, TeamMusic teamMusic, String content) {
         Comment comment = new Comment();
         comment.user = user;
-        comment.teamMusic = teammusic;
+        comment.teamMusic = teamMusic;
         comment.content = content;
         return comment;
     }

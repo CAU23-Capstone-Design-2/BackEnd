@@ -22,6 +22,8 @@ public class User {
 
     private String profileImage;
 
+    private String modelPath;
+
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
     private List<Likes> likes = new ArrayList<>();
 
@@ -34,10 +36,11 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
     private List<TeamUser> teamUsers = new ArrayList<>();
 
-    public static User createUser(String nickname , String profileImage) {
+    public static User createUser(String nickname , String profileImage, String modelPath) {
         User user = new User();
         user.nickname = nickname;
         user.profileImage = profileImage;
+        user.modelPath = modelPath;
         return user;
     }
 }
