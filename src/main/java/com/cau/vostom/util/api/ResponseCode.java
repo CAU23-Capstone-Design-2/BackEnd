@@ -29,6 +29,7 @@ public enum ResponseCode {
     // 200 OK
     USER_LOGINED(HttpStatus.OK, true, "로그인 되었습니다."),
     USER_UPDATED(HttpStatus.OK, true, "사용자 정보가 수정되었습니다."),
+    USER_DELETED(HttpStatus.OK, true, "사용자가 삭제되었습니다."),
 
 
     // 201 Created

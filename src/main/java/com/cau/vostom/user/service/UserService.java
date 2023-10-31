@@ -4,6 +4,7 @@ import com.cau.vostom.music.repository.MusicRepository;
 import com.cau.vostom.team.repository.TeamMusicRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.User;
+import com.cau.vostom.user.dto.request.DeleteUserDto;
 import com.cau.vostom.user.dto.request.UpdateUserDto;
 import com.cau.vostom.user.repository.CommentRepository;
 import com.cau.vostom.user.repository.LikesRepository;
@@ -40,7 +41,9 @@ public class UserService {
 
     //회원 탈퇴
     @Transactional
-    public void deleteUser() {
+    public void deleteUser(DeleteUserDto deleteUserDto) {
+        User user = userRepository.findById(deleteUserDto.getUserId()).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
+        userRepository.delete(user);
     }
 
     // 회원 중복 체크

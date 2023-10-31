@@ -47,4 +47,10 @@ public class User {
     public void updateUser(String nickname) {
         this.nickname = nickname;
     }
+
+    public void deleteUser() {
+        this.nickname = null;
+        this.profileImage = null;
+        this.modelPath = null;
+    }
 }
