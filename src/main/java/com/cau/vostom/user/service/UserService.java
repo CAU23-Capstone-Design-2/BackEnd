@@ -7,6 +7,7 @@ import com.cau.vostom.user.domain.User;
 import com.cau.vostom.user.dto.request.DeleteUserDto;
 import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
 import com.cau.vostom.user.dto.request.UpdateUserDto;
+import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.repository.CommentRepository;
 import com.cau.vostom.user.repository.LikesRepository;
 import com.cau.vostom.user.repository.UserRepository;
@@ -35,7 +36,7 @@ public class UserService {
     //회원 정보 수정
     @Transactional
     public void updateUser(UpdateUserDto updateUserDto) {
-        User user = userRepository.findById(updateUserDto.getUserId()).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
+        User user = getUserById(updateUserDto.getUserId());
         user.updateUser(updateUserDto.getNickname());
         userRepository.save(user);
     }
@@ -43,7 +44,7 @@ public class UserService {
     //회원 탈퇴
     @Transactional
     public void deleteUser(DeleteUserDto deleteUserDto) {
-        User user = userRepository.findById(deleteUserDto.getUserId()).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
+        User user = getUserById(deleteUserDto.getUserId());
         userRepository.delete(user);
     }
 
@@ -56,7 +57,9 @@ public class UserService {
 
     //회원 조회
     @Transactional(readOnly = true)
-    public void getUser() {
+    public ResponseUserDto getUser(Long userId) {
+        User user = getUserById(userId);
+        return ResponseUserDto.from(user);
     }
 
     //내 댓글 조회
@@ -77,8 +80,12 @@ public class UserService {
     //학습 데이터 수정
     @Transactional
     public void retryVoiceData(RetryVoiceDataDto retryVoiceDataDto) {
-        User user = userRepository.findById(retryVoiceDataDto.getUserId()).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
+        User user = getUserById(retryVoiceDataDto.getUserId());
         user.retryVoiceData(retryVoiceDataDto.getModelPath());
         userRepository.save(user);
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
     }
 }

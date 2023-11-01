@@ -3,16 +3,14 @@ package com.cau.vostom.user.controller;
 import com.cau.vostom.user.dto.request.DeleteUserDto;
 import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
 import com.cau.vostom.user.dto.request.UpdateUserDto;
+import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.service.UserService;
 import com.cau.vostom.util.api.ApiResponse;
 import com.cau.vostom.util.api.ResponseCode;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController @RequiredArgsConstructor
 @Api(tags = {"User"})
@@ -42,5 +40,11 @@ public class UserController {
     public ApiResponse<Void> retryVoiceData(RetryVoiceDataDto retryVoiceDataDto) {
         userService.retryVoiceData(retryVoiceDataDto);
         return ApiResponse.success(null, ResponseCode.USER_VOICE_DATA_UPDATED.getMessage());
+    }
+
+    @Operation(summary = "회원 정보 조회")
+    @GetMapping("/info/user/{userId}")
+    public ApiResponse<ResponseUserDto> getUser(@PathVariable Long userId) {
+        return ApiResponse.success(userService.getUser(userId), ResponseCode.USER_READ.getMessage());
     }
 }

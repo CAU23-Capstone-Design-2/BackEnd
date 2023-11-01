@@ -32,6 +32,7 @@ public enum ResponseCode {
     USER_UPDATED(HttpStatus.OK, true, "사용자 정보가 수정되었습니다."),
     USER_DELETED(HttpStatus.OK, true, "사용자가 삭제되었습니다."),
     USER_VOICE_DATA_UPDATED(HttpStatus.OK, true, "학습 데이터가 수정되었습니다."),
+    USER_READ(HttpStatus.OK, true, "사용자 정보를 조회하였습니다."),
 
 
     // 201 Created
