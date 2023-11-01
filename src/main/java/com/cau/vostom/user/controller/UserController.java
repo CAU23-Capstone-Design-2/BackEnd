@@ -1,6 +1,7 @@
 package com.cau.vostom.user.controller;
 
 import com.cau.vostom.user.dto.request.DeleteUserDto;
+import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
 import com.cau.vostom.user.dto.request.UpdateUserDto;
 import com.cau.vostom.user.service.UserService;
 import com.cau.vostom.util.api.ApiResponse;
@@ -34,5 +35,12 @@ public class UserController {
     public ApiResponse<Void> deleteUser(DeleteUserDto deleteUserDto) {
         userService.deleteUser(deleteUserDto);
         return ApiResponse.success(null, ResponseCode.USER_DELETED.getMessage());
+    }
+
+    @Operation(summary = "학습 데이터 수정")
+    @PutMapping("/retry")
+    public ApiResponse<Void> retryVoiceData(RetryVoiceDataDto retryVoiceDataDto) {
+        userService.retryVoiceData(retryVoiceDataDto);
+        return ApiResponse.success(null, ResponseCode.USER_VOICE_DATA_UPDATED.getMessage());
     }
 }

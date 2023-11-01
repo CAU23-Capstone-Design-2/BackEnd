@@ -5,6 +5,7 @@ import com.cau.vostom.team.repository.TeamMusicRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.User;
 import com.cau.vostom.user.dto.request.DeleteUserDto;
+import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
 import com.cau.vostom.user.dto.request.UpdateUserDto;
 import com.cau.vostom.user.repository.CommentRepository;
 import com.cau.vostom.user.repository.LikesRepository;
@@ -47,8 +48,10 @@ public class UserService {
     }
 
     // 회원 중복 체크
-    private boolean checkUser() {
-        return true;
+    private void validateUser(Long kakaoId) {
+        if(userRepository.existsById((kakaoId))) {
+            throw new UserException(ResponseCode.USER_ALREADY_EXISTS);
+        }
     }
 
     //회원 조회
@@ -71,8 +74,11 @@ public class UserService {
     public void getMyMusic() {
     }
 
-    //학습 데이터 삭제
+    //학습 데이터 수정
     @Transactional
-    public void deleteData() {
+    public void retryVoiceData(RetryVoiceDataDto retryVoiceDataDto) {
+        User user = userRepository.findById(retryVoiceDataDto.getUserId()).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
+        user.retryVoiceData(retryVoiceDataDto.getModelPath());
+        userRepository.save(user);
     }
 }

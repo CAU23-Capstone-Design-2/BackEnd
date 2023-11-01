@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 //회원 탈퇴
 public class DeleteUserDto {
     private Long userId;
+    private Long kakaoId;
 
-    public static DeleteUserDto of(Long userId) {
-        return new DeleteUserDto(userId);
+    public static DeleteUserDto of(Long userId, Long kakaoId) {
+        return new DeleteUserDto(userId, kakaoId);
     }
 }

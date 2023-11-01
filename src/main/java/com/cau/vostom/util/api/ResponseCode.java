@@ -22,6 +22,7 @@ public enum ResponseCode {
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, false, "허용되지 않은 메소드입니다."),
 
     // 409 Conflict
+    USER_ALREADY_EXISTS(HttpStatus.CONFLICT, false, "이미 존재하는 사용자입니다."),
 
     // 500 Internal Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "서버에 오류가 발생하였습니다."),
@@ -30,6 +31,7 @@ public enum ResponseCode {
     USER_LOGINED(HttpStatus.OK, true, "로그인 되었습니다."),
     USER_UPDATED(HttpStatus.OK, true, "사용자 정보가 수정되었습니다."),
     USER_DELETED(HttpStatus.OK, true, "사용자가 삭제되었습니다."),
+    USER_VOICE_DATA_UPDATED(HttpStatus.OK, true, "학습 데이터가 수정되었습니다."),
 
 
     // 201 Created

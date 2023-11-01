@@ -18,6 +18,8 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
+    private Long kakaoId;
+
     private String nickname;
 
     private String profileImage;
@@ -36,11 +38,13 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
     private List<TeamUser> teamUsers = new ArrayList<>();
 
-    public static User createUser(String nickname , String profileImage, String modelPath) {
+
+    public static User createUser(String nickname , String profileImage, String modelPath, Long kakaoId) {
         User user = new User();
         user.nickname = nickname;
         user.profileImage = profileImage;
         user.modelPath = modelPath;
+        user.kakaoId = kakaoId;
         return user;
     }
 
@@ -48,9 +52,8 @@ public class User {
         this.nickname = nickname;
     }
 
-    public void deleteUser() {
-        this.nickname = null;
-        this.profileImage = null;
-        this.modelPath = null;
+    public void retryVoiceData(String modelPath) {
+        this.modelPath = modelPath;
     }
+
 }
