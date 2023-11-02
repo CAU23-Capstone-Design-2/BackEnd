@@ -2,8 +2,12 @@ package com.cau.vostom.music.service;
 
 import com.cau.vostom.music.domain.Music;
 import com.cau.vostom.music.dto.request.DeleteMusicDto;
+import com.cau.vostom.music.dto.request.UploadMusicDto;
 import com.cau.vostom.music.repository.MusicRepository;
+import com.cau.vostom.team.domain.Team;
+import com.cau.vostom.team.domain.TeamMusic;
 import com.cau.vostom.team.repository.TeamMusicRepository;
+import com.cau.vostom.team.repository.TeamRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.User;
 import com.cau.vostom.util.api.ResponseCode;
@@ -18,11 +22,16 @@ public class MusicService {
 
     private final MusicRepository musicRepository;
     private final TeamMusicRepository teamMusicRepository;
-    private final TeamUserRepository teamUserRepository;
+    private final TeamRepository teamRepository;
 
     //그룹에 음악 업로드
     @Transactional
-    public void uploadMusicToTeam() {
+    public Long uploadMusicToTeam(UploadMusicDto uploadMusicDto) {
+    Music music = getMusicById(uploadMusicDto.getMusicId());
+    Team team = teamRepository.findById(uploadMusicDto.getTeamId()).orElseThrow(() -> new MusicException(ResponseCode.TEAM_NOT_FOUND));
+    TeamMusic teamMusic = TeamMusic.createGroupMusic(team, music);
+
+    return teamMusicRepository.save(teamMusic).getId();
     }
 
     //음악 삭제
