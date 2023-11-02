@@ -3,6 +3,7 @@ package com.cau.vostom.user.controller;
 import com.cau.vostom.user.dto.request.DeleteUserDto;
 import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
 import com.cau.vostom.user.dto.request.UpdateUserDto;
+import com.cau.vostom.user.dto.response.ResponseCommentDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.service.UserService;
 import com.cau.vostom.util.api.ApiResponse;
@@ -11,6 +12,8 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController @RequiredArgsConstructor
 @Api(tags = {"User"})
@@ -46,5 +49,11 @@ public class UserController {
     @GetMapping("/info/user/{userId}")
     public ApiResponse<ResponseUserDto> getUser(@PathVariable Long userId) {
         return ApiResponse.success(userService.getUser(userId), ResponseCode.USER_READ.getMessage());
+    }
+
+    @Operation(summary = "내 댓글 조회")
+    @GetMapping("/info/comment/{userId}")
+    public ApiResponse<List<ResponseCommentDto>> getUserComment(@PathVariable Long userId) {
+        return ApiResponse.success(userService.getUserComment(userId), ResponseCode.COMMENT_READ.getMessage());
     }
 }

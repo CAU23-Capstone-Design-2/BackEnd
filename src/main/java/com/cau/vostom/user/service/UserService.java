@@ -3,10 +3,12 @@ package com.cau.vostom.user.service;
 import com.cau.vostom.music.repository.MusicRepository;
 import com.cau.vostom.team.repository.TeamMusicRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
+import com.cau.vostom.user.domain.Comment;
 import com.cau.vostom.user.domain.User;
 import com.cau.vostom.user.dto.request.DeleteUserDto;
 import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
 import com.cau.vostom.user.dto.request.UpdateUserDto;
+import com.cau.vostom.user.dto.response.ResponseCommentDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.repository.CommentRepository;
 import com.cau.vostom.user.repository.LikesRepository;
@@ -16,6 +18,10 @@ import com.cau.vostom.util.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -64,17 +70,31 @@ public class UserService {
 
     //내 댓글 조회
     @Transactional(readOnly = true)
-    public void getMyComment() {
+    public List<ResponseCommentDto> getUserComment(Long userId) {
+        User user = getUserById(userId);
+        List<Comment> comments = commentRepository.findAllByUserId(user.getId());
+        if(comments.isEmpty()) { //댓글이 없는 경우
+            return List.of();
+        }
+        /*List<ResponseCommentDto> commentDtos = new ArrayList<>();
+
+        for(Comment comment : comments) {
+            commentDtos.add(ResponseCommentDto.from(comment));
+        }
+        return commentDtos;*/
+        return comments.stream().map(ResponseCommentDto::from).collect(Collectors.toList());
+
     }
 
-    //내가 좋아요 한 곡 조회
+    //내가 좋아요 한 노래 조회
     @Transactional(readOnly = true)
-    public void getMyLike() {
+    public void getUserLike() {
+
     }
 
     //내 노래 조회
     @Transactional(readOnly = true)
-    public void getMyMusic() {
+    public void getUserMusic() {
     }
 
     //학습 데이터 수정
