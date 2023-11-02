@@ -1,5 +1,6 @@
 package com.cau.vostom.user.service;
 
+import com.cau.vostom.music.domain.Music;
 import com.cau.vostom.music.repository.MusicRepository;
 import com.cau.vostom.team.repository.TeamMusicRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
@@ -9,6 +10,7 @@ import com.cau.vostom.user.dto.request.DeleteUserDto;
 import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
 import com.cau.vostom.user.dto.request.UpdateUserDto;
 import com.cau.vostom.user.dto.response.ResponseCommentDto;
+import com.cau.vostom.user.dto.response.ResponseMusicDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.repository.CommentRepository;
 import com.cau.vostom.user.repository.LikesRepository;
@@ -94,7 +96,13 @@ public class UserService {
 
     //내 노래 조회
     @Transactional(readOnly = true)
-    public void getUserMusic() {
+    public List<ResponseMusicDto> getUserMusic(Long userId) {
+        User user = getUserById(userId);
+        List<Music> musics = musicRepository.findAllByUserId(user.getId());
+        if(musics.isEmpty()) { //노래가 없는 경우
+            return List.of();
+        }
+        return musics.stream().map(ResponseMusicDto::from).collect(Collectors.toList());
     }
 
     //학습 데이터 수정

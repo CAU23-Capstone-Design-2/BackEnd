@@ -4,6 +4,7 @@ import com.cau.vostom.user.dto.request.DeleteUserDto;
 import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
 import com.cau.vostom.user.dto.request.UpdateUserDto;
 import com.cau.vostom.user.dto.response.ResponseCommentDto;
+import com.cau.vostom.user.dto.response.ResponseMusicDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.service.UserService;
 import com.cau.vostom.util.api.ApiResponse;
@@ -55,5 +56,11 @@ public class UserController {
     @GetMapping("/info/comment/{userId}")
     public ApiResponse<List<ResponseCommentDto>> getUserComment(@PathVariable Long userId) {
         return ApiResponse.success(userService.getUserComment(userId), ResponseCode.COMMENT_READ.getMessage());
+    }
+
+    @Operation(summary = "내 노래 조회")
+    @GetMapping("/info/music/{userId}")
+    public ApiResponse<List<ResponseMusicDto>> getUserMusic(@PathVariable Long userId) {
+        return ApiResponse.success(userService.getUserMusic(userId), ResponseCode.MUSIC_READ.getMessage());
     }
 }

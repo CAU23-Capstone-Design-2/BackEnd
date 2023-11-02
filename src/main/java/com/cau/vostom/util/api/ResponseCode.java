@@ -34,6 +34,7 @@ public enum ResponseCode {
     USER_VOICE_DATA_UPDATED(HttpStatus.OK, true, "학습 데이터가 수정되었습니다."),
     USER_READ(HttpStatus.OK, true, "사용자 정보를 조회하였습니다."),
     COMMENT_READ(HttpStatus.OK, true, "사용자의 댓글을 조회하였습니다."),
+    MUSIC_READ(HttpStatus.OK, true, "사용자의 음악을 조회하였습니다."),
 
 
     // 201 Created
