@@ -14,4 +14,16 @@ public class GlobalExceptionHandler {
         log.info("UserException: {}", e.getMessage());
         return ApiResponse.fail(e.getResponseCode());
     }
+
+    @ExceptionHandler(TeamException.class)
+    public ApiResponse<Void> handleTeamException(TeamException e) {
+        log.info("TeamException: {}", e.getMessage());
+        return ApiResponse.fail(e.getResponseCode());
+    }
+
+    @ExceptionHandler(MusicException.class)
+    public ApiResponse<Void> handleMusicException(MusicException e) {
+        log.info("MusicException: {}", e.getMessage());
+        return ApiResponse.fail(e.getResponseCode());
+    }
 }
