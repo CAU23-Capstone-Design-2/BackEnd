@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
     boolean existsByUserIdAndTeamId(Long userId, Long teamId);
+
+    boolean existsByUserId(Long userId);
     void deleteByUserIdAndTeamId(Long userId, Long teamId);
 
     List<TeamUser> findByTeamId(Long teamId);
     List<TeamUser> findByUserId(Long userId);
+
+    int countTeamUserByTeamId(Long teamId);
 }
