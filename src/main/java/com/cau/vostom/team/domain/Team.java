@@ -39,4 +39,10 @@ public class Team {
         team.groupInfo = groupInfo;
         return team;
     }
+
+    public void updateGroup(String groupName, String groupImage, String groupInfo) {
+        this.groupName = groupName;
+        this.groupImage = groupImage;
+        this.groupInfo = groupInfo;
+    }
 }
