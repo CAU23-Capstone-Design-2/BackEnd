@@ -23,7 +23,7 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'junit:junit:4.13.1'
@@ -39,6 +39,13 @@ dependencies {
 	//Swagger
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+	//kakao login
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation platform('org.springframework.boot:spring-boot-dependencies:2.7.15')
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+	implementation "io.jsonwebtoken:jjwt:0.9.1"
 }
 
 tasks.named('test') {
