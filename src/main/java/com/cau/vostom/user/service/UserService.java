@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,11 +34,6 @@ public class UserService {
     private final MusicRepository musicRepository;
     private final TeamUserRepository teamUserRepository;
     private final TeamMusicRepository teamMusicRepository;
-
-    //회원 가입
-    @Transactional
-    public void createUser() {
-    }
 
     //회원 정보 수정
     @Transactional
