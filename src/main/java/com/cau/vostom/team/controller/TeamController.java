@@ -50,6 +50,14 @@ public class TeamController {
         return ApiResponse.success(teamService.createTeam(createTeamDto), ResponseCode.TEAM_CREATED.getMessage());
     }
 
+    //그룹 탈퇴
+    @Operation(summary = "그룹 탈퇴")
+    @PostMapping("/delete")
+    public ApiResponse<Void> deleteTeam(Long userId, Long teamId) {
+        teamService.deleteTeam(userId, teamId);
+        return ApiResponse.success(null, ResponseCode.TEAM_DELETED.getMessage());
+    }
+
     //그룹 정보 수정
     @Operation(summary = "그룹 정보 수정")
     @PostMapping("/update")
