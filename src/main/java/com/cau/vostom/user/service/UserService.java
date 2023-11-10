@@ -7,6 +7,7 @@ import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.Comment;
 import com.cau.vostom.user.domain.User;
 import com.cau.vostom.user.dto.request.DeleteUserDto;
+import com.cau.vostom.user.dto.request.RequestVoiceTrainDto;
 import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
 import com.cau.vostom.user.dto.request.UpdateUserDto;
 import com.cau.vostom.user.dto.response.ResponseCommentDto;
@@ -84,9 +85,17 @@ public class UserService {
 
     //내가 좋아요 한 노래 조회
     @Transactional(readOnly = true)
-    public void getUserLike() {
+    public List<ResponseMusicDto> getUserLikedMusic(Long userId) {
+        User user = getUserById(userId);
+        List<Music> likedMusics = musicRepository.findLikedMusicsByUserId(user.getId());
+        if (likedMusics.isEmpty()) {// 좋아요한 노래가 없는 경우
+            return List.of();
+        }
 
+        // 좋아요한 노래를 ResponseMusicDto로 변환하여 반환
+        return likedMusics.stream().map(ResponseMusicDto::from).collect(Collectors.toList());
     }
+
 
     //내 노래 조회
     @Transactional(readOnly = true)
@@ -99,13 +108,27 @@ public class UserService {
         return musics.stream().map(ResponseMusicDto::from).collect(Collectors.toList());
     }
 
+    /*
     //학습 데이터 수정
     @Transactional
     public void retryVoiceData(RetryVoiceDataDto retryVoiceDataDto) {
         User user = getUserById(retryVoiceDataDto.getUserId());
-        user.retryVoiceData(retryVoiceDataDto.getModelPath());
+        user.retryVoiceData(retryVoiceDataDto.getModelPath(), 2);
         userRepository.save(user);
     }
+   */
+
+    /*목소리 학습 요청
+    @Transactional
+    public void requestVoiceTrain(RequestVoiceTrainDto requestVoiceTrainDto){
+        User user = getUserById(requestVoiceTrainDto.getUserId());
+        //서버에 파일 업로드 <- 서버의 어디에 저장할 지 경로 지정,
+        //modelCompleted = 1
+        // runtime.exec('python3 train.py --voice_path={경로} --model_name='{kakao_id}')
+        //return 2
+        user.requestVoiceTrain(requestVoiceTrainDto.getModelCompleted(), requestVoiceTrainDto.getUserVoice());
+    }
+    */
 
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));

@@ -37,6 +37,7 @@ public enum ResponseCode {
     USER_READ(HttpStatus.OK, true, "사용자 정보를 조회하였습니다."),
     COMMENT_READ(HttpStatus.OK, true, "사용자의 댓글을 조회하였습니다."),
     MUSIC_READ(HttpStatus.OK, true, "사용자의 음악을 조회하였습니다."),
+    MUSIC_LIKED_READ(HttpStatus.OK, true, "사용자가 좋아요한 음악을 조회하였습니다."),
     MUSIC_DELETED(HttpStatus.OK, true, "음악이 삭제되었습니다."),
     TEAM_CREATED(HttpStatus.OK, true, "그룹이 생성되었습니다."),
     TEAM_UPDATED(HttpStatus.OK, true, "그룹 정보가 수정되었습니다."),
