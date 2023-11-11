@@ -1,6 +1,6 @@
 package com.cau.vostom.user.domain;
 
-import com.cau.vostom.team.domain.TeamMusic;
+import com.cau.vostom.music.domain.Music;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,16 +22,16 @@ public class Likes {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_music_id")
-    private TeamMusic teamMusic;
+    @JoinColumn(name = "music_id")
+    private Music music;
 
     @CreatedDate
     private LocalDateTime likesDate;
 
-    public static Likes createLikes(User user, TeamMusic teamMusic) {
+    public static Likes createLikes(User user, Music music) {
         Likes likes = new Likes();
         likes.user = user;
-        likes.teamMusic = teamMusic;
+        likes.music = music;
         return likes;
     }
 }

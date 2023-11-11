@@ -1,6 +1,6 @@
 package com.cau.vostom.user.domain;
 
-import com.cau.vostom.team.domain.TeamMusic;
+import com.cau.vostom.music.domain.Music;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,18 +21,18 @@ public class Comment {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_music_id")
-    private TeamMusic teamMusic;
+    @JoinColumn(name = "music_id")
+    private Music music;
 
     private String content;
 
     @CreatedDate
     private LocalDateTime commentDate;
 
-    public static Comment createComment(User user, TeamMusic teamMusic, String content) {
+    public static Comment createComment(User user, Music music, String content) {
         Comment comment = new Comment();
         comment.user = user;
-        comment.teamMusic = teamMusic;
+        comment.music = music;
         comment.content = content;
         return comment;
     }

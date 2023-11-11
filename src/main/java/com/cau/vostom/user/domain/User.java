@@ -32,6 +32,9 @@ public class User implements UserDetails {
 
     private String modelPath;
 
+    private int modelCompleted;
+    // 0 : default, 1 : ing, 2 : finish
+
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
     private List<Likes> likes = new ArrayList<>();
 
@@ -45,11 +48,12 @@ public class User implements UserDetails {
     private List<TeamUser> teamUsers = new ArrayList<>();
 
 
-    public static User createUser(String nickname, String profileImage, Long kakaoId) {
+    public static User createUser(String nickname, String profileImage, Long kakaoId, int modelCompleted) {
         User user = new User();
         user.nickname = nickname;
         user.profileImage = profileImage;
         user.kakaoId = kakaoId;
+        user.modelCompleted = 0;
         return user;
     }
 
@@ -57,12 +61,15 @@ public class User implements UserDetails {
         this.nickname = nickname;
     }
 
-    public void retryVoiceData(String modelPath) {
+
+    /*
+    public void retryVoiceData(String modelPath, int modelCompleted) {
         this.modelPath = modelPath;
+        this.modelCompleted = 2;
     }
+    */
 
     //Jwt 설정을 위한 UserDetails 메소드
-
     @ElementCollection(fetch = FetchType.EAGER) //roles 컬렉션
     private List<String> roles = new ArrayList<>();
     @Override   //사용자의 권한 목록 리턴

@@ -70,6 +70,13 @@ public class TeamService {
         return ResponseTeamDetailDto.of(team.getGroupName(), team.getGroupImage(), team.getGroupInfo(), team.getTeamUsers().size(), teamMusicList);
     }
 
+    //그룹 탈퇴
+    @Transactional
+    public void deleteTeam(Long userId, Long teamId) {
+        if(!teamUserRepository.existsByUserIdAndTeamId(userId, teamId)) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
+        teamUserRepository.deleteByUserIdAndTeamId(userId, teamId);
+    }
+
     private Team getTeamById(Long teamId) {
         return teamRepository.findById(teamId).orElseThrow(() -> new TeamException(ResponseCode.TEAM_NOT_FOUND));
     }

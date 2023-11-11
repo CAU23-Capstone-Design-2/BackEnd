@@ -1,5 +1,6 @@
 package com.cau.vostom.user.controller;
 
+import com.cau.vostom.user.dto.request.CreateCommentDto;
 import com.cau.vostom.user.dto.request.DeleteUserDto;
 import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
 import com.cau.vostom.user.dto.request.UpdateUserDto;
@@ -39,12 +40,15 @@ public class UserController {
         return ApiResponse.success(null, ResponseCode.USER_DELETED.getMessage());
     }
 
+    /*
     @Operation(summary = "학습 데이터 수정")
     @PutMapping("/retry")
     public ApiResponse<Void> retryVoiceData(RetryVoiceDataDto retryVoiceDataDto) {
         userService.retryVoiceData(retryVoiceDataDto);
         return ApiResponse.success(null, ResponseCode.USER_VOICE_DATA_UPDATED.getMessage());
     }
+
+     */
 
     @Operation(summary = "회원 정보 조회")
     @GetMapping("/info/user/{userId}")
@@ -58,9 +62,23 @@ public class UserController {
         return ApiResponse.success(userService.getUserComment(userId), ResponseCode.COMMENT_READ.getMessage());
     }
 
+    //내가 좋아요 한 노래 조회
+    @Operation(summary = "내가 좋아요 한 노래 조회")
+    @GetMapping("/info/likedMusic/{userId}")
+    public ApiResponse<List<ResponseMusicDto>> getUserLikedMusic(@PathVariable Long userId) {
+        return ApiResponse.success(userService.getUserLikedMusic(userId), ResponseCode.MUSIC_LIKED_READ.getMessage());
+    }
+
     @Operation(summary = "내 노래 조회")
     @GetMapping("/info/music/{userId}")
     public ApiResponse<List<ResponseMusicDto>> getUserMusic(@PathVariable Long userId) {
         return ApiResponse.success(userService.getUserMusic(userId), ResponseCode.MUSIC_READ.getMessage());
+    }
+
+    //댓글 작성
+    @Operation(summary = "댓글 작성")
+    @PostMapping("/comment/create")
+    public ApiResponse<Long> createComment(CreateCommentDto createCommentDto) {
+        return ApiResponse.success(userService.writeComment(createCommentDto), ResponseCode.COMMENT_CREATED.getMessage());
     }
 }

@@ -25,7 +25,7 @@ public class KakaoAuthService {
             return user.get().getId();
         }
         else {
-            User newUser = User.createUser(userInfo.getKakao_account().getProfile().getNickname(), userInfo.getKakao_account().getProfile().getProfile_image_url(), userInfo.getId());
+            User newUser = User.createUser(userInfo.getKakao_account().getProfile().getNickname(), userInfo.getKakao_account().getProfile().getProfile_image_url(), userInfo.getId(), 0);
             return userRepository.save(newUser).getId();
         }
     }

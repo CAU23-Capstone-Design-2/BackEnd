@@ -27,12 +27,6 @@ public class TeamMusic {
     @JoinColumn(name = "music_id")
     private Music music;
 
-    @OneToMany(mappedBy = "teamMusic", cascade = {CascadeType.REMOVE})
-    private List<Likes> likes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "teamMusic", cascade = {CascadeType.REMOVE})
-    private List<Comment> comments = new ArrayList<>();
-
     public static TeamMusic createGroupMusic(Team team, Music music) {
         TeamMusic teamMusic = new TeamMusic();
         teamMusic.team = team;
