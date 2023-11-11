@@ -1,5 +1,6 @@
 package com.cau.vostom.user.controller;
 
+import com.cau.vostom.user.dto.request.CreateCommentDto;
 import com.cau.vostom.user.dto.request.DeleteUserDto;
 import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
 import com.cau.vostom.user.dto.request.UpdateUserDto;
@@ -72,5 +73,12 @@ public class UserController {
     @GetMapping("/info/music/{userId}")
     public ApiResponse<List<ResponseMusicDto>> getUserMusic(@PathVariable Long userId) {
         return ApiResponse.success(userService.getUserMusic(userId), ResponseCode.MUSIC_READ.getMessage());
+    }
+
+    //댓글 작성
+    @Operation(summary = "댓글 작성")
+    @PostMapping("/comment/create")
+    public ApiResponse<Long> createComment(CreateCommentDto createCommentDto) {
+        return ApiResponse.success(userService.writeComment(createCommentDto), ResponseCode.COMMENT_CREATED.getMessage());
     }
 }

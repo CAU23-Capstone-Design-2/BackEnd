@@ -6,10 +6,7 @@ import com.cau.vostom.team.repository.TeamMusicRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.Comment;
 import com.cau.vostom.user.domain.User;
-import com.cau.vostom.user.dto.request.DeleteUserDto;
-import com.cau.vostom.user.dto.request.RequestVoiceTrainDto;
-import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
-import com.cau.vostom.user.dto.request.UpdateUserDto;
+import com.cau.vostom.user.dto.request.*;
 import com.cau.vostom.user.dto.response.ResponseCommentDto;
 import com.cau.vostom.user.dto.response.ResponseMusicDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
@@ -107,6 +104,17 @@ public class UserService {
         }
         return musics.stream().map(ResponseMusicDto::from).collect(Collectors.toList());
     }
+
+    //댓글 쓰기
+    @Transactional
+    public Long writeComment(CreateCommentDto createCommentDto) {
+        User user = getUserById(createCommentDto.getUserId());
+        Music music = musicRepository.findById(createCommentDto.getMusicId()).orElseThrow(() -> new UserException(ResponseCode.MUSIC_NOT_FOUND));
+        Comment comment = Comment.createComment(user, music, createCommentDto.getContent());
+        return commentRepository.save(comment).getId();
+    }
+
+
 
     /*
     //학습 데이터 수정

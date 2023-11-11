@@ -44,6 +44,7 @@ public enum ResponseCode {
     TEAM_UPDATED(HttpStatus.OK, true, "그룹 정보가 수정되었습니다."),
     TEAM_LISTED(HttpStatus.OK, true, "그룹 정보를 조회하였습니다."),
     TEAM_DETAIL_READ(HttpStatus.OK, true, "그룹 상세 정보를 조회하였습니다."),
+    COMMENT_CREATED(HttpStatus.OK, true, "댓글이 생성되었습니다."),
 
 
     // 201 Created
