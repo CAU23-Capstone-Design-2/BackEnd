@@ -10,6 +10,7 @@ import com.cau.vostom.team.dto.response.ResponseTeamMusicDto;
 import com.cau.vostom.team.repository.TeamRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.User;
+import com.cau.vostom.user.repository.UserRepository;
 import com.cau.vostom.util.api.ResponseCode;
 import com.cau.vostom.util.exception.TeamException;
 import com.cau.vostom.util.exception.UserException;
@@ -25,6 +26,7 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
     private final TeamUserRepository teamUserRepository;
+    private final UserRepository userRepository;
 
 //    //그룹 인원 수 조회
 //    @Transactional(readOnly = true)
@@ -38,6 +40,17 @@ public class TeamService {
     public Long createTeam(CreateTeamDto createTeamDto) {
         Team team = Team.createGroup(createTeamDto.getTeamName(), createTeamDto.getTeamImage(), createTeamDto.getTeamDescription());
         return teamRepository.save(team).getId();
+    }
+
+    //그룹 가입
+    @Transactional
+    public void joinTeam(Long userId, Long teamId) {
+        if(!teamRepository.existsById(teamId)) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
+        if(teamUserRepository.existsByUserIdAndTeamId(userId, teamId)) throw new TeamException(ResponseCode.TEAM_ALREADY_JOINED);
+        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamException(ResponseCode.TEAM_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
+        TeamUser teamUser = TeamUser.createGroupUser(team, user);
+        teamUserRepository.save(teamUser);
     }
 
     //그룹 정보 수정

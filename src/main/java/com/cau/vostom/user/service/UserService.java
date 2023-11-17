@@ -141,4 +141,5 @@ public class UserService {
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
     }
+
 }

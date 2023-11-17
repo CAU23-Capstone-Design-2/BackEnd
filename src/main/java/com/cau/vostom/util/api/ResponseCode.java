@@ -11,6 +11,7 @@ public enum ResponseCode {
 
     // 400 Bad Request
     BAD_REQUEST(HttpStatus.BAD_REQUEST, false, "잘못된 요청입니다."),
+    TEAM_ALREADY_JOINED(HttpStatus.BAD_REQUEST, false, "이미 가입한 그룹입니다."),
 
     // 403 Forbidden
     FORBIDDEN(HttpStatus.FORBIDDEN, false, "권한이 없습니다."),
