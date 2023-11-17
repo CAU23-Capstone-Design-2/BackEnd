@@ -8,4 +8,5 @@ import java.util.List;
 public interface CelebrityRepository extends JpaRepository<Celebrity, Long> {
 
     List<Celebrity> findByCelebrityName(String celebrityName);
+
 }

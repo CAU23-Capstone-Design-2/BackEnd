@@ -29,4 +29,11 @@ public class CelebrityController {
         return ApiResponse.success(celebrityService.getCelebrityList(), ResponseCode.CELEBRITY_LISTED.getMessage());
     }
 
+    //연예인 노래 리스트
+    @Operation(summary = "연예인 노래 리스트")
+    @GetMapping("/playlist/{celebrityName}")
+    public ApiResponse<List<ResponsePlayListDto>> getPlayList(@PathVariable String celebrityName) {
+        return ApiResponse.success(celebrityService.getPlayList(celebrityName), ResponseCode.CELEBRITY_LISTED.getMessage());
+    }
+
 }
