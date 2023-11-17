@@ -9,17 +9,21 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PlayList {
+public class Celebrity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "playlist_id")
+    @Column(name = "celebrity_id")
     private Long id;
 
-    private String singer_name;
+    private String celebrityName;
 
-    private String music_name;
+    private String singerName;
 
-    private String music_img;
+    private String celebrityImg;
 
-    private String music_path;
+    private String musicName;
+
+    private String musicImg;
+
+    private String musicPath;
 }
