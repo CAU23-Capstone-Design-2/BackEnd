@@ -3,6 +3,8 @@ package com.cau.vostom.team.service;
 import com.cau.vostom.team.domain.Team;
 import com.cau.vostom.team.domain.TeamUser;
 import com.cau.vostom.team.dto.request.CreateTeamDto;
+import com.cau.vostom.team.dto.request.DeleteTeamDto;
+import com.cau.vostom.team.dto.request.JoinTeamDto;
 import com.cau.vostom.team.dto.request.UpdateTeamDto;
 import com.cau.vostom.team.dto.response.ResponseTeamDetailDto;
 import com.cau.vostom.team.dto.response.ResponseTeamDto;
@@ -44,11 +46,11 @@ public class TeamService {
 
     //그룹 가입
     @Transactional
-    public void joinTeam(Long userId, Long teamId) {
-        if(!teamRepository.existsById(teamId)) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
-        if(teamUserRepository.existsByUserIdAndTeamId(userId, teamId)) throw new TeamException(ResponseCode.TEAM_ALREADY_JOINED);
-        Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamException(ResponseCode.TEAM_NOT_FOUND));
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
+    public void joinTeam(JoinTeamDto joinTeamDto) {
+        if(!teamRepository.existsById(joinTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
+        if(teamUserRepository.existsByUserIdAndTeamId(joinTeamDto.getUserId(), joinTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_ALREADY_JOINED);
+        Team team = teamRepository.findById(joinTeamDto.getTeamId()).orElseThrow(() -> new TeamException(ResponseCode.TEAM_NOT_FOUND));
+        User user = userRepository.findById(joinTeamDto.getUserId()).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
         TeamUser teamUser = TeamUser.createGroupUser(team, user);
         teamUserRepository.save(teamUser);
     }
@@ -85,9 +87,9 @@ public class TeamService {
 
     //그룹 탈퇴
     @Transactional
-    public void deleteTeam(Long userId, Long teamId) {
-        if(!teamUserRepository.existsByUserIdAndTeamId(userId, teamId)) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
-        teamUserRepository.deleteByUserIdAndTeamId(userId, teamId);
+    public void deleteTeam(DeleteTeamDto deleteTeamDto) {
+        if(!teamUserRepository.existsByUserIdAndTeamId(deleteTeamDto.getUserId(), deleteTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
+        teamUserRepository.deleteByUserIdAndTeamId(deleteTeamDto.getUserId(), deleteTeamDto.getTeamId());
     }
 
     private Team getTeamById(Long teamId) {
