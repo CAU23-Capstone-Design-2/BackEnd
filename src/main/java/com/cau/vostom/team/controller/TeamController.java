@@ -1,6 +1,8 @@
 package com.cau.vostom.team.controller;
 
 import com.cau.vostom.team.dto.request.CreateTeamDto;
+import com.cau.vostom.team.dto.request.DeleteTeamDto;
+import com.cau.vostom.team.dto.request.JoinTeamDto;
 import com.cau.vostom.team.dto.request.UpdateTeamDto;
 import com.cau.vostom.team.dto.response.ResponseTeamDetailDto;
 import com.cau.vostom.team.dto.response.ResponseTeamDto;
@@ -46,22 +48,30 @@ public class TeamController {
     //그룹 생성
     @Operation(summary = "그룹 생성")
     @PostMapping("/create")
-    public ApiResponse<Long> createTeam(CreateTeamDto createTeamDto) {
+    public ApiResponse<Long> createTeam(@RequestBody CreateTeamDto createTeamDto) {
         return ApiResponse.success(teamService.createTeam(createTeamDto), ResponseCode.TEAM_CREATED.getMessage());
+    }
+
+    //그룹 가입
+    @Operation(summary = "그룹 가입")
+    @PostMapping("/join")
+    public ApiResponse<Void> joinTeam(@RequestBody JoinTeamDto joinTeamDto) {
+        teamService.joinTeam(joinTeamDto);
+        return ApiResponse.success(null, ResponseCode.TEAM_JOINED.getMessage());
     }
 
     //그룹 탈퇴
     @Operation(summary = "그룹 탈퇴")
     @PostMapping("/delete")
-    public ApiResponse<Void> deleteTeam(Long userId, Long teamId) {
-        teamService.deleteTeam(userId, teamId);
+    public ApiResponse<Void> deleteTeam(@RequestBody DeleteTeamDto deleteTeamDto) {
+        teamService.deleteTeam(deleteTeamDto);
         return ApiResponse.success(null, ResponseCode.TEAM_DELETED.getMessage());
     }
 
     //그룹 정보 수정
     @Operation(summary = "그룹 정보 수정")
     @PostMapping("/update")
-    public ApiResponse<Void> updateTeam(UpdateTeamDto updateTeamDto) {
+    public ApiResponse<Void> updateTeam(@RequestBody UpdateTeamDto updateTeamDto) {
         teamService.updateTeam(updateTeamDto);
         return ApiResponse.success(null, ResponseCode.TEAM_UPDATED.getMessage());
     }

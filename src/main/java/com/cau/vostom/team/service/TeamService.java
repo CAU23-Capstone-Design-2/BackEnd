@@ -3,6 +3,8 @@ package com.cau.vostom.team.service;
 import com.cau.vostom.team.domain.Team;
 import com.cau.vostom.team.domain.TeamUser;
 import com.cau.vostom.team.dto.request.CreateTeamDto;
+import com.cau.vostom.team.dto.request.DeleteTeamDto;
+import com.cau.vostom.team.dto.request.JoinTeamDto;
 import com.cau.vostom.team.dto.request.UpdateTeamDto;
 import com.cau.vostom.team.dto.response.ResponseTeamDetailDto;
 import com.cau.vostom.team.dto.response.ResponseTeamDto;
@@ -10,6 +12,7 @@ import com.cau.vostom.team.dto.response.ResponseTeamMusicDto;
 import com.cau.vostom.team.repository.TeamRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.User;
+import com.cau.vostom.user.repository.UserRepository;
 import com.cau.vostom.util.api.ResponseCode;
 import com.cau.vostom.util.exception.TeamException;
 import com.cau.vostom.util.exception.UserException;
@@ -25,6 +28,7 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
     private final TeamUserRepository teamUserRepository;
+    private final UserRepository userRepository;
 
 //    //그룹 인원 수 조회
 //    @Transactional(readOnly = true)
@@ -38,6 +42,17 @@ public class TeamService {
     public Long createTeam(CreateTeamDto createTeamDto) {
         Team team = Team.createGroup(createTeamDto.getTeamName(), createTeamDto.getTeamImage(), createTeamDto.getTeamDescription());
         return teamRepository.save(team).getId();
+    }
+
+    //그룹 가입
+    @Transactional
+    public void joinTeam(JoinTeamDto joinTeamDto) {
+        if(!teamRepository.existsById(joinTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
+        if(teamUserRepository.existsByUserIdAndTeamId(joinTeamDto.getUserId(), joinTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_ALREADY_JOINED);
+        Team team = teamRepository.findById(joinTeamDto.getTeamId()).orElseThrow(() -> new TeamException(ResponseCode.TEAM_NOT_FOUND));
+        User user = userRepository.findById(joinTeamDto.getUserId()).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
+        TeamUser teamUser = TeamUser.createGroupUser(team, user);
+        teamUserRepository.save(teamUser);
     }
 
     //그룹 정보 수정
@@ -72,9 +87,9 @@ public class TeamService {
 
     //그룹 탈퇴
     @Transactional
-    public void deleteTeam(Long userId, Long teamId) {
-        if(!teamUserRepository.existsByUserIdAndTeamId(userId, teamId)) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
-        teamUserRepository.deleteByUserIdAndTeamId(userId, teamId);
+    public void deleteTeam(DeleteTeamDto deleteTeamDto) {
+        if(!teamUserRepository.existsByUserIdAndTeamId(deleteTeamDto.getUserId(), deleteTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
+        teamUserRepository.deleteByUserIdAndTeamId(deleteTeamDto.getUserId(), deleteTeamDto.getTeamId());
     }
 
     private Team getTeamById(Long teamId) {

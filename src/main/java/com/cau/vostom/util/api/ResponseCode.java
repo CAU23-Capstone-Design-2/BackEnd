@@ -25,6 +25,9 @@ public enum ResponseCode {
 
     // 409 Conflict
     USER_ALREADY_EXISTS(HttpStatus.CONFLICT, false, "이미 존재하는 사용자입니다."),
+    TEAM_ALREADY_JOINED(HttpStatus.CONFLICT, false, "이미 가입한 그룹입니다."),
+    LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT, false, "이미 좋아요한 음악입니다."),
+    LIKE_ALREADY_DELETED(HttpStatus.CONFLICT, false, "이미 좋아요한 음악입니다."),
 
     // 500 Internal Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "서버에 오류가 발생하였습니다."),
@@ -46,6 +49,9 @@ public enum ResponseCode {
     TEAM_DETAIL_READ(HttpStatus.OK, true, "그룹 상세 정보를 조회하였습니다."),
     COMMENT_CREATED(HttpStatus.OK, true, "댓글이 생성되었습니다."),
     CELEBRITY_LISTED(HttpStatus.OK, true, "연예인 리스트를 조회하였습니다."),
+    TEAM_JOINED(HttpStatus.OK, true, "그룹에 가입되었습니다."),
+    LIKE_CREATED(HttpStatus.OK, true, "좋아요가 생성되었습니다."),
+    LIKE_DELETED(HttpStatus.OK, true, "좋아요가 삭제되었습니다."),
 
 
     // 201 Created
