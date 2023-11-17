@@ -24,11 +24,12 @@ public class CelebrityService {
 
     //pretrained 연예인 리스트 보기
     @Transactional(readOnly = true)
-    public List<ResponseCelebrityDto> getCelebrityList(String celebrityName) {
-        List<Celebrity> celebrity = getCelebrityByName(celebrityName);
+    public List<ResponseCelebrityDto> getCelebrityList() {
+        List<Celebrity> celebrity = celebrityRepository.findAll();
 
         return celebrity.stream()
                 .map(ResponseCelebrityDto::from)
+                .distinct()
                 .collect(Collectors.toList());
     }
 
