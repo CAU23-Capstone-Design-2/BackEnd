@@ -48,6 +48,8 @@ public enum ResponseCode {
     COMMENT_CREATED(HttpStatus.OK, true, "댓글이 생성되었습니다."),
     CELEBRITY_LISTED(HttpStatus.OK, true, "연예인 리스트를 조회하였습니다."),
     TEAM_JOINED(HttpStatus.OK, true, "그룹에 가입되었습니다."),
+    LIKE_CREATED(HttpStatus.OK, true, "좋아요가 생성되었습니다."),
+    LIKE_DELETED(HttpStatus.OK, true, "좋아요가 삭제되었습니다."),
 
 
     // 201 Created
