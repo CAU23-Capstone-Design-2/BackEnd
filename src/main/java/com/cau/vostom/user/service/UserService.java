@@ -5,6 +5,7 @@ import com.cau.vostom.music.repository.MusicRepository;
 import com.cau.vostom.team.repository.TeamMusicRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.Comment;
+import com.cau.vostom.user.domain.Likes;
 import com.cau.vostom.user.domain.User;
 import com.cau.vostom.user.dto.request.*;
 import com.cau.vostom.user.dto.response.ResponseCommentDto;
@@ -109,11 +110,27 @@ public class UserService {
     @Transactional
     public Long writeComment(CreateCommentDto createCommentDto) {
         User user = getUserById(createCommentDto.getUserId());
-        Music music = musicRepository.findById(createCommentDto.getMusicId()).orElseThrow(() -> new UserException(ResponseCode.MUSIC_NOT_FOUND));
+        Music music = getMusicById(createCommentDto.getMusicId());
         Comment comment = Comment.createComment(user, music, createCommentDto.getContent());
         return commentRepository.save(comment).getId();
     }
 
+    //좋아요 누르기
+    @Transactional
+    public void likeMusic(RequestLikeDto requestLikeDto) {
+        User user = getUserById(requestLikeDto.getUserId());
+        Music music = getMusicById(requestLikeDto.getMusicId());
+        Likes likes = Likes.createLikes(user, music);
+        likesRepository.save(likes);
+    }
+
+    //좋아요 취소
+    @Transactional
+    public void unlikeMusic(RequestLikeDto requestLikeDto) {
+        User user = getUserById(requestLikeDto.getUserId());
+        Music music = getMusicById(requestLikeDto.getMusicId());
+        likesRepository.deleteByUserIdAndMusicId(user.getId(), music.getId());
+    }
 
 
     /*
@@ -141,5 +158,11 @@ public class UserService {
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
     }
+
+    private Music getMusicById(Long musicId) {
+        return musicRepository.findById(musicId).orElseThrow(() -> new UserException(ResponseCode.MUSIC_NOT_FOUND));
+    }
+
+
 
 }

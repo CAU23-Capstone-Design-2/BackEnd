@@ -1,9 +1,6 @@
 package com.cau.vostom.user.controller;
 
-import com.cau.vostom.user.dto.request.CreateCommentDto;
-import com.cau.vostom.user.dto.request.DeleteUserDto;
-import com.cau.vostom.user.dto.request.RetryVoiceDataDto;
-import com.cau.vostom.user.dto.request.UpdateUserDto;
+import com.cau.vostom.user.dto.request.*;
 import com.cau.vostom.user.dto.response.ResponseCommentDto;
 import com.cau.vostom.user.dto.response.ResponseMusicDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
@@ -25,17 +22,17 @@ public class UserController {
     private final UserService userService;
 
     // 회원정보 수정
-    @Operation(summary = "회원정보 수정")
+    @Operation(summary = "회원정보 수정", description = "updateUSerDto를 받아서 처리하고 반환데이터는 null")
     @PutMapping("/update")
-    public ApiResponse<Void> updateUser(UpdateUserDto updateUserDto) {
+    public ApiResponse<Void> updateUser(@RequestBody UpdateUserDto updateUserDto) {
         userService.updateUser(updateUserDto);
         return ApiResponse.success(null, ResponseCode.USER_UPDATED.getMessage());
     }
 
     // 회원 탈퇴
-    @Operation(summary = "회원 탈퇴")
+    @Operation(summary = "회원 탈퇴", description = "deleteUserDto를 받아서 처리하고 반환데이터는 null")
     @DeleteMapping("/delete")
-    public ApiResponse<Void> deleteUser(DeleteUserDto deleteUserDto) {
+    public ApiResponse<Void> deleteUser(@RequestBody DeleteUserDto deleteUserDto) {
         userService.deleteUser(deleteUserDto);
         return ApiResponse.success(null, ResponseCode.USER_DELETED.getMessage());
     }
@@ -78,7 +75,23 @@ public class UserController {
     //댓글 작성
     @Operation(summary = "댓글 작성")
     @PostMapping("/comment/create")
-    public ApiResponse<Long> createComment(CreateCommentDto createCommentDto) {
+    public ApiResponse<Long> createComment(@RequestBody CreateCommentDto createCommentDto) {
         return ApiResponse.success(userService.writeComment(createCommentDto), ResponseCode.COMMENT_CREATED.getMessage());
+    }
+
+    //좋아요 누르기
+    @Operation(summary = "좋아요 누르기")
+    @PostMapping("/like")
+    public ApiResponse<Void> like(@RequestBody RequestLikeDto requestLikeDto) {
+        userService.likeMusic(requestLikeDto);
+        return ApiResponse.success(null, ResponseCode.LIKE_CREATED.getMessage());
+    }
+
+    //좋아요 취소
+    @Operation(summary = "좋아요 취소")
+    @DeleteMapping("/like/delete")
+    public ApiResponse<Void> deleteLike(@RequestBody RequestLikeDto requestLikeDto) {
+        userService.unlikeMusic(requestLikeDto);
+        return ApiResponse.success(null, ResponseCode.LIKE_DELETED.getMessage());
     }
 }
