@@ -14,15 +14,10 @@ public class TeamMusicService {
     private final TeamRepository teamRepository;
     private final TeamUserRepository teamUserRepository;
 
-    //그룹에 노래 삭제
-    @Transactional
-    public void deleteMusic() {
-    }
-
-    //그룹에 노래 조회
-    @Transactional(readOnly = true)
-    public void getMusic() {
-    }
+//    //그룹에 노래 삭제
+//    @Transactional
+//    public void deleteMusic() {
+//    }
 
 
 }
