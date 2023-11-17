@@ -121,6 +121,8 @@ public class UserService {
         User user = getUserById(requestLikeDto.getUserId());
         Music music = getMusicById(requestLikeDto.getMusicId());
         Likes likes = Likes.createLikes(user, music);
+        if(likesRepository.existsByUserIdAndMusicId(user.getId(), music.getId()))
+            throw new UserException(ResponseCode.LIKE_ALREADY_EXISTS);
         likesRepository.save(likes);
     }
 
@@ -129,6 +131,8 @@ public class UserService {
     public void unlikeMusic(RequestLikeDto requestLikeDto) {
         User user = getUserById(requestLikeDto.getUserId());
         Music music = getMusicById(requestLikeDto.getMusicId());
+        if(!(likesRepository.existsByUserIdAndMusicId(user.getId(), music.getId())))
+            throw new UserException(ResponseCode.LIKE_ALREADY_DELETED);
         likesRepository.deleteByUserIdAndMusicId(user.getId(), music.getId());
     }
 

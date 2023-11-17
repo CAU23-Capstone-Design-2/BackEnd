@@ -11,7 +11,6 @@ public enum ResponseCode {
 
     // 400 Bad Request
     BAD_REQUEST(HttpStatus.BAD_REQUEST, false, "잘못된 요청입니다."),
-    TEAM_ALREADY_JOINED(HttpStatus.BAD_REQUEST, false, "이미 가입한 그룹입니다."),
 
     // 403 Forbidden
     FORBIDDEN(HttpStatus.FORBIDDEN, false, "권한이 없습니다."),
@@ -26,6 +25,9 @@ public enum ResponseCode {
 
     // 409 Conflict
     USER_ALREADY_EXISTS(HttpStatus.CONFLICT, false, "이미 존재하는 사용자입니다."),
+    TEAM_ALREADY_JOINED(HttpStatus.CONFLICT, false, "이미 가입한 그룹입니다."),
+    LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT, false, "이미 좋아요한 음악입니다."),
+    LIKE_ALREADY_DELETED(HttpStatus.CONFLICT, false, "이미 좋아요한 음악입니다."),
 
     // 500 Internal Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "서버에 오류가 발생하였습니다."),
