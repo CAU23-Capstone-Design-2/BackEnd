@@ -52,6 +52,7 @@ public enum ResponseCode {
     TEAM_JOINED(HttpStatus.OK, true, "그룹에 가입되었습니다."),
     LIKE_CREATED(HttpStatus.OK, true, "좋아요가 생성되었습니다."),
     LIKE_DELETED(HttpStatus.OK, true, "좋아요가 삭제되었습니다."),
+    MUSIC_COMMENT_READ(HttpStatus.OK, true, "노래의 댓글을 조회하였습니다."),
 
 
     // 201 Created
