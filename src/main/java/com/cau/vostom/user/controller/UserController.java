@@ -2,7 +2,7 @@ package com.cau.vostom.user.controller;
 
 import com.cau.vostom.team.dto.response.ResponseTeamMusicDto;
 import com.cau.vostom.user.dto.request.*;
-import com.cau.vostom.user.dto.response.ResponseCommentDto;
+import com.cau.vostom.user.dto.response.ResponseMyCommentDto;
 import com.cau.vostom.user.dto.response.ResponseMusicDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.service.UserService;
@@ -56,7 +56,7 @@ public class UserController {
 
     @Operation(summary = "내 댓글 조회")
     @GetMapping("/info/comment/{userId}")
-    public ApiResponse<List<ResponseCommentDto>> getUserComment(@PathVariable Long userId) {
+    public ApiResponse<List<ResponseMyCommentDto>> getUserComment(@PathVariable Long userId) {
         return ApiResponse.success(userService.getUserComment(userId), ResponseCode.COMMENT_READ.getMessage());
     }
 

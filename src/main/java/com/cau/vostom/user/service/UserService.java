@@ -2,18 +2,16 @@ package com.cau.vostom.user.service;
 
 import com.cau.vostom.music.domain.Music;
 import com.cau.vostom.music.repository.MusicRepository;
-import com.cau.vostom.team.domain.Team;
 import com.cau.vostom.team.domain.TeamMusic;
 import com.cau.vostom.team.domain.TeamUser;
 import com.cau.vostom.team.dto.response.ResponseTeamMusicDto;
 import com.cau.vostom.team.repository.TeamMusicRepository;
-import com.cau.vostom.team.repository.TeamRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.Comment;
 import com.cau.vostom.user.domain.Likes;
 import com.cau.vostom.user.domain.User;
 import com.cau.vostom.user.dto.request.*;
-import com.cau.vostom.user.dto.response.ResponseCommentDto;
+import com.cau.vostom.user.dto.response.ResponseMyCommentDto;
 import com.cau.vostom.user.dto.response.ResponseMusicDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.repository.CommentRepository;
@@ -71,7 +69,7 @@ public class UserService {
 
     //내 댓글 조회
     @Transactional(readOnly = true)
-    public List<ResponseCommentDto> getUserComment(Long userId) {
+    public List<ResponseMyCommentDto> getUserComment(Long userId) {
         User user = getUserById(userId);
         List<Comment> comments = commentRepository.findAllByUserId(user.getId());
         if(comments.isEmpty()) { //댓글이 없는 경우
@@ -83,7 +81,7 @@ public class UserService {
             commentDtos.add(ResponseCommentDto.from(comment));
         }
         return commentDtos;*/
-        return comments.stream().map(ResponseCommentDto::from).collect(Collectors.toList());
+        return comments.stream().map(ResponseMyCommentDto::from).collect(Collectors.toList());
 
     }
 
