@@ -1,7 +1,8 @@
 package com.cau.vostom.user.controller;
 
+import com.cau.vostom.team.dto.response.ResponseTeamMusicDto;
 import com.cau.vostom.user.dto.request.*;
-import com.cau.vostom.user.dto.response.ResponseCommentDto;
+import com.cau.vostom.user.dto.response.ResponseMyCommentDto;
 import com.cau.vostom.user.dto.response.ResponseMusicDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.service.UserService;
@@ -55,7 +56,7 @@ public class UserController {
 
     @Operation(summary = "내 댓글 조회")
     @GetMapping("/info/comment/{userId}")
-    public ApiResponse<List<ResponseCommentDto>> getUserComment(@PathVariable Long userId) {
+    public ApiResponse<List<ResponseMyCommentDto>> getUserComment(@PathVariable Long userId) {
         return ApiResponse.success(userService.getUserComment(userId), ResponseCode.COMMENT_READ.getMessage());
     }
 
@@ -66,10 +67,18 @@ public class UserController {
         return ApiResponse.success(userService.getUserLikedMusic(userId), ResponseCode.MUSIC_LIKED_READ.getMessage());
     }
 
+    //내 노래 조회
     @Operation(summary = "내 노래 조회")
     @GetMapping("/info/music/{userId}")
     public ApiResponse<List<ResponseMusicDto>> getUserMusic(@PathVariable Long userId) {
         return ApiResponse.success(userService.getUserMusic(userId), ResponseCode.MUSIC_READ.getMessage());
+    }
+
+    //내 그룹 노래 조회
+    @Operation(summary = "내 그룹 노래 조회")
+    @GetMapping("/info/teamMusic/{userId}")
+    public ApiResponse<List<ResponseTeamMusicDto>> getUserTeamMusic(@PathVariable Long userId) {
+        return ApiResponse.success(userService.getUserTeamMusic(userId), ResponseCode.MUSIC_READ.getMessage());
     }
 
     //댓글 작성

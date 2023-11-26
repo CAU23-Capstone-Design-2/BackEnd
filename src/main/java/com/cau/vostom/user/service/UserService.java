@@ -2,13 +2,16 @@ package com.cau.vostom.user.service;
 
 import com.cau.vostom.music.domain.Music;
 import com.cau.vostom.music.repository.MusicRepository;
+import com.cau.vostom.team.domain.TeamMusic;
+import com.cau.vostom.team.domain.TeamUser;
+import com.cau.vostom.team.dto.response.ResponseTeamMusicDto;
 import com.cau.vostom.team.repository.TeamMusicRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.Comment;
 import com.cau.vostom.user.domain.Likes;
 import com.cau.vostom.user.domain.User;
 import com.cau.vostom.user.dto.request.*;
-import com.cau.vostom.user.dto.response.ResponseCommentDto;
+import com.cau.vostom.user.dto.response.ResponseMyCommentDto;
 import com.cau.vostom.user.dto.response.ResponseMusicDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.repository.CommentRepository;
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,7 +69,7 @@ public class UserService {
 
     //내 댓글 조회
     @Transactional(readOnly = true)
-    public List<ResponseCommentDto> getUserComment(Long userId) {
+    public List<ResponseMyCommentDto> getUserComment(Long userId) {
         User user = getUserById(userId);
         List<Comment> comments = commentRepository.findAllByUserId(user.getId());
         if(comments.isEmpty()) { //댓글이 없는 경우
@@ -77,7 +81,7 @@ public class UserService {
             commentDtos.add(ResponseCommentDto.from(comment));
         }
         return commentDtos;*/
-        return comments.stream().map(ResponseCommentDto::from).collect(Collectors.toList());
+        return comments.stream().map(ResponseMyCommentDto::from).collect(Collectors.toList());
 
     }
 
@@ -104,6 +108,27 @@ public class UserService {
             return List.of();
         }
         return musics.stream().map(ResponseMusicDto::from).collect(Collectors.toList());
+    }
+
+    //내 그룹 노래 조회
+    @Transactional(readOnly = true)
+    public List<ResponseTeamMusicDto> getUserTeamMusic(Long userId) {
+        User user = getUserById(userId);
+        List<TeamUser> teamUsers = teamUserRepository.findAllByUserId(user.getId());
+        if(teamUsers.isEmpty()) { //그룹에 속해 있지 않은 경우
+            return List.of();
+        }
+        List<ResponseTeamMusicDto> myTeamMusic = new ArrayList<>();
+        for(TeamUser teamUser : teamUsers) {
+            List<TeamMusic> teamMusics = teamUser.getTeam().getTeamMusics();
+            if(teamMusics.isEmpty()) { //그룹에 노래가 없는 경우
+                continue;
+            }
+            for(TeamMusic teamMusic : teamMusics) {
+                myTeamMusic.add(ResponseTeamMusicDto.from(teamMusic));
+            }
+        }
+        return myTeamMusic.stream().distinct().collect(Collectors.toList());
     }
 
     //댓글 쓰기

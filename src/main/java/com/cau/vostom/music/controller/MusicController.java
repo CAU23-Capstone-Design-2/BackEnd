@@ -2,16 +2,16 @@ package com.cau.vostom.music.controller;
 
 import com.cau.vostom.music.dto.request.DeleteMusicDto;
 import com.cau.vostom.music.dto.request.UploadMusicDto;
+import com.cau.vostom.music.dto.response.ResponseMusicCommentDto;
 import com.cau.vostom.music.service.MusicService;
 import com.cau.vostom.util.api.ApiResponse;
 import com.cau.vostom.util.api.ResponseCode;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -35,6 +35,13 @@ public class MusicController {
     @PutMapping("/upload")
     public ApiResponse<Long> uploadMusicToTeam(UploadMusicDto uploadMusicDto) {
         return ApiResponse.success(musicService.uploadMusicToTeam(uploadMusicDto), ResponseCode.MUSIC_DELETED.getMessage());
+    }
+
+    //노래의 댓글 조회
+    @Operation(summary = "노래의 댓글 조회")
+    @GetMapping("/comment/{musicId}")
+    public ApiResponse<List<ResponseMusicCommentDto>> getMusicComment(@PathVariable Long musicId) {
+        return ApiResponse.success(musicService.getMusicComment(musicId), ResponseCode.MUSIC_COMMENT_READ.getMessage());
     }
 
 }
