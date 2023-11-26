@@ -7,9 +7,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ResponseCelebrityDto {
-    private String singerName;
+    private String celebrityName;
 
-    private String singerImg;
+    private String celebrityImg;
 
     public static ResponseCelebrityDto of(String celebrityName, String celebrityImg) {
         return new ResponseCelebrityDto(celebrityName, celebrityImg);
