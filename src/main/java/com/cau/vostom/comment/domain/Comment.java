@@ -9,6 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -26,6 +28,9 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "music_id")
     private Music music;
+
+    @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE})
+    private List<CommentLikes> commentLikes = new ArrayList<>();
 
     private String content;
 
