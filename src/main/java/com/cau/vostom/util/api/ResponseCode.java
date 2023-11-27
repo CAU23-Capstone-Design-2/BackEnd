@@ -19,6 +19,7 @@ public enum ResponseCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, false, "사용자를 찾을 수 없습니다."),
     MUSIC_NOT_FOUND(HttpStatus.NOT_FOUND, false, "음악을 찾을 수 없습니다."),
     TEAM_NOT_FOUND(HttpStatus.NOT_FOUND, false, "그룹을 찾을 수 없습니다."),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, false, "댓글을 찾을 수 없습니다."),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, false, "허용되지 않은 메소드입니다."),
@@ -53,6 +54,8 @@ public enum ResponseCode {
     LIKE_CREATED(HttpStatus.OK, true, "좋아요가 생성되었습니다."),
     LIKE_DELETED(HttpStatus.OK, true, "좋아요가 삭제되었습니다."),
     MUSIC_COMMENT_READ(HttpStatus.OK, true, "노래의 댓글을 조회하였습니다."),
+    COMMENT_LIKE_CREATED(HttpStatus.OK, true, "댓글 좋아요가 생성되었습니다."),
+    COMNMENT_LIKE_UNDO(HttpStatus.OK, true, "댓글 좋아요가 취소되었습니다."),
 
 
     // 201 Created
