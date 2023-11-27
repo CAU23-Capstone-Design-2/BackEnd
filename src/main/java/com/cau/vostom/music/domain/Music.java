@@ -1,7 +1,6 @@
 package com.cau.vostom.music.domain;
 
 import com.cau.vostom.comment.domain.Comment;
-import com.cau.vostom.user.domain.Likes;
 import com.cau.vostom.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,7 +30,7 @@ public class Music {
     private User user;
 
     @OneToMany(mappedBy = "music", cascade = {CascadeType.REMOVE})
-    private List<Likes> likes = new ArrayList<>();
+    private List<MusicLikes> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "music", cascade = {CascadeType.REMOVE})
     private List<Comment> comments = new ArrayList<>();
