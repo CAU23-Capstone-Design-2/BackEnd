@@ -5,7 +5,6 @@ import com.cau.vostom.comment.dto.request.RequestCommentLikeDto;
 import com.cau.vostom.comment.dto.response.ResponseMusicCommentDto;
 import com.cau.vostom.comment.dto.response.ResponseMyCommentDto;
 import com.cau.vostom.comment.service.CommentService;
-import com.cau.vostom.user.dto.request.RequestLikeDto;
 import com.cau.vostom.util.api.ApiResponse;
 import com.cau.vostom.util.api.ResponseCode;
 import io.swagger.annotations.Api;
