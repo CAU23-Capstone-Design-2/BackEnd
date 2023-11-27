@@ -17,9 +17,7 @@ public class Music {
     @Column(name = "music_id")
     private Long id;
 
-    private String musicName;
-
-    private String singerName;
+    private String title;
 
     private String musicImage;
 
@@ -35,10 +33,9 @@ public class Music {
     @OneToMany(mappedBy = "music", cascade = {CascadeType.REMOVE})
     private List<Comment> comments = new ArrayList<>();
 
-    public static Music createMusic(String musicName, String singerName, String musicImage, String fileUrl) {
+    public static Music createMusic(String title, String musicImage, String fileUrl) {
         Music music = new Music();
-        music.musicName = musicName;
-        music.singerName = singerName;
+        music.title = title;
         music.musicImage = musicImage;
         music.fileUrl = fileUrl;
         return music;
