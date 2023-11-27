@@ -75,19 +75,4 @@ public class UserController {
         return ApiResponse.success(userService.getUserTeamMusic(userId), ResponseCode.MUSIC_READ.getMessage());
     }
 
-    //좋아요 누르기
-    @Operation(summary = "좋아요 누르기")
-    @PostMapping("/like")
-    public ApiResponse<Void> like(@RequestBody RequestLikeDto requestLikeDto) {
-        userService.likeMusic(requestLikeDto);
-        return ApiResponse.success(null, ResponseCode.LIKE_CREATED.getMessage());
-    }
-
-    //좋아요 취소
-    @Operation(summary = "좋아요 취소")
-    @DeleteMapping("/like/delete")
-    public ApiResponse<Void> deleteLike(@RequestBody RequestLikeDto requestLikeDto) {
-        userService.unlikeMusic(requestLikeDto);
-        return ApiResponse.success(null, ResponseCode.LIKE_DELETED.getMessage());
-    }
 }

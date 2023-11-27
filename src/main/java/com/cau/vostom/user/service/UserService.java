@@ -7,12 +7,10 @@ import com.cau.vostom.team.domain.TeamUser;
 import com.cau.vostom.team.dto.response.ResponseTeamMusicDto;
 import com.cau.vostom.team.repository.TeamMusicRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
-import com.cau.vostom.user.domain.Likes;
 import com.cau.vostom.user.domain.User;
 import com.cau.vostom.user.dto.request.*;
 import com.cau.vostom.user.dto.response.ResponseMusicDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
-import com.cau.vostom.user.repository.LikesRepository;
 import com.cau.vostom.user.repository.UserRepository;
 import com.cau.vostom.util.api.ResponseCode;
 import com.cau.vostom.util.exception.UserException;
@@ -28,7 +26,6 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    private final LikesRepository likesRepository;
     private final UserRepository userRepository;
     private final MusicRepository musicRepository;
     private final TeamUserRepository teamUserRepository;
@@ -111,28 +108,6 @@ public class UserService {
     }
 
 
-    //좋아요 누르기
-    @Transactional
-    public void likeMusic(RequestLikeDto requestLikeDto) {
-        User user = getUserById(requestLikeDto.getUserId());
-        Music music = getMusicById(requestLikeDto.getMusicId());
-        Likes likes = Likes.createLikes(user, music);
-        if(likesRepository.existsByUserIdAndMusicId(user.getId(), music.getId()))
-            throw new UserException(ResponseCode.LIKE_ALREADY_EXISTS);
-        likesRepository.save(likes);
-    }
-
-    //좋아요 취소
-    @Transactional
-    public void unlikeMusic(RequestLikeDto requestLikeDto) {
-        User user = getUserById(requestLikeDto.getUserId());
-        Music music = getMusicById(requestLikeDto.getMusicId());
-        if(!(likesRepository.existsByUserIdAndMusicId(user.getId(), music.getId())))
-            throw new UserException(ResponseCode.LIKE_ALREADY_DELETED);
-        likesRepository.deleteByUserIdAndMusicId(user.getId(), music.getId());
-    }
-
-
     /*
     //학습 데이터 수정
     @Transactional
@@ -158,11 +133,6 @@ public class UserService {
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
     }
-
-    private Music getMusicById(Long musicId) {
-        return musicRepository.findById(musicId).orElseThrow(() -> new UserException(ResponseCode.MUSIC_NOT_FOUND));
-    }
-
 
 
 }
