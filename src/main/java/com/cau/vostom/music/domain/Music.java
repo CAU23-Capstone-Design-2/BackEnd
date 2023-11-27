@@ -1,6 +1,6 @@
 package com.cau.vostom.music.domain;
 
-import com.cau.vostom.user.domain.Comment;
+import com.cau.vostom.comment.domain.Comment;
 import com.cau.vostom.user.domain.Likes;
 import com.cau.vostom.user.domain.User;
 import lombok.AccessLevel;
