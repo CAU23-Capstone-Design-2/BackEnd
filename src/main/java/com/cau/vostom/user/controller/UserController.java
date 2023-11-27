@@ -2,7 +2,6 @@ package com.cau.vostom.user.controller;
 
 import com.cau.vostom.team.dto.response.ResponseTeamMusicDto;
 import com.cau.vostom.user.dto.request.*;
-import com.cau.vostom.user.dto.response.ResponseMyCommentDto;
 import com.cau.vostom.user.dto.response.ResponseMusicDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.service.UserService;
@@ -54,11 +53,6 @@ public class UserController {
         return ApiResponse.success(userService.getUser(userId), ResponseCode.USER_READ.getMessage());
     }
 
-    @Operation(summary = "내 댓글 조회")
-    @GetMapping("/info/comment/{userId}")
-    public ApiResponse<List<ResponseMyCommentDto>> getUserComment(@PathVariable Long userId) {
-        return ApiResponse.success(userService.getUserComment(userId), ResponseCode.COMMENT_READ.getMessage());
-    }
 
     //내가 좋아요 한 노래 조회
     @Operation(summary = "내가 좋아요 한 노래 조회")
@@ -79,13 +73,6 @@ public class UserController {
     @GetMapping("/info/teamMusic/{userId}")
     public ApiResponse<List<ResponseTeamMusicDto>> getUserTeamMusic(@PathVariable Long userId) {
         return ApiResponse.success(userService.getUserTeamMusic(userId), ResponseCode.MUSIC_READ.getMessage());
-    }
-
-    //댓글 작성
-    @Operation(summary = "댓글 작성")
-    @PostMapping("/comment/create")
-    public ApiResponse<Long> createComment(@RequestBody CreateCommentDto createCommentDto) {
-        return ApiResponse.success(userService.writeComment(createCommentDto), ResponseCode.COMMENT_CREATED.getMessage());
     }
 
     //좋아요 누르기
