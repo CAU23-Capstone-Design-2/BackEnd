@@ -1,9 +1,12 @@
 package com.cau.vostom.comment.service;
 
 import com.cau.vostom.comment.domain.Comment;
+import com.cau.vostom.comment.domain.CommentLikes;
 import com.cau.vostom.comment.dto.request.CreateCommentDto;
+import com.cau.vostom.comment.dto.request.RequestCommentLikeDto;
 import com.cau.vostom.comment.dto.response.ResponseMusicCommentDto;
 import com.cau.vostom.comment.dto.response.ResponseMyCommentDto;
+import com.cau.vostom.comment.repository.CommentLikesRepository;
 import com.cau.vostom.comment.repository.CommentRepository;
 import com.cau.vostom.music.domain.Music;
 import com.cau.vostom.music.repository.MusicRepository;
@@ -24,6 +27,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final MusicRepository musicRepository;
+    private final CommentLikesRepository commentLikesRepository;
 
     //댓글 쓰기
     @Transactional
@@ -64,11 +68,36 @@ public class CommentService {
 
     }
 
+    //댓글 좋아요 누르기
+    @Transactional
+    public void likeComment(RequestCommentLikeDto requestCommentLikeDto) {
+        User user = getUserById(requestCommentLikeDto.getUserId());
+        Comment comment = getCommentById(requestCommentLikeDto.getCommentId());
+        CommentLikes commentlikes = CommentLikes.createCommentLikes(user, comment);
+        if(commentLikesRepository.existsByUserIdAndCommentId(user.getId(), comment.getId()))
+            throw new UserException(ResponseCode.LIKE_ALREADY_EXISTS);
+        commentLikesRepository.save(commentlikes);
+    }
+
+    //댓글 좋아요 취소
+    @Transactional
+    public void unlikeComment(RequestCommentLikeDto requestCommentLikeDto) {
+        User user = getUserById(requestCommentLikeDto.getUserId());
+        Comment comment = getCommentById(requestCommentLikeDto.getCommentId());
+        if(!(commentLikesRepository.existsByUserIdAndCommentId(user.getId(), comment.getId())))
+            throw new UserException(ResponseCode.LIKE_ALREADY_DELETED);
+        commentLikesRepository.deleteByUserIdAndCommentId(user.getId(), comment.getId());
+    }
+
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
     }
 
     private Music getMusicById(Long musicId) {
         return musicRepository.findById(musicId).orElseThrow(() -> new UserException(ResponseCode.MUSIC_NOT_FOUND));
+    }
+
+    private Comment getCommentById(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(() -> new UserException(ResponseCode.COMMENT_NOT_FOUND));
     }
 }
