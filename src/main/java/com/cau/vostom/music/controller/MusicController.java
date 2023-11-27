@@ -1,8 +1,8 @@
 package com.cau.vostom.music.controller;
 
 import com.cau.vostom.music.dto.request.DeleteMusicDto;
+import com.cau.vostom.music.dto.request.MusicLikeDto;
 import com.cau.vostom.music.dto.request.UploadMusicDto;
-import com.cau.vostom.music.dto.response.ResponseMusicCommentDto;
 import com.cau.vostom.music.service.MusicService;
 import com.cau.vostom.util.api.ApiResponse;
 import com.cau.vostom.util.api.ResponseCode;
@@ -10,8 +10,6 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -37,11 +35,20 @@ public class MusicController {
         return ApiResponse.success(musicService.uploadMusicToTeam(uploadMusicDto), ResponseCode.MUSIC_DELETED.getMessage());
     }
 
-    //노래의 댓글 조회
-    @Operation(summary = "노래의 댓글 조회")
-    @GetMapping("/comment/{musicId}")
-    public ApiResponse<List<ResponseMusicCommentDto>> getMusicComment(@PathVariable Long musicId) {
-        return ApiResponse.success(musicService.getMusicComment(musicId), ResponseCode.MUSIC_COMMENT_READ.getMessage());
+    //좋아요 누르기
+    @Operation(summary = "노래에 좋아요 누르기")
+    @PostMapping("/like")
+    public ApiResponse<Void> like(@RequestBody MusicLikeDto musicLikeDto) {
+        musicService.likeMusic(musicLikeDto);
+        return ApiResponse.success(null, ResponseCode.MUSIC_LIKE_CREATED.getMessage());
+    }
+
+    //좋아요 취소
+    @Operation(summary = "노래 좋아요 취소")
+    @DeleteMapping("/like/undo")
+    public ApiResponse<Void> deleteLike(@RequestBody MusicLikeDto musicLikeDto) {
+        musicService.unlikeMusic(musicLikeDto);
+        return ApiResponse.success(null, ResponseCode.MUSIC_LIKE_UNDO.getMessage());
     }
 
 }

@@ -1,6 +1,6 @@
-package com.cau.vostom.user.domain;
+package com.cau.vostom.music.domain;
 
-import com.cau.vostom.music.domain.Music;
+import com.cau.vostom.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,12 +9,13 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter @Entity
+@Getter
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Likes {
+public class MusicLikes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "likes_id")
+    @Column(name = "music_likes_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,10 +29,10 @@ public class Likes {
     @CreatedDate
     private LocalDateTime likesDate;
 
-    public static Likes createLikes(User user, Music music) {
-        Likes likes = new Likes();
-        likes.user = user;
-        likes.music = music;
-        return likes;
+    public static MusicLikes createMusicLikes(User user, Music music) {
+        MusicLikes musicLikes = new MusicLikes();
+        musicLikes.user = user;
+        musicLikes.music = music;
+        return musicLikes;
     }
 }

@@ -1,5 +1,8 @@
 package com.cau.vostom.user.domain;
 
+import com.cau.vostom.comment.domain.Comment;
+import com.cau.vostom.comment.domain.CommentLikes;
+import com.cau.vostom.music.domain.MusicLikes;
 import com.cau.vostom.team.domain.TeamUser;
 import com.cau.vostom.music.domain.Music;
 import lombok.AccessLevel;
@@ -36,7 +39,10 @@ public class User implements UserDetails {
     // 0 : default, 1 : ing, 2 : finish
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
-    private List<Likes> likes = new ArrayList<>();
+    private List<MusicLikes> musiclikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
+    private List<CommentLikes> commentLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
     private List<Comment> comments = new ArrayList<>();

@@ -1,6 +1,6 @@
-package com.cau.vostom.music.dto.response;
+package com.cau.vostom.comment.dto.response;
 
-import com.cau.vostom.user.domain.Comment;
+import com.cau.vostom.comment.domain.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

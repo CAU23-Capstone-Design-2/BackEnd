@@ -1,4 +1,4 @@
-package com.cau.vostom.user.dto.request;
+package com.cau.vostom.comment.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

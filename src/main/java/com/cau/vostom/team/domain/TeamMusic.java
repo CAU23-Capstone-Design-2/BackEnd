@@ -1,15 +1,11 @@
 package com.cau.vostom.team.domain;
 
 import com.cau.vostom.music.domain.Music;
-import com.cau.vostom.user.domain.Comment;
-import com.cau.vostom.user.domain.Likes;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

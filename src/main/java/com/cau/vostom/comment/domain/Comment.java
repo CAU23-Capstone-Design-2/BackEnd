@@ -1,6 +1,7 @@
-package com.cau.vostom.user.domain;
+package com.cau.vostom.comment.domain;
 
 import com.cau.vostom.music.domain.Music;
+import com.cau.vostom.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,12 +9,16 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@Getter @Entity
+@Getter
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "comment_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -23,6 +28,9 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "music_id")
     private Music music;
+
+    @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE})
+    private List<CommentLikes> commentLikes = new ArrayList<>();
 
     private String content;
 
@@ -36,5 +44,4 @@ public class Comment {
         comment.content = content;
         return comment;
     }
-
 }
