@@ -1,5 +1,6 @@
 package com.cau.vostom.comment.controller;
 
+import com.cau.vostom.auth.component.JwtTokenProvider;
 import com.cau.vostom.comment.dto.request.CreateCommentDto;
 import com.cau.vostom.comment.dto.request.RequestCommentLikeDto;
 import com.cau.vostom.comment.dto.response.ResponseMusicCommentDto;
@@ -19,32 +20,35 @@ import java.util.List;
 @Api(tags = {"Comment"})
 @RequestMapping("/api/comment")
 public class CommentController {
+
     private final CommentService commentService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Operation(summary = "내 댓글 조회")
-    @GetMapping("/user/{userId}")
-    public ApiResponse<List<ResponseMyCommentDto>> getUserComment(@PathVariable Long userId) {
+    @GetMapping("/mylist")
+    public ApiResponse<List<ResponseMyCommentDto>> getUserComment(@RequestHeader String accessToken) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(commentService.getUserComment(userId), ResponseCode.COMMENT_READ.getMessage());
     }
 
     //댓글 작성
     @Operation(summary = "댓글 작성")
     @PostMapping("/create")
-    public ApiResponse<Long> createComment(@RequestBody CreateCommentDto createCommentDto) {
+    public ApiResponse<Long> createComment(@RequestHeader String accessToken, @RequestBody CreateCommentDto createCommentDto) {
         return ApiResponse.success(commentService.writeComment(createCommentDto), ResponseCode.COMMENT_CREATED.getMessage());
     }
 
     //노래의 댓글 조회
     @Operation(summary = "노래의 댓글 조회")
     @GetMapping("/music/{musicId}")
-    public ApiResponse<List<ResponseMusicCommentDto>> getMusicComment(@PathVariable Long musicId) {
+    public ApiResponse<List<ResponseMusicCommentDto>> getMusicComment(@RequestHeader String accessToken, @PathVariable Long musicId) {
         return ApiResponse.success(commentService.getMusicComment(musicId), ResponseCode.MUSIC_COMMENT_READ.getMessage());
     }
 
     //댓글 좋아요
     @Operation(summary = "댓글 좋아요")
     @PostMapping("/like")
-    public ApiResponse<Void> likeComment(@RequestBody RequestCommentLikeDto requestCommentLikeDto) {
+    public ApiResponse<Void> likeComment(@RequestHeader String accessToken, @RequestBody RequestCommentLikeDto requestCommentLikeDto) {
         commentService.likeComment(requestCommentLikeDto);
         return ApiResponse.success(null, ResponseCode.COMMENT_LIKE_CREATED.getMessage());
     }
@@ -52,8 +56,9 @@ public class CommentController {
     //댓글 좋아요 취소
     @Operation(summary = "댓글 좋아요 취소")
     @DeleteMapping("/like/undo")
-    public ApiResponse<Void> deleteLike(@RequestBody RequestCommentLikeDto requestCommentLikeDto) {
-        commentService.unlikeComment(requestCommentLikeDto);
+    public ApiResponse<Void> deleteLike(@RequestHeader String accessToken, @RequestParam String commentId) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        commentService.unlikeComment(RequestCommentLikeDto.of(userId, Long.parseLong(commentId)));
         return ApiResponse.success(null, ResponseCode.COMNMENT_LIKE_UNDO.getMessage());
     }
 }
