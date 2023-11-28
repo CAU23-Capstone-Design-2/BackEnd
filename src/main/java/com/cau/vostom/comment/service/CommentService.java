@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class CommentService {
     @Transactional
     public Long writeComment(CreateCommentDto createCommentDto) {
         User user = getUserById(createCommentDto.getUserId());
-        Music music = getMusicById(createCommentDto.getMusicId());
+        Music music = getMusicById(createCommentDto.getCoverSongId());
         Comment comment = Comment.createComment(user, music, createCommentDto.getContent());
         return commentRepository.save(comment).getId();
     }
@@ -58,14 +59,19 @@ public class CommentService {
 
     //노래의 댓글 조회
     @Transactional(readOnly = true)
-    public List<ResponseMusicCommentDto> getMusicComment(Long musicId) {
+    public List<ResponseMusicCommentDto> getMusicComment(Long musicId, Long userId) {
         Music music = getMusicById(musicId);
         List<Comment> comments = commentRepository.findAllByMusicId(music.getId());
+        List<ResponseMusicCommentDto> musicComments = new ArrayList<>();
+        for(Comment comment : comments){
+            boolean isLiked = commentLikesRepository.existsByUserIdAndCommentId(userId, comment.getId());
+            int likeCount = comment.getCommentLikes().size();
+            musicComments.add(ResponseMusicCommentDto.of(comment.getId(), comment.getUser().getId(), comment.getContent(), comment.getUser().getNickname(), comment.getUser().getProfileImage(), comment.getCommentDate(), likeCount, isLiked));
+        }
         if(comments.isEmpty()) { //댓글이 없는 경우
             return List.of();
         }
-        return comments.stream().map(ResponseMusicCommentDto::from).collect(Collectors.toList());
-
+        return musicComments;
     }
 
     //댓글 좋아요 누르기
