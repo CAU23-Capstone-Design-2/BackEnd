@@ -9,6 +9,7 @@ import com.cau.vostom.team.repository.TeamMusicRepository;
 import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.User;
 import com.cau.vostom.user.dto.request.*;
+import com.cau.vostom.user.dto.response.ResponseCelebrityDto;
 import com.cau.vostom.user.dto.response.ResponseMusicDto;
 import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.repository.UserRepository;
@@ -84,6 +85,17 @@ public class UserService {
             return List.of();
         }
         return musics.stream().map(ResponseMusicDto::from).collect(Collectors.toList());
+    }
+
+    //연예인 리스트 조회
+    @Transactional(readOnly = true)
+    public List<ResponseCelebrityDto> getCelebrityList(){
+        List<User> celebrity = userRepository.findAllByIsCelebrity(true);
+
+        return celebrity.stream()
+                .map(ResponseCelebrityDto::from)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     //내 그룹 노래 조회

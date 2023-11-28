@@ -35,6 +35,8 @@ public class User implements UserDetails {
 
     private String modelPath;
 
+    private boolean isCelebrity;
+
     private int modelCompleted;
     // 0 : default, 1 : ing, 2 : finish
 
