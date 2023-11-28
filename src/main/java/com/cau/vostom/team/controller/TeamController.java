@@ -27,35 +27,35 @@ public class TeamController {
     //모든 그룹 정보 조회
     @Operation(summary = "모든 그룹 정보 조회")
     @GetMapping("/list")
-    public ApiResponse<List<ResponseTeamDto>> getAllTeam() {
+    public ApiResponse<List<ResponseTeamDto>> getAllTeam(@RequestHeader String accessToken) {
         return ApiResponse.success(teamService.getAllTeam(), ResponseCode.TEAM_LISTED.getMessage());
     }
 
     //내 그룹 정보 조회
     @Operation(summary = "내 그룹 정보 조회")
     @GetMapping("/mylist/{userId}")
-    public ApiResponse<List<ResponseTeamDto>> getMyTeam(@PathVariable Long userId) {
+    public ApiResponse<List<ResponseTeamDto>> getMyTeam(@RequestHeader String accessToken, @PathVariable Long userId) {
         return ApiResponse.success(teamService.getMyTeam(userId), ResponseCode.TEAM_LISTED.getMessage());
     }
 
     //그룹 상세 정보 조회
     @Operation(summary = "그룹 상세 정보 조회")
     @GetMapping("/detail/{teamId}")
-    public ApiResponse<ResponseTeamDetailDto> getTeamDetail(@PathVariable Long teamId) {
+    public ApiResponse<ResponseTeamDetailDto> getTeamDetail(@RequestHeader String accessToken, @PathVariable Long teamId) {
         return ApiResponse.success(teamService.getTeamDetail(teamId), ResponseCode.TEAM_DETAIL_READ.getMessage());
     }
 
     //그룹 생성
     @Operation(summary = "그룹 생성")
     @PostMapping("/create")
-    public ApiResponse<Long> createTeam(@RequestBody CreateTeamDto createTeamDto) {
+    public ApiResponse<Long> createTeam(@RequestHeader String accessToken, @RequestBody CreateTeamDto createTeamDto) {
         return ApiResponse.success(teamService.createTeam(createTeamDto), ResponseCode.TEAM_CREATED.getMessage());
     }
 
     //그룹 가입
     @Operation(summary = "그룹 가입")
     @PostMapping("/join")
-    public ApiResponse<Void> joinTeam(@RequestBody JoinTeamDto joinTeamDto) {
+    public ApiResponse<Void> joinTeam(@RequestHeader String accessToken, @RequestBody JoinTeamDto joinTeamDto) {
         teamService.joinTeam(joinTeamDto);
         return ApiResponse.success(null, ResponseCode.TEAM_JOINED.getMessage());
     }
@@ -63,7 +63,7 @@ public class TeamController {
     //그룹 탈퇴
     @Operation(summary = "그룹 탈퇴")
     @PostMapping("/delete")
-    public ApiResponse<Void> deleteTeam(@RequestBody DeleteTeamDto deleteTeamDto) {
+    public ApiResponse<Void> deleteTeam(@RequestHeader String accessToken, @RequestBody DeleteTeamDto deleteTeamDto) {
         teamService.deleteTeam(deleteTeamDto);
         return ApiResponse.success(null, ResponseCode.TEAM_DELETED.getMessage());
     }
@@ -71,7 +71,7 @@ public class TeamController {
     //그룹 정보 수정
     @Operation(summary = "그룹 정보 수정")
     @PostMapping("/update")
-    public ApiResponse<Void> updateTeam(@RequestBody UpdateTeamDto updateTeamDto) {
+    public ApiResponse<Void> updateTeam(@RequestHeader String accessToken, @RequestBody UpdateTeamDto updateTeamDto) {
         teamService.updateTeam(updateTeamDto);
         return ApiResponse.success(null, ResponseCode.TEAM_UPDATED.getMessage());
     }

@@ -10,16 +10,15 @@ import lombok.Getter;
 public class ResponseMusicDto {
     private Long userId;
     private Long musicId;
-    private String musicName;
-    private String singerName;
+    private String title;
     private String musicImage;
     private String fileUrl;
 
-    public static ResponseMusicDto of(Long userId, Long musicId, String musicName, String singerName, String musicImage, String fileUrl) {
-        return new ResponseMusicDto(userId, musicId, musicName, singerName, musicImage, fileUrl);
+    public static ResponseMusicDto of(Long userId, Long musicId, String title, String musicImage, String fileUrl) {
+        return new ResponseMusicDto(userId, musicId, title, musicImage, fileUrl);
     }
 
     public static ResponseMusicDto from(Music music) {
-        return ResponseMusicDto.of(music.getUser().getId(), music.getId(), music.getMusicName(), music.getSingerName(), music.getMusicImage(), music.getFileUrl());
+        return ResponseMusicDto.of(music.getUser().getId(), music.getId(), music.getTitle(), music.getMusicImage(), music.getFileUrl());
     }
 }

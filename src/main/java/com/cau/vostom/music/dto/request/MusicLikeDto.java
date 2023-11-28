@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MusicLikeDto {
     private Long userId;
-    private Long musicId;
+    private Long id;
 
-    public static MusicLikeDto of(Long userId, Long musicId) {
-        return new MusicLikeDto(userId, musicId);
+    public static MusicLikeDto of(Long userId, Long id) {
+        return new MusicLikeDto(userId, id);
     }
 }

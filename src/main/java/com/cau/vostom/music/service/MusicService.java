@@ -43,7 +43,7 @@ public class MusicService {
     @Transactional
     public void likeMusic(MusicLikeDto musicLikeDto) {
         User user = getUserById(musicLikeDto.getUserId());
-        Music music = getMusicById(musicLikeDto.getMusicId());
+        Music music = getMusicById(musicLikeDto.getId());
         MusicLikes musicLikes = MusicLikes.createMusicLikes(user, music);
         if(musicLikesRepository.existsByUserIdAndMusicId(user.getId(), music.getId()))
             throw new UserException(ResponseCode.LIKE_ALREADY_EXISTS);
@@ -54,7 +54,7 @@ public class MusicService {
     @Transactional
     public void unlikeMusic(MusicLikeDto musicLikeDto) {
         User user = getUserById(musicLikeDto.getUserId());
-        Music music = getMusicById(musicLikeDto.getMusicId());
+        Music music = getMusicById(musicLikeDto.getId());
         if(!(musicLikesRepository.existsByUserIdAndMusicId(user.getId(), music.getId())))
             throw new UserException(ResponseCode.LIKE_ALREADY_DELETED);
         musicLikesRepository.deleteByUserIdAndMusicId(user.getId(), music.getId());
