@@ -31,14 +31,14 @@ public class MusicController {
     //그룹에 음악 추가
     @Operation(summary = "그룹에 음악 추가")
     @PutMapping("/upload")
-    public ApiResponse<Long> uploadMusicToTeam(UploadMusicDto uploadMusicDto) {
+    public ApiResponse<Long> uploadMusicToTeam(@RequestHeader String accessToken, UploadMusicDto uploadMusicDto) {
         return ApiResponse.success(musicService.uploadMusicToTeam(uploadMusicDto), ResponseCode.MUSIC_DELETED.getMessage());
     }
 
     //좋아요 누르기
     @Operation(summary = "노래에 좋아요 누르기")
     @PostMapping("/like")
-    public ApiResponse<Void> like(@RequestBody MusicLikeDto musicLikeDto) {
+    public ApiResponse<Void> like(@RequestHeader String accessToken, @RequestBody MusicLikeDto musicLikeDto) {
         musicService.likeMusic(musicLikeDto);
         return ApiResponse.success(null, ResponseCode.MUSIC_LIKE_CREATED.getMessage());
     }
@@ -46,7 +46,7 @@ public class MusicController {
     //좋아요 취소
     @Operation(summary = "노래 좋아요 취소")
     @DeleteMapping("/like/undo")
-    public ApiResponse<Void> deleteLike(@RequestBody MusicLikeDto musicLikeDto) {
+    public ApiResponse<Void> deleteLike(@RequestHeader String accessToken, @RequestBody MusicLikeDto musicLikeDto) {
         musicService.unlikeMusic(musicLikeDto);
         return ApiResponse.success(null, ResponseCode.MUSIC_LIKE_UNDO.getMessage());
     }
