@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateCommentDto {
     private Long userId;
-    private Long musicId;
+    private Long coverSongId;
     private String content;
 
-    public static CreateCommentDto of(Long userId, Long musicId, String content) {
-        return new CreateCommentDto(userId, musicId, content);
+    public static CreateCommentDto of(Long userId, Long coverSongId, String content) {
+        return new CreateCommentDto(userId, coverSongId, content);
     }
 }

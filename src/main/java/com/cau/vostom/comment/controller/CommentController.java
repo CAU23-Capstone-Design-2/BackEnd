@@ -39,26 +39,34 @@ public class CommentController {
     }
 
     //노래의 댓글 조회
-    @Operation(summary = "노래의 댓글 조회")
+    /*@Operation(summary = "노래의 댓글 조회")
     @GetMapping("/music/{musicId}")
     public ApiResponse<List<ResponseMusicCommentDto>> getMusicComment(@RequestHeader String accessToken, @PathVariable Long musicId) {
         return ApiResponse.success(commentService.getMusicComment(musicId), ResponseCode.MUSIC_COMMENT_READ.getMessage());
+    }*/
+
+    @Operation(summary = "노래의 댓글 조회")
+    @GetMapping("/music")
+    public ApiResponse<List<ResponseMusicCommentDto>> getMusicComment(@RequestHeader String accessToken, @RequestParam String id) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        return ApiResponse.success(commentService.getMusicComment(Long.parseLong(id), userId), ResponseCode.MUSIC_COMMENT_READ.getMessage());
     }
 
     //댓글 좋아요
     @Operation(summary = "댓글 좋아요")
     @PostMapping("/like")
-    public ApiResponse<Void> likeComment(@RequestHeader String accessToken, @RequestBody RequestCommentLikeDto requestCommentLikeDto) {
-        commentService.likeComment(requestCommentLikeDto);
+    public ApiResponse<Void> likeComment(@RequestHeader String accessToken, @RequestParam String id) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        commentService.likeComment(RequestCommentLikeDto.of(userId, Long.parseLong(id)));
         return ApiResponse.success(null, ResponseCode.COMMENT_LIKE_CREATED.getMessage());
     }
 
     //댓글 좋아요 취소
     @Operation(summary = "댓글 좋아요 취소")
     @DeleteMapping("/like/undo")
-    public ApiResponse<Void> deleteLike(@RequestHeader String accessToken, @RequestParam String commentId) {
+    public ApiResponse<Void> deleteLike(@RequestHeader String accessToken, @RequestParam String id) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        commentService.unlikeComment(RequestCommentLikeDto.of(userId, Long.parseLong(commentId)));
+        commentService.unlikeComment(RequestCommentLikeDto.of(userId, Long.parseLong(id)));
         return ApiResponse.success(null, ResponseCode.COMNMENT_LIKE_UNDO.getMessage());
     }
 }
