@@ -9,13 +9,15 @@ import lombok.Getter;
 public class ResponseCelebrityDto {
     private String celebrityName;
 
-    private String celebrityImg;
+    private String imgUri;
 
-    public static ResponseCelebrityDto of(String celebrityName, String celebrityImg) {
-        return new ResponseCelebrityDto(celebrityName, celebrityImg);
+    private Long id;
+
+    public static ResponseCelebrityDto of(String celebrityName, String imgUri, Long id) {
+        return new ResponseCelebrityDto(celebrityName, imgUri, id);
     }
 
     public static ResponseCelebrityDto from(Celebrity celebrity) {
-        return new ResponseCelebrityDto(celebrity.getCelebrityName(), celebrity.getCelebrityImg());
+        return new ResponseCelebrityDto(celebrity.getCelebrityName(), celebrity.getCelebrityImg(), celebrity.getId());
     }
 }

@@ -12,16 +12,16 @@ import javax.persistence.*;
 public class Celebrity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "celebrity_id")
+    @Column(name = "celebrity_music_id")
     private Long id;
 
     private String celebrityName;
 
-    private String singerName;
+    private Long celebrityId;
 
     private String celebrityImg;
 
-    private String musicName;
+    private String title;
 
     private String musicImg;
 
