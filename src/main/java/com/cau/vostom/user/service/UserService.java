@@ -120,14 +120,13 @@ public class UserService {
         List<ResponseTeamMusicDto> myTeamMusic = new ArrayList<>();
         for(TeamUser teamUser : teamUsers) {
             List<TeamMusic> teamMusics = teamUser.getTeam().getTeamMusics();
-            if(teamMusics.isEmpty()) { //그룹에 노래가 없는 경우
-                continue;
-            }
             for(TeamMusic teamMusic : teamMusics) {
-                myTeamMusic.add(ResponseTeamMusicDto.from(teamMusic));
+                boolean isLiked = musicRepository.existsByUserIdAndId(userId,teamMusic.getMusic().getId());
+                int likeCount = teamMusic.getMusic().getLikes().size();
+                myTeamMusic.add(ResponseTeamMusicDto.of(teamMusic.getId(), teamMusic.getMusic().getTitle(), teamMusic.getMusic().getMusicImage(), teamMusic.getMusic().getUser().getId(), teamMusic.getMusic().getUser().getNickname(), teamMusic.getMusic().getUser().getProfileImage(), teamMusic.getMusic().getFileUrl(), likeCount, isLiked));
             }
         }
-        return myTeamMusic.stream().distinct().collect(Collectors.toList());
+        return myTeamMusic;
     }
 
 
