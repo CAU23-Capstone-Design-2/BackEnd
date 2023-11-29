@@ -5,7 +5,7 @@ import com.cau.vostom.team.domain.Team;
 import com.cau.vostom.team.domain.TeamMusic;
 import com.cau.vostom.team.domain.TeamUser;
 import com.cau.vostom.team.dto.request.CreateTeamDto;
-import com.cau.vostom.team.dto.request.DeleteTeamDto;
+import com.cau.vostom.team.dto.request.LeaveTeamDto;
 import com.cau.vostom.team.dto.request.JoinTeamDto;
 import com.cau.vostom.team.dto.request.UpdateTeamDto;
 import com.cau.vostom.team.dto.response.ResponseTeamDto;
@@ -112,9 +112,10 @@ public class TeamService {
 
     //그룹 탈퇴
     @Transactional
-    public void deleteTeam(DeleteTeamDto deleteTeamDto) {
-        if(!teamUserRepository.existsByUserIdAndTeamId(deleteTeamDto.getUserId(), deleteTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
-        teamUserRepository.deleteByUserIdAndTeamId(deleteTeamDto.getUserId(), deleteTeamDto.getTeamId());
+    public void leaveTeam(LeaveTeamDto leaveTeamDto, Long userId) {
+        if(!teamUserRepository.existsByUserIdAndTeamId(userId, leaveTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
+        if(teamUserRepository.findByUserIdAndTeamId(userId, leaveTeamDto.getTeamId()).isLeader()) throw new TeamException(ResponseCode.LEADER_CANNOT_LEAVE);
+        teamUserRepository.deleteByUserIdAndTeamId(userId, leaveTeamDto.getTeamId());
     }
 
     private Team getTeamById(Long teamId) {

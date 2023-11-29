@@ -2,7 +2,7 @@ package com.cau.vostom.team.controller;
 
 import com.cau.vostom.auth.component.JwtTokenProvider;
 import com.cau.vostom.team.dto.request.CreateTeamDto;
-import com.cau.vostom.team.dto.request.DeleteTeamDto;
+import com.cau.vostom.team.dto.request.LeaveTeamDto;
 import com.cau.vostom.team.dto.request.JoinTeamDto;
 import com.cau.vostom.team.dto.request.UpdateTeamDto;
 import com.cau.vostom.team.dto.response.ResponseTeamDto;
@@ -66,10 +66,11 @@ public class TeamController {
 
     //그룹 탈퇴
     @Operation(summary = "그룹 탈퇴")
-    @PostMapping("/delete")
-    public ApiResponse<Void> deleteTeam(@RequestHeader String accessToken, @RequestBody DeleteTeamDto deleteTeamDto) {
-        teamService.deleteTeam(deleteTeamDto);
-        return ApiResponse.success(null, ResponseCode.TEAM_DELETED.getMessage());
+    @PostMapping("/leave")
+    public ApiResponse<Void> leaveTeam(@RequestHeader String accessToken, @RequestBody LeaveTeamDto leaveTeamDto) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        teamService.leaveTeam(leaveTeamDto, userId);
+        return ApiResponse.success(null, ResponseCode.TEAM_LEAVED.getMessage());
     }
 
     //그룹 정보 수정
