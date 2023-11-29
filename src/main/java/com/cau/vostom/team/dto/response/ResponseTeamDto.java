@@ -8,16 +8,16 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ResponseTeamDto {
     private Long teamId;
-    private String teamName;
-    private String teamImage;
-    private int teamUserCount;
+    private String title;
+    private String groupImgUri;
+    private String description;
+    private int groupMemberCount;
+    private Long userId; //그룹장 아이디
+    private String userName; //그룹장 이름
+    private String userImgUri; //그룹장 프로필 사진
 
-    public static ResponseTeamDto of(Long teamId, String teamName, String teamImage, int teamUserCount) {
-        return new ResponseTeamDto(teamId, teamName, teamImage, teamUserCount);
-    }
-
-    public static ResponseTeamDto from(Team team) {
-        return new ResponseTeamDto(team.getId(), team.getGroupName(), team.getGroupImage(), team.getTeamUsers().size());
+    public static ResponseTeamDto of(Long teamId, String title, String groupImgUri, String description, int groupMemberCount, Long userId, String userName, String userImgUri) {
+        return new ResponseTeamDto(teamId, title, groupImgUri, description, groupMemberCount, userId, userName, userImgUri);
     }
 
 }

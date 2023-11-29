@@ -14,6 +14,7 @@ public enum ResponseCode {
 
     // 403 Forbidden
     FORBIDDEN(HttpStatus.FORBIDDEN, false, "권한이 없습니다."),
+    NOT_LEADER(HttpStatus.FORBIDDEN, false, "팀 리더가 아닙니다."),
 
     // 404 Not Found
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, false, "사용자를 찾을 수 없습니다."),
@@ -49,6 +50,7 @@ public enum ResponseCode {
     TEAM_DELETED(HttpStatus.OK, true, "그룹이 삭제되었습니다."),
     TEAM_UPDATED(HttpStatus.OK, true, "그룹 정보가 수정되었습니다."),
     TEAM_LISTED(HttpStatus.OK, true, "그룹 정보를 조회하였습니다."),
+    MY_TEAM_LISTED(HttpStatus.OK, true, "내 그룹 정보를 조회하였습니다."),
     TEAM_DETAIL_READ(HttpStatus.OK, true, "그룹 상세 정보를 조회하였습니다."),
     COMMENT_CREATED(HttpStatus.OK, true, "댓글이 생성되었습니다."),
     CELEBRITY_LISTED(HttpStatus.OK, true, "연예인 리스트를 조회하였습니다."),

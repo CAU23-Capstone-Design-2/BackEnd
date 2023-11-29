@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,7 +72,13 @@ public class TeamService {
     //모든 그룹 정보 조회
     @Transactional(readOnly = true)
     public List<ResponseTeamDto> getAllTeam() {
-        return teamRepository.findAll().stream().map(ResponseTeamDto::from).collect(Collectors.toList());
+        List<Team> teams = teamRepository.findAll();
+        List<ResponseTeamDto> allTeamInfo = new ArrayList<>();
+        for(Team team : teams) {
+            TeamUser teamLeader = teamUserRepository.findByTeamIdAndIsLeader(team.getId(), true);
+            allTeamInfo.add(ResponseTeamDto.of(team.getId(), team.getGroupName(), team.getGroupImage(), team.getGroupInfo(), team.getTeamUsers().size(), teamLeader.getUser().getId(), teamLeader.getUser().getNickname(), teamLeader.getUser().getProfileImage()));
+        }
+        return allTeamInfo;
     }
 
     //내 그룹 정보 조회
@@ -79,7 +86,13 @@ public class TeamService {
     public List<ResponseTeamDto> getMyTeam(Long userId) {
         if(!teamUserRepository.existsByUserId(userId)) throw new UserException(ResponseCode.USER_NOT_FOUND);
         List<TeamUser> teamUsers = teamUserRepository.findByUserId(userId);
-        return teamUsers.stream().map(teamUser -> ResponseTeamDto.from(teamUser.getTeam())).collect(Collectors.toList());
+        List<ResponseTeamDto> myTeamInfo = new ArrayList<>();
+        for(TeamUser teamUser : teamUsers) {
+            Team team = teamUser.getTeam();
+            TeamUser teamLeader = teamUserRepository.findByTeamIdAndIsLeader(team.getId(), true);
+            myTeamInfo.add(ResponseTeamDto.of(team.getId(), team.getGroupName(), team.getGroupImage(), team.getGroupInfo(), team.getTeamUsers().size(), teamLeader.getUser().getId(), teamLeader.getUser().getNickname(), teamLeader.getUser().getProfileImage()));
+        }
+        return myTeamInfo;
     }
 
     //특정 그룹 상세 정보 조회
