@@ -34,7 +34,7 @@ public class MusicController {
     @Operation(summary = "그룹에 음악 추가")
     @PutMapping("/upload")
     public ApiResponse<Long> uploadMusicToTeam(@RequestHeader String accessToken, UploadMusicDto uploadMusicDto) {
-        return ApiResponse.success(musicService.uploadMusicToTeam(uploadMusicDto), ResponseCode.MUSIC_DELETED.getMessage());
+        return ApiResponse.success(musicService.uploadMusicToTeam(uploadMusicDto), ResponseCode.MUSIC_UPLOADED.getMessage());
     }
 
     //좋아요 누르기

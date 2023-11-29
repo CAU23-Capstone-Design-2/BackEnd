@@ -44,6 +44,7 @@ public enum ResponseCode {
     TEAM_MUSIC_READ(HttpStatus.OK, true, "그룹의 음악을 조회하였습니다."),
     MUSIC_LIKED_READ(HttpStatus.OK, true, "사용자가 좋아요한 음악을 조회하였습니다."),
     MUSIC_DELETED(HttpStatus.OK, true, "음악이 삭제되었습니다."),
+    MUSIC_UPLOADED(HttpStatus.OK, true, "그룹에 음악이 업로드되었습니다."),
     TEAM_CREATED(HttpStatus.OK, true, "그룹이 생성되었습니다."),
     TEAM_DELETED(HttpStatus.OK, true, "그룹이 삭제되었습니다."),
     TEAM_UPDATED(HttpStatus.OK, true, "그룹 정보가 수정되었습니다."),
