@@ -67,12 +67,17 @@ public class UserService {
     public List<ResponseMusicDto> getUserLikedMusic(Long userId) {
         User user = getUserById(userId);
         List<Music> likedMusics = musicRepository.findLikedMusicsByUserId(user.getId());
+        List<ResponseMusicDto> userLikedMusics = new ArrayList<>();
         if (likedMusics.isEmpty()) {// 좋아요한 노래가 없는 경우
             return List.of();
         }
-
+        for(Music music : likedMusics) {
+            boolean isLiked = musicRepository.existsByUserIdAndId(userId, music.getId());
+            int likeCount = music.getLikes().size();
+            userLikedMusics.add(ResponseMusicDto.of(music.getUser().getId(), music.getUser().getNickname(), music.getUser().getProfileImage(), music.getId(), music.getTitle(), music.getMusicImage(), music.getFileUrl(), likeCount, isLiked));
+        }
         // 좋아요한 노래를 ResponseMusicDto로 변환하여 반환
-        return likedMusics.stream().map(ResponseMusicDto::from).collect(Collectors.toList());
+        return userLikedMusics;
     }
 
 
@@ -81,10 +86,16 @@ public class UserService {
     public List<ResponseMusicDto> getUserMusic(Long userId) {
         User user = getUserById(userId);
         List<Music> musics = musicRepository.findAllByUserId(user.getId());
+        List<ResponseMusicDto> userMusics = new ArrayList<>();
+        for(Music music : musics) {
+            boolean isLiked = musicRepository.existsByUserIdAndId(userId, music.getId());
+            int likeCount = music.getLikes().size();
+            userMusics.add(ResponseMusicDto.of(music.getUser().getId(), music.getUser().getNickname(), music.getUser().getProfileImage(), music.getId(), music.getTitle(), music.getMusicImage(), music.getFileUrl(), likeCount, isLiked));
+        }
         if(musics.isEmpty()) { //노래가 없는 경우
             return List.of();
         }
-        return musics.stream().map(ResponseMusicDto::from).collect(Collectors.toList());
+        return userMusics;
     }
 
     //연예인 리스트 조회
