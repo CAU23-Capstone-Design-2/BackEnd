@@ -1,12 +1,13 @@
 package com.cau.vostom.team.service;
 
+import com.cau.vostom.music.repository.MusicRepository;
 import com.cau.vostom.team.domain.Team;
+import com.cau.vostom.team.domain.TeamMusic;
 import com.cau.vostom.team.domain.TeamUser;
 import com.cau.vostom.team.dto.request.CreateTeamDto;
 import com.cau.vostom.team.dto.request.DeleteTeamDto;
 import com.cau.vostom.team.dto.request.JoinTeamDto;
 import com.cau.vostom.team.dto.request.UpdateTeamDto;
-import com.cau.vostom.team.dto.response.ResponseTeamDetailDto;
 import com.cau.vostom.team.dto.response.ResponseTeamDto;
 import com.cau.vostom.team.dto.response.ResponseTeamMusicDto;
 import com.cau.vostom.team.repository.TeamRepository;
@@ -22,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class TeamService {
@@ -30,6 +30,7 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final TeamUserRepository teamUserRepository;
     private final UserRepository userRepository;
+    private final MusicRepository musicRepository;
 
 //    //그룹 인원 수 조회
 //    @Transactional(readOnly = true)
@@ -95,12 +96,18 @@ public class TeamService {
         return myTeamInfo;
     }
 
-    //특정 그룹 상세 정보 조회
+    //특정 그룹 플레이 리스트 조회
     @Transactional(readOnly = true)
-    public ResponseTeamDetailDto getTeamDetail(Long teamId) {
+    public List<ResponseTeamMusicDto> getTeamPlaylist(Long teamId, Long userId) {
         Team team = getTeamById(teamId);
-        List<ResponseTeamMusicDto> teamMusicList = team.getTeamMusics().stream().map(ResponseTeamMusicDto::from).collect(Collectors.toList());
-        return ResponseTeamDetailDto.of(team.getGroupName(), team.getGroupImage(), team.getGroupInfo(), team.getTeamUsers().size(), teamMusicList);
+        List<ResponseTeamMusicDto> myTeamMusic = new ArrayList<>();
+        List<TeamMusic> teamMusics = team.getTeamMusics();
+        for(TeamMusic teamMusic : teamMusics) {
+            boolean isLiked = musicRepository.existsByUserIdAndId(userId,teamMusic.getMusic().getId());
+            int likeCount = teamMusic.getMusic().getLikes().size();
+            myTeamMusic.add(ResponseTeamMusicDto.of(teamMusic.getId(), teamMusic.getMusic().getTitle(), teamMusic.getMusic().getMusicImage(), teamMusic.getMusic().getUser().getId(), teamMusic.getMusic().getUser().getNickname(), teamMusic.getMusic().getUser().getProfileImage(), teamMusic.getMusic().getFileUrl(), likeCount, isLiked));
+        }
+        return myTeamMusic;
     }
 
     //그룹 탈퇴

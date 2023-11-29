@@ -5,7 +5,6 @@ import com.cau.vostom.team.dto.request.CreateTeamDto;
 import com.cau.vostom.team.dto.request.DeleteTeamDto;
 import com.cau.vostom.team.dto.request.JoinTeamDto;
 import com.cau.vostom.team.dto.request.UpdateTeamDto;
-import com.cau.vostom.team.dto.response.ResponseTeamDetailDto;
 import com.cau.vostom.team.dto.response.ResponseTeamDto;
 import com.cau.vostom.team.dto.response.ResponseTeamMusicDto;
 import com.cau.vostom.team.service.TeamService;
@@ -42,10 +41,11 @@ public class TeamController {
     }
 
     //그룹 상세 정보 조회
-    @Operation(summary = "그룹 상세 정보 조회")
-    @GetMapping("/detail/{teamId}")
-    public ApiResponse<ResponseTeamDetailDto> getTeamDetail(@RequestHeader String accessToken, @PathVariable Long teamId) {
-        return ApiResponse.success(teamService.getTeamDetail(teamId), ResponseCode.TEAM_DETAIL_READ.getMessage());
+    @Operation(summary = "특정 그룹의 플레이 리스트 조회")
+    @GetMapping("/playlist")
+    public ApiResponse<List<ResponseTeamMusicDto>> getTeamDetail(@RequestHeader String accessToken, @RequestBody Long id) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        return ApiResponse.success(teamService.getTeamPlaylist(id, userId), ResponseCode.TEAM_DETAIL_READ.getMessage());
     }
 
     //그룹 생성
