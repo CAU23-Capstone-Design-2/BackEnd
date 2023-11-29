@@ -15,6 +15,7 @@ public enum ResponseCode {
     // 403 Forbidden
     FORBIDDEN(HttpStatus.FORBIDDEN, false, "권한이 없습니다."),
     NOT_LEADER(HttpStatus.FORBIDDEN, false, "팀 리더가 아닙니다."),
+    NOT_COMMENT_OWNER(HttpStatus.FORBIDDEN, false, "댓글 작성자가 아닙니다."),
 
     // 404 Not Found
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, false, "사용자를 찾을 수 없습니다."),
@@ -59,7 +60,9 @@ public enum ResponseCode {
     MUSIC_LIKE_UNDO(HttpStatus.OK, true, "노래 좋아요가 취소되었습니다."),
     MUSIC_COMMENT_READ(HttpStatus.OK, true, "노래의 댓글을 조회하였습니다."),
     COMMENT_LIKE_CREATED(HttpStatus.OK, true, "댓글 좋아요가 생성되었습니다."),
-    COMNMENT_LIKE_UNDO(HttpStatus.OK, true, "댓글 좋아요가 취소되었습니다."),
+    COMMENT_LIKE_UNDO(HttpStatus.OK, true, "댓글 좋아요가 취소되었습니다."),
+    COMMENT_DELETED(HttpStatus.OK, true, "댓글이 삭제되었습니다."),
+    COMMENT_UPDATED(HttpStatus.OK, true, "댓글이 수정되었습니다."),
 
 
     // 201 Created
