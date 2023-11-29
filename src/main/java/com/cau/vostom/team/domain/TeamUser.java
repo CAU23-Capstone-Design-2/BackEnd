@@ -24,13 +24,16 @@ public class TeamUser {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private boolean isLeader = false; //그룹장 여부
+
     @CreatedDate
     private LocalDateTime joinDate;
 
-    public static TeamUser createGroupUser(Team team, User user) {
+    public static TeamUser createGroupUser(Team team, User user, boolean isLeader) {
         TeamUser teamUser = new TeamUser();
         teamUser.team = team;
         teamUser.user = user;
+        teamUser.isLeader = isLeader;
         return teamUser;
     }
 }

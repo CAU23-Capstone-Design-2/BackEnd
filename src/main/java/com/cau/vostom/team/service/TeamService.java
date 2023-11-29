@@ -39,9 +39,13 @@ public class TeamService {
 
     //그룹 생성
     @Transactional
-    public Long createTeam(CreateTeamDto createTeamDto) {
+    public Long createTeam(CreateTeamDto createTeamDto, Long userId) {
         Team team = Team.createGroup(createTeamDto.getTeamName(), createTeamDto.getTeamImage(), createTeamDto.getTeamDescription());
-        return teamRepository.save(team).getId();
+        User user = getUserById(userId);
+        Long teamId = teamRepository.save(team).getId();
+        TeamUser teamUser = TeamUser.createGroupUser(team, user, true);
+        teamUserRepository.save(teamUser);
+        return teamId;
     }
 
     //그룹 가입
@@ -49,16 +53,17 @@ public class TeamService {
     public void joinTeam(JoinTeamDto joinTeamDto) {
         if(!teamRepository.existsById(joinTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
         if(teamUserRepository.existsByUserIdAndTeamId(joinTeamDto.getUserId(), joinTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_ALREADY_JOINED);
-        Team team = teamRepository.findById(joinTeamDto.getTeamId()).orElseThrow(() -> new TeamException(ResponseCode.TEAM_NOT_FOUND));
-        User user = userRepository.findById(joinTeamDto.getUserId()).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
-        TeamUser teamUser = TeamUser.createGroupUser(team, user);
+        Team team = getTeamById(joinTeamDto.getTeamId());
+        User user = getUserById(joinTeamDto.getUserId());
+        TeamUser teamUser = TeamUser.createGroupUser(team, user, false);
         teamUserRepository.save(teamUser);
     }
 
     //그룹 정보 수정
     @Transactional
-    public void updateTeam(UpdateTeamDto updateTeamDto) {
+    public void updateTeam(UpdateTeamDto updateTeamDto, Long userId) {
         Team team = getTeamById(updateTeamDto.getTeamId());
+        if(!teamUserRepository.findByUserIdAndTeamId(userId, updateTeamDto.getTeamId()).isLeader()) throw new TeamException(ResponseCode.NOT_LEADER);
         team.updateGroup(updateTeamDto.getTeamName(), updateTeamDto.getTeamImage(), updateTeamDto.getTeamDescription());
         teamRepository.save(team);
     }
@@ -94,6 +99,10 @@ public class TeamService {
 
     private Team getTeamById(Long teamId) {
         return teamRepository.findById(teamId).orElseThrow(() -> new TeamException(ResponseCode.TEAM_NOT_FOUND));
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
     }
 
 }
