@@ -17,6 +17,7 @@ public enum ResponseCode {
     NOT_LEADER(HttpStatus.FORBIDDEN, false, "팀 리더가 아닙니다."),
     NOT_COMMENT_OWNER(HttpStatus.FORBIDDEN, false, "댓글 작성자가 아닙니다."),
     LEADER_CANNOT_LEAVE(HttpStatus.FORBIDDEN, false, "팀 리더는 팀을 탈퇴할 수 없습니다."),
+    NOT_TEAM_MEMBER(HttpStatus.FORBIDDEN, false, "팀 멤버가 아닙니다."),
 
     // 404 Not Found
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, false, "사용자를 찾을 수 없습니다."),

@@ -11,6 +11,7 @@ import com.cau.vostom.team.domain.Team;
 import com.cau.vostom.team.domain.TeamMusic;
 import com.cau.vostom.team.repository.TeamMusicRepository;
 import com.cau.vostom.team.repository.TeamRepository;
+import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.User;
 import com.cau.vostom.user.repository.UserRepository;
 import com.cau.vostom.util.api.ResponseCode;
@@ -26,17 +27,21 @@ public class MusicService {
     private final MusicRepository musicRepository;
     private final TeamMusicRepository teamMusicRepository;
     private final TeamRepository teamRepository;
+    private final TeamUserRepository teamUserRepository;
     private final UserRepository userRepository;
     private final MusicLikesRepository musicLikesRepository;
 
     //그룹에 음악 업로드
     @Transactional
-    public Long uploadMusicToTeam(UploadMusicDto uploadMusicDto) {
-    Music music = getMusicById(uploadMusicDto.getMusicId());
-    Team team = teamRepository.findById(uploadMusicDto.getTeamId()).orElseThrow(() -> new MusicException(ResponseCode.TEAM_NOT_FOUND));
-    TeamMusic teamMusic = TeamMusic.createGroupMusic(team, music);
+    public Long uploadMusicToTeam(Long userId, UploadMusicDto uploadMusicDto) {
+        if(!teamUserRepository.existsByUserIdAndTeamId(userId, uploadMusicDto.getTeamId())){
+            throw new UserException(ResponseCode.NOT_TEAM_MEMBER);
+        }
+        Music music = getMusicById(uploadMusicDto.getMusicId());
+        Team team = teamRepository.findById(uploadMusicDto.getTeamId()).orElseThrow(() -> new MusicException(ResponseCode.TEAM_NOT_FOUND));
+        TeamMusic teamMusic = TeamMusic.createGroupMusic(team, music);
 
-    return teamMusicRepository.save(teamMusic).getId();
+        return teamMusicRepository.save(teamMusic).getId();
     }
 
     //좋아요 누르기

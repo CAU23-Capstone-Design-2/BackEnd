@@ -11,9 +11,8 @@ import lombok.NoArgsConstructor;
 public class UploadMusicDto {
     private Long teamId;
     private Long musicId;
-    private Long userId;
 
-    public static UploadMusicDto of(Long teamId, Long musicId, Long userId) {
-        return new UploadMusicDto(teamId, musicId, userId);
+    public static UploadMusicDto of(Long teamId, Long musicId) {
+        return new UploadMusicDto(teamId, musicId);
     }
 }
