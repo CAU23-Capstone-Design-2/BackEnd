@@ -118,6 +118,14 @@ public class TeamService {
         teamUserRepository.deleteByUserIdAndTeamId(userId, leaveTeamDto.getTeamId());
     }
 
+    //그룹 삭제
+    @Transactional
+    public void deleteTeam(Long teamId, Long userId) {
+        Team team = getTeamById(teamId);
+        if(!teamUserRepository.findByUserIdAndTeamId(userId, teamId).isLeader()) throw new TeamException(ResponseCode.NOT_LEADER);
+        teamRepository.delete(team);
+    }
+
     private Team getTeamById(Long teamId) {
         return teamRepository.findById(teamId).orElseThrow(() -> new TeamException(ResponseCode.TEAM_NOT_FOUND));
     }

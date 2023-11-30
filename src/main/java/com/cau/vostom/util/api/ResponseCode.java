@@ -50,6 +50,7 @@ public enum ResponseCode {
     MUSIC_UPLOADED(HttpStatus.OK, true, "그룹에 음악이 업로드되었습니다."),
     TEAM_CREATED(HttpStatus.OK, true, "그룹이 생성되었습니다."),
     TEAM_LEAVED(HttpStatus.OK, true, "그룹이 탈퇴되었습니다."),
+    TEAM_DELETED(HttpStatus.OK, true, "그룹이 삭제되었습니다."),
     TEAM_UPDATED(HttpStatus.OK, true, "그룹 정보가 수정되었습니다."),
     TEAM_LISTED(HttpStatus.OK, true, "그룹 정보를 조회하였습니다."),
     MY_TEAM_LISTED(HttpStatus.OK, true, "내 그룹 정보를 조회하였습니다."),

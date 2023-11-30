@@ -75,10 +75,19 @@ public class TeamController {
 
     //그룹 정보 수정
     @Operation(summary = "그룹 정보 수정")
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ApiResponse<Void> updateTeam(@RequestHeader String accessToken, @RequestBody UpdateTeamDto updateTeamDto) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         teamService.updateTeam(updateTeamDto, userId);
         return ApiResponse.success(null, ResponseCode.TEAM_UPDATED.getMessage());
+    }
+
+    //그룹 삭제
+    @Operation(summary = "그룹 삭제")
+    @DeleteMapping("/delete")
+    public ApiResponse<Void> deleteTeam(@RequestHeader String accessToken, @RequestBody Long id) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        teamService.deleteTeam(id, userId);
+        return ApiResponse.success(null, ResponseCode.TEAM_DELETED.getMessage());
     }
 }
