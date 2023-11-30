@@ -50,7 +50,7 @@ public class TeamController {
 
     //그룹 생성
     @Operation(summary = "그룹 생성")
-    @PostMapping("/create")
+    @PostMapping
     public ApiResponse<Long> createTeam(@RequestHeader String accessToken, @RequestBody CreateTeamDto createTeamDto) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(teamService.createTeam(createTeamDto, userId), ResponseCode.TEAM_CREATED.getMessage());
@@ -75,7 +75,7 @@ public class TeamController {
 
     //그룹 정보 수정
     @Operation(summary = "그룹 정보 수정")
-    @PutMapping("/update")
+    @PutMapping
     public ApiResponse<Void> updateTeam(@RequestHeader String accessToken, @RequestBody UpdateTeamDto updateTeamDto) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         teamService.updateTeam(updateTeamDto, userId);
@@ -84,7 +84,7 @@ public class TeamController {
 
     //그룹 삭제
     @Operation(summary = "그룹 삭제")
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ApiResponse<Void> deleteTeam(@RequestHeader String accessToken, @RequestBody Long id) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         teamService.deleteTeam(id, userId);
