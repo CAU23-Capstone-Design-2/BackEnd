@@ -18,6 +18,7 @@ public enum ResponseCode {
     NOT_COMMENT_OWNER(HttpStatus.FORBIDDEN, false, "댓글 작성자가 아닙니다."),
     LEADER_CANNOT_LEAVE(HttpStatus.FORBIDDEN, false, "팀 리더는 팀을 탈퇴할 수 없습니다."),
     NOT_TEAM_MEMBER(HttpStatus.FORBIDDEN, false, "팀 멤버가 아닙니다."),
+    NOT_MUSIC_OWNER(HttpStatus.FORBIDDEN, false, "그룹 음악 소유자가 아닙니다."),
 
     // 404 Not Found
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, false, "사용자를 찾을 수 없습니다."),
@@ -48,6 +49,7 @@ public enum ResponseCode {
     TEAM_MUSIC_READ(HttpStatus.OK, true, "그룹의 음악을 조회하였습니다."),
     MUSIC_LIKED_READ(HttpStatus.OK, true, "사용자가 좋아요한 음악을 조회하였습니다."),
     MUSIC_DELETED(HttpStatus.OK, true, "음악이 삭제되었습니다."),
+    GROUP_MUSIC_DELETED(HttpStatus.OK, true, "그룹 음악이 삭제되었습니다."),
     MUSIC_UPLOADED(HttpStatus.OK, true, "그룹에 음악이 업로드되었습니다."),
     TEAM_CREATED(HttpStatus.OK, true, "그룹이 생성되었습니다."),
     TEAM_LEAVED(HttpStatus.OK, true, "그룹이 탈퇴되었습니다."),

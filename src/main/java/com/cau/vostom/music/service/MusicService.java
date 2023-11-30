@@ -21,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service @RequiredArgsConstructor
 public class MusicService {
 
@@ -42,6 +44,15 @@ public class MusicService {
         TeamMusic teamMusic = TeamMusic.createGroupMusic(team, music);
 
         return teamMusicRepository.save(teamMusic).getId();
+    }
+
+    //그룹에 업로드한 음악 삭제
+    @Transactional
+    public void deleteMusicToTeam(Long userId, UploadMusicDto uploadMusicDto){
+        Music music = getMusicById(uploadMusicDto.getMusicId());
+        if(!Objects.equals(userId, music.getUser().getId()))
+            throw new UserException(ResponseCode.NOT_MUSIC_OWNER);
+        teamMusicRepository.deleteByMusicIdAndTeamId(uploadMusicDto.getMusicId(), uploadMusicDto.getTeamId());
     }
 
     //좋아요 누르기

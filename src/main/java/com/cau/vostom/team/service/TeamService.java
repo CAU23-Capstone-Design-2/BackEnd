@@ -32,13 +32,6 @@ public class TeamService {
     private final UserRepository userRepository;
     private final MusicRepository musicRepository;
 
-//    //그룹 인원 수 조회
-//    @Transactional(readOnly = true)
-//    public int getTeamUserCount(Long teamId) {
-//        if(!teamRepository.existsById(teamId)) throw new UserException(ResponseCode.TEAM_NOT_FOUND);
-//        return teamUserRepository.countTeamUserByTeamId(teamId);
-//    }
-
     //그룹 생성
     @Transactional
     public Long createTeam(CreateTeamDto createTeamDto, Long userId) {
