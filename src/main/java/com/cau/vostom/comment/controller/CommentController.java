@@ -33,17 +33,10 @@ public class CommentController {
 
     //댓글 작성
     @Operation(summary = "댓글 작성")
-    @PostMapping("/create")
+    @PostMapping
     public ApiResponse<Long> createComment(@RequestHeader String accessToken, @RequestBody CreateCommentDto createCommentDto) {
         return ApiResponse.success(commentService.writeComment(createCommentDto), ResponseCode.COMMENT_CREATED.getMessage());
     }
-
-    //노래의 댓글 조회
-    /*@Operation(summary = "노래의 댓글 조회")
-    @GetMapping("/music/{musicId}")
-    public ApiResponse<List<ResponseMusicCommentDto>> getMusicComment(@RequestHeader String accessToken, @PathVariable Long musicId) {
-        return ApiResponse.success(commentService.getMusicComment(musicId), ResponseCode.MUSIC_COMMENT_READ.getMessage());
-    }*/
 
     @Operation(summary = "노래의 댓글 조회")
     @GetMapping("/music")
@@ -67,6 +60,24 @@ public class CommentController {
     public ApiResponse<Void> deleteLike(@RequestHeader String accessToken, @RequestParam String id) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         commentService.unlikeComment(RequestCommentLikeDto.of(userId, Long.parseLong(id)));
-        return ApiResponse.success(null, ResponseCode.COMNMENT_LIKE_UNDO.getMessage());
+        return ApiResponse.success(null, ResponseCode.COMMENT_LIKE_UNDO.getMessage());
+    }
+
+    //댓글 삭제
+    @Operation(summary = "댓글 삭제")
+    @DeleteMapping
+    public ApiResponse<Void> deleteComment(@RequestHeader String accessToken, @RequestParam String id) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        commentService.deleteComment(userId, Long.parseLong(id));
+        return ApiResponse.success(null, ResponseCode.COMMENT_DELETED.getMessage());
+    }
+
+    //댓글 수정
+    @Operation(summary = "댓글 수정")
+    @PutMapping
+    public ApiResponse<Void> updateComment(@RequestHeader String accessToken, @RequestParam String id, @RequestBody String content) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        commentService.updateComment(userId, Long.parseLong(id), content);
+        return ApiResponse.success(null, ResponseCode.COMMENT_UPDATED.getMessage());
     }
 }

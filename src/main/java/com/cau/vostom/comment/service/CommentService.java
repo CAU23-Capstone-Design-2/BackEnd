@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -93,6 +94,23 @@ public class CommentService {
         if(!(commentLikesRepository.existsByUserIdAndCommentId(user.getId(), comment.getId())))
             throw new UserException(ResponseCode.LIKE_ALREADY_DELETED);
         commentLikesRepository.deleteByUserIdAndCommentId(user.getId(), comment.getId());
+    }
+
+    //댓글 삭제
+    @Transactional
+    public void deleteComment(Long userId, Long commentId) {
+        Comment comment = getCommentById(commentId);
+        if(!Objects.equals(comment.getUser().getId(), userId)) throw new UserException(ResponseCode.NOT_COMMENT_OWNER);
+        commentRepository.delete(comment);
+    }
+
+    //댓글 수정
+    @Transactional
+    public void updateComment(Long userId, Long commentId, String content) {
+        Comment comment = getCommentById(commentId);
+        if(!Objects.equals(comment.getUser().getId(), userId)) throw new UserException(ResponseCode.NOT_COMMENT_OWNER);
+        comment.updateComment(content);
+        commentRepository.save(comment);
     }
 
     private User getUserById(Long userId) {

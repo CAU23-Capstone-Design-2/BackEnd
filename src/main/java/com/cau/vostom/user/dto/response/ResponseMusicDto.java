@@ -9,16 +9,16 @@ import lombok.Getter;
 //내 노래 조회
 public class ResponseMusicDto {
     private Long userId;
-    private Long musicId;
+    private String userName;
+    private String userImgUri;
+    private Long id; //musicId
     private String title;
-    private String musicImage;
-    private String fileUrl;
+    private String albumArtUri;
+    private String contentUri;
+    private int likeCount;
+    private Boolean likedByUser;
 
-    public static ResponseMusicDto of(Long userId, Long musicId, String title, String musicImage, String fileUrl) {
-        return new ResponseMusicDto(userId, musicId, title, musicImage, fileUrl);
-    }
-
-    public static ResponseMusicDto from(Music music) {
-        return ResponseMusicDto.of(music.getUser().getId(), music.getId(), music.getTitle(), music.getMusicImage(), music.getFileUrl());
+    public static ResponseMusicDto of(Long userId, String userName, String userImgUri, Long id, String title, String albumArtUri, String contentUri, int likeCount, Boolean likedByUser) {
+        return new ResponseMusicDto(userId, userName, userImgUri, id, title, albumArtUri, contentUri, likeCount, likedByUser);
     }
 }

@@ -22,9 +22,9 @@ public class MusicController {
     private final MusicService musicService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    //음악 삭제
-    @Operation(summary = "음악 삭제")
-    @DeleteMapping("/delete")
+    //내 음악 삭제
+    @Operation(summary = "내 음악 삭제")
+    @DeleteMapping
     public ApiResponse<Void> deleteMusic(DeleteMusicDto deleteMusicDto) {
         musicService.deleteMusic(deleteMusicDto);
         return ApiResponse.success(null, ResponseCode.MUSIC_DELETED.getMessage());
@@ -32,9 +32,19 @@ public class MusicController {
 
     //그룹에 음악 추가
     @Operation(summary = "그룹에 음악 추가")
-    @PutMapping("/upload")
-    public ApiResponse<Long> uploadMusicToTeam(@RequestHeader String accessToken, UploadMusicDto uploadMusicDto) {
-        return ApiResponse.success(musicService.uploadMusicToTeam(uploadMusicDto), ResponseCode.MUSIC_DELETED.getMessage());
+    @PutMapping("/group")
+    public ApiResponse<Long> uploadMusicToTeam(@RequestHeader String accessToken, @RequestBody UploadMusicDto uploadMusicDto) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        return ApiResponse.success(musicService.uploadMusicToTeam(userId, uploadMusicDto), ResponseCode.MUSIC_UPLOADED.getMessage());
+    }
+
+    //그룹에 업로드한 음악 삭제
+    @Operation(summary = "그룹에 업로드한 음악 삭제")
+    @DeleteMapping("/group")
+    public ApiResponse<Void> deleteMusicToTeam(@RequestHeader String accessToken, @RequestBody UploadMusicDto uploadMusicDto) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        musicService.deleteMusicToTeam(userId, uploadMusicDto);
+        return ApiResponse.success(null, ResponseCode.GROUP_MUSIC_DELETED.getMessage());
     }
 
     //좋아요 누르기

@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeleteTeamDto {
+public class LeaveTeamDto {
     private Long teamId;
-    private Long userId;
 
-    public static DeleteTeamDto of(Long teamId, Long userId) {
-        return new DeleteTeamDto(teamId, userId);
+    public static LeaveTeamDto of(Long teamId) {
+        return new LeaveTeamDto(teamId);
     }
 }

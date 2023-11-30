@@ -10,5 +10,5 @@ public interface TeamMusicRepository extends JpaRepository<TeamMusic, Long>{
     boolean existsByMusicIdAndTeamId(Long musicId, Long teamId);
     List<TeamMusic> findByTeamId(Long teamId);
 
-    void deleteByMusicId(Long musicId);
+    void deleteByMusicIdAndTeamId(Long musicId, Long teamId);
 }

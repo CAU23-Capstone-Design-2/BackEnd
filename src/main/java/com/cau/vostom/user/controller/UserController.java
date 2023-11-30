@@ -34,7 +34,7 @@ public class UserController {
 
     // 회원 탈퇴
     @Operation(summary = "회원 탈퇴", description = "deleteUserDto를 받아서 처리하고 반환데이터는 null")
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ApiResponse<Void> deleteUser(@RequestBody DeleteUserDto deleteUserDto) {
         userService.deleteUser(deleteUserDto);
         return ApiResponse.success(null, ResponseCode.USER_DELETED.getMessage());
@@ -50,17 +50,16 @@ public class UserController {
 
      */
 
-    @Operation(summary = "회원 정보 조회")
-    //@GetMapping("/info/user/{userId}")
-    @GetMapping("/info/user")
+    @Operation(summary = "유저 프로필 정보 조회")
+    @GetMapping("/profile")
     public ApiResponse<ResponseUserDto> getUser(@RequestHeader String accessToken) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        return ApiResponse.success(userService.getUser(userId), ResponseCode.USER_READ.getMessage());
+        return ApiResponse.success(userService.getUserProfile(userId), ResponseCode.USER_READ.getMessage());
     }
 
     //내가 좋아요 한 노래 조회
     @Operation(summary = "내가 좋아요 한 노래 조회")
-    @GetMapping("/info/likedMusic")
+    @GetMapping("/likedMusic")
     public ApiResponse<List<ResponseMusicDto>> getUserLikedMusic(@RequestHeader String accessToken) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(userService.getUserLikedMusic(userId), ResponseCode.MUSIC_LIKED_READ.getMessage());
@@ -68,7 +67,7 @@ public class UserController {
 
     //내 노래 조회
     @Operation(summary = "내 노래 조회")
-    @GetMapping("/info/music")
+    @GetMapping("/music")
     public ApiResponse<List<ResponseMusicDto>> getUserMusic(@RequestHeader String accessToken) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(userService.getUserMusic(userId), ResponseCode.MY_MUSIC_READ.getMessage());
@@ -76,7 +75,7 @@ public class UserController {
 
     //내 그룹 노래 조회
     @Operation(summary = "내 그룹 노래 조회")
-    @GetMapping("/info/teamMusic")
+    @GetMapping("/teamMusic")
     public ApiResponse<List<ResponseTeamMusicDto>> getUserTeamMusic(@RequestHeader String accessToken) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(userService.getUserTeamMusic(userId), ResponseCode.TEAM_MUSIC_READ.getMessage());
@@ -84,14 +83,14 @@ public class UserController {
 
     //연예인 리스트 조회
     @Operation(summary = "연예인 리스트 조회")
-    @GetMapping("/info/celebrity")
+    @GetMapping("/celebrityList")
     public ApiResponse<List<ResponseCelebrityDto>> getCelebrityList(@RequestHeader String accessToken){
         return ApiResponse.success(userService.getCelebrityList(), ResponseCode.CELEBRITY_LISTED.getMessage());
     }
 
     //특정 연예인의 노래 리스트 조회
     @Operation(summary = "특정 연예인의 노래 리스트 조회")
-    @GetMapping("/info/celebrity/music")
+    @GetMapping("/celebrity/musicList")
     public ApiResponse<List<ResponseMusicDto>> getCelebrityMusic(@RequestHeader String accessToken, @RequestParam Long id) {
         return ApiResponse.success(userService.getUserMusic(id), ResponseCode.MY_MUSIC_READ.getMessage());
     }

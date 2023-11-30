@@ -44,4 +44,8 @@ public class Comment {
         comment.content = content;
         return comment;
     }
+
+    public void updateComment(String content) {
+        this.content = content;
+    }
 }
