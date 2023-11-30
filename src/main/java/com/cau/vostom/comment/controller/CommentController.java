@@ -33,7 +33,7 @@ public class CommentController {
 
     //댓글 작성
     @Operation(summary = "댓글 작성")
-    @PostMapping("/create")
+    @PostMapping
     public ApiResponse<Long> createComment(@RequestHeader String accessToken, @RequestBody CreateCommentDto createCommentDto) {
         return ApiResponse.success(commentService.writeComment(createCommentDto), ResponseCode.COMMENT_CREATED.getMessage());
     }
@@ -65,7 +65,7 @@ public class CommentController {
 
     //댓글 삭제
     @Operation(summary = "댓글 삭제")
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ApiResponse<Void> deleteComment(@RequestHeader String accessToken, @RequestParam String id) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         commentService.deleteComment(userId, Long.parseLong(id));
@@ -74,7 +74,7 @@ public class CommentController {
 
     //댓글 수정
     @Operation(summary = "댓글 수정")
-    @PutMapping("/update")
+    @PutMapping
     public ApiResponse<Void> updateComment(@RequestHeader String accessToken, @RequestParam String id, @RequestBody String content) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         commentService.updateComment(userId, Long.parseLong(id), content);
