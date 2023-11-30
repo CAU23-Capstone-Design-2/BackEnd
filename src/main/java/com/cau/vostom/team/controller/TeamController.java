@@ -19,8 +19,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Api(tags = {"Team"})
-@RequestMapping("/api/team")
+@Api(tags = {"Groups"})
+@RequestMapping("/api/group")
 public class TeamController {
     private final TeamService teamService;
     private final JwtTokenProvider jwtTokenProvider;
