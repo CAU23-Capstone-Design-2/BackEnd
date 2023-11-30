@@ -56,7 +56,7 @@ public class UserService {
 
     //회원 조회
     @Transactional(readOnly = true)
-    public ResponseUserDto getUser(Long userId) {
+    public ResponseUserDto getUserProfile(Long userId) {
         User user = getUserById(userId);
         return ResponseUserDto.from(user);
     }

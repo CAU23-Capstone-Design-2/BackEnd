@@ -50,12 +50,11 @@ public class UserController {
 
      */
 
-    @Operation(summary = "회원 정보 조회")
-    //@GetMapping("/info/user/{userId}")
-    @GetMapping("/info/user")
+    @Operation(summary = "유저 프로필 정보 조회")
+    @GetMapping("/info/profile")
     public ApiResponse<ResponseUserDto> getUser(@RequestHeader String accessToken) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        return ApiResponse.success(userService.getUser(userId), ResponseCode.USER_READ.getMessage());
+        return ApiResponse.success(userService.getUserProfile(userId), ResponseCode.USER_READ.getMessage());
     }
 
     //내가 좋아요 한 노래 조회
