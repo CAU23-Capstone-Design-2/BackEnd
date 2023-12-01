@@ -70,7 +70,15 @@ public class UserController {
     @GetMapping("/music")
     public ApiResponse<List<ResponseMusicDto>> getUserMusic(@RequestHeader String accessToken) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        return ApiResponse.success(userService.getUserMusic(userId), ResponseCode.MY_MUSIC_READ.getMessage());
+        return ApiResponse.success(userService.getUserMusic(userId, true), ResponseCode.MY_MUSIC_READ.getMessage());
+    }
+
+    //요청중인 내 노래 조회
+    @Operation(summary = "요청 중인 내 노래 조회")
+    @GetMapping("/music/request")
+    public ApiResponse<List<ResponseMusicDto>> getUserMusicRequest(@RequestHeader String accessToken) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        return ApiResponse.success(userService.getUserMusic(userId, false), ResponseCode.REQUESTED_MUSIC_READ.getMessage());
     }
 
     //내 그룹 노래 조회
@@ -92,7 +100,7 @@ public class UserController {
     @Operation(summary = "특정 연예인의 노래 리스트 조회")
     @GetMapping("/celebrity/musicList")
     public ApiResponse<List<ResponseMusicDto>> getCelebrityMusic(@RequestHeader String accessToken, @RequestParam Long id) {
-        return ApiResponse.success(userService.getUserMusic(id), ResponseCode.MY_MUSIC_READ.getMessage());
+        return ApiResponse.success(userService.getUserMusic(id, true), ResponseCode.MY_MUSIC_READ.getMessage());
     }
 
 }

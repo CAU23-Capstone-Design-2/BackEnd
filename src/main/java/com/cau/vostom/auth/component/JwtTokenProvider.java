@@ -35,12 +35,12 @@ public class JwtTokenProvider {
 
     // 토큰 생성
     public String createToken(String userPk) {
-        Claims claims = Jwts.claims().setSubject(userPk); // JWT payload 에 저장되는 정보단위
+        Claims claims = Jwts.claims().setSubject(userPk); // JWT payload 에 저장되는 정보 단위
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
-                .setExpiration(new Date(now.getTime() + (30 * 24 * 60 * 1000L))) // 토큰 유효시각 설정 (12시간)
+                .setExpiration(new Date(now.getTime() + (10 * 2 * 30 * 24 * 60 * 1000L))) // 토큰 유효 시각 설정 (10일)
                 .signWith(SignatureAlgorithm.HS256, secretKey)  // 암호화 알고리즘과, secret 값
                 .compact();
     }

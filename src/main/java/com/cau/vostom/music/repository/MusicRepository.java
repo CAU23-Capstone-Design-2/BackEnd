@@ -8,9 +8,12 @@ import java.util.Optional;
 
 public interface MusicRepository extends JpaRepository<Music, Long>{
     List<Music> findAllByUserId(Long userId);
+
+    List<Music> findAllByUserIdAndIsTrained(Long userId, boolean isTrained);
     List<Music> findLikedMusicsByUserId(Long userId);
 
     boolean existsByUserIdAndId(Long userId, Long musicId);
+
 
     Optional<Music> findById(Long musicId);
 
