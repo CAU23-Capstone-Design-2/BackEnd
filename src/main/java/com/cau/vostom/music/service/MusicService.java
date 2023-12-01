@@ -4,7 +4,9 @@ import com.cau.vostom.music.domain.Music;
 import com.cau.vostom.music.domain.MusicLikes;
 import com.cau.vostom.music.dto.request.DeleteMusicDto;
 import com.cau.vostom.music.dto.request.MusicLikeDto;
+import com.cau.vostom.music.dto.request.RequestMusicTrainDto;
 import com.cau.vostom.music.dto.request.UploadMusicDto;
+import com.cau.vostom.music.repository.CacheRepository;
 import com.cau.vostom.music.repository.MusicLikesRepository;
 import com.cau.vostom.music.repository.MusicRepository;
 import com.cau.vostom.team.domain.Team;
@@ -18,10 +20,15 @@ import com.cau.vostom.util.api.ResponseCode;
 import com.cau.vostom.util.exception.MusicException;
 import com.cau.vostom.util.exception.UserException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Objects;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service @RequiredArgsConstructor
 public class MusicService {
@@ -32,6 +39,7 @@ public class MusicService {
     private final TeamUserRepository teamUserRepository;
     private final UserRepository userRepository;
     private final MusicLikesRepository musicLikesRepository;
+    private final CacheRepository cacheRepository;
 
     //그룹에 음악 업로드
     @Transactional
@@ -84,9 +92,40 @@ public class MusicService {
     }
 
     //음악 학습 요청
-    @Transactional
-    public void requestMusic() {
+    @Async
+    public void trainMusic(Long userId, RequestMusicTrainDto requestMusicTrainDto, String url) throws IOException {
+        String d_url = URLDecoder.decode(url, "UTF-8");
 
+        String title = requestMusicTrainDto.getTitle();
+        String imgUrl = requestMusicTrainDto.getImgUrl();
+        String youtubeCode = d_url.split("v=")[1].split("&")[0];
+
+        Music music = musicRepository.save(Music.createMusic(title, imgUrl, userId.toString()+'_'+youtubeCode+".mp3"));
+
+
+        String newDirectoryPath = "/home/snark/dev/jiwoo/RVC/RVC-model/";
+        // Java(Spring)에서 현재 작업 디렉토리 변경
+        System.setProperty(userId+".dir", newDirectoryPath);
+
+        if(cacheRepository.existsByYoutubeCode(youtubeCode)) {
+            String command = "python myinfer.py " + youtubeCode + ".wav " + userId + ".pth";
+
+            // command 실행
+            Process process = Runtime.getRuntime().exec(command);
+        }
+        else {
+            String command = "python pre.py --url " + d_url;
+            Process process = Runtime.getRuntime().exec(command); // 2m
+
+            // 2. 학습 (infer.py)
+            String command2 = "python myinfer.py " + youtubeCode + ".wav " + userId + ".pth";
+
+            // command 실행
+            Process process2 = Runtime.getRuntime().exec(command2); // 20s
+        }
+
+        music.setTrained();
+        musicRepository.save(music);
     }
 
     private Music getMusicById(Long musicId) {

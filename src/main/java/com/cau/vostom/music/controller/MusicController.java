@@ -3,6 +3,7 @@ package com.cau.vostom.music.controller;
 import com.cau.vostom.auth.component.JwtTokenProvider;
 import com.cau.vostom.music.dto.request.DeleteMusicDto;
 import com.cau.vostom.music.dto.request.MusicLikeDto;
+import com.cau.vostom.music.dto.request.RequestMusicTrainDto;
 import com.cau.vostom.music.dto.request.UploadMusicDto;
 import com.cau.vostom.music.service.MusicService;
 import com.cau.vostom.util.api.ApiResponse;
@@ -11,6 +12,8 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 
 @RestController
@@ -64,5 +67,15 @@ public class MusicController {
         musicService.unlikeMusic(MusicLikeDto.of(userId, Long.parseLong(id)));
         return ApiResponse.success(null, ResponseCode.MUSIC_LIKE_UNDO.getMessage());
     }
+
+    //음악 파일 합성 요청
+    @Operation(summary = "음악 파일 합성 요청")
+    @PostMapping("/train")
+    public ApiResponse<Void> trainMusic(@RequestHeader String accessToken, @RequestBody RequestMusicTrainDto requestMusicTrainDto, @RequestParam String url) throws IOException {
+        Long userId = Long.parseLong((jwtTokenProvider.getUserPk(accessToken)));
+        musicService.trainMusic(userId, requestMusicTrainDto, url);
+        return ApiResponse.success(null, ResponseCode.MUSIC_TRAIN_REQUESTED.getMessage());
+    }
+
 
 }
