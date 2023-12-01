@@ -71,7 +71,7 @@ public class MusicController {
     //음악 파일 합성 요청
     @Operation(summary = "음악 파일 합성 요청")
     @PostMapping("/train")
-    public ApiResponse<Void> trainMusic(@RequestHeader String accessToken, @RequestBody RequestMusicTrainDto requestMusicTrainDto, @RequestParam String url) throws IOException {
+    public ApiResponse<Void> trainMusic(@RequestHeader String accessToken, @RequestBody RequestMusicTrainDto requestMusicTrainDto, @RequestParam String url) throws IOException, InterruptedException {
         Long userId = Long.parseLong((jwtTokenProvider.getUserPk(accessToken)));
         musicService.trainMusic(userId, requestMusicTrainDto, url);
         return ApiResponse.success(null, ResponseCode.MUSIC_TRAIN_REQUESTED.getMessage());

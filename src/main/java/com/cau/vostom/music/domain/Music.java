@@ -36,8 +36,9 @@ public class Music {
     @OneToMany(mappedBy = "music", cascade = {CascadeType.REMOVE})
     private List<Comment> comments = new ArrayList<>();
 
-    public static Music createMusic(String title, String musicImage, String fileUrl) {
+    public static Music createMusic(User user, String title, String musicImage, String fileUrl) {
         Music music = new Music();
+        music.user = user;
         music.title = title;
         music.musicImage = musicImage;
         music.fileUrl = fileUrl;

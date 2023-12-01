@@ -11,13 +11,12 @@ import lombok.NoArgsConstructor;
 public class RequestMusicTrainDto {
     private String imgUrl;
     private String title;
-    private String url;
 
-    public static RequestMusicTrainDto of(String imgUrl, String title, String url) {
-        return new RequestMusicTrainDto(imgUrl, title, url);
+    public static RequestMusicTrainDto of(String imgUrl, String title) {
+        return new RequestMusicTrainDto(imgUrl, title);
     }
 
     public static RequestMusicTrainDto from(Music music){
-        return new RequestMusicTrainDto(music.getMusicImage(), music.getTitle(), music.getFileUrl());
+        return new RequestMusicTrainDto(music.getMusicImage(), music.getTitle());
     }
 }
