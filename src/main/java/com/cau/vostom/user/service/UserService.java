@@ -83,9 +83,9 @@ public class UserService {
 
     //내 노래 조회
     @Transactional(readOnly = true)
-    public List<ResponseMusicDto> getUserMusic(Long userId) {
+    public List<ResponseMusicDto> getUserMusic(Long userId, boolean isTrained) {
         User user = getUserById(userId);
-        List<Music> musics = musicRepository.findAllByUserId(user.getId());
+        List<Music> musics = musicRepository.findAllByUserIdAndIsTrained(user.getId(), isTrained);
         List<ResponseMusicDto> userMusics = new ArrayList<>();
         for(Music music : musics) {
             boolean isLiked = musicRepository.existsByUserIdAndId(userId, music.getId());
