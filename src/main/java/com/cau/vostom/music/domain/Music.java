@@ -5,6 +5,7 @@ import com.cau.vostom.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class Music {
 
     private String fileUrl;
 
+    private boolean isTrained = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -40,5 +43,7 @@ public class Music {
         music.fileUrl = fileUrl;
         return music;
     }
-
+    public void setTrained() {
+        this.isTrained = true;
+    }
 }
