@@ -68,6 +68,8 @@ public enum ResponseCode {
     COMMENT_LIKE_UNDO(HttpStatus.OK, true, "댓글 좋아요가 취소되었습니다."),
     COMMENT_DELETED(HttpStatus.OK, true, "댓글이 삭제되었습니다."),
     COMMENT_UPDATED(HttpStatus.OK, true, "댓글이 수정되었습니다."),
+    MUSIC_TRAIN_REQUESTED(HttpStatus.OK, true, "음악 학습이 요청되었습니다."),
+    REQUESTED_MUSIC_READ(HttpStatus.OK, true, "요청중인 음악을 조회하였습니다."),
 
 
     // 201 Created
