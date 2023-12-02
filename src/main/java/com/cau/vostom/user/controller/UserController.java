@@ -12,6 +12,7 @@ import com.cau.vostom.util.api.ResponseCode;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,9 +29,11 @@ public class UserController {
 
     // 회원정보 수정
     @Operation(summary = "회원정보 수정", description = "updateUSerDto를 받아서 처리하고 반환데이터는 null")
-    @PutMapping("/update")
-    public ApiResponse<Void> updateUser(@RequestHeader String accessToken, @RequestBody UpdateUserDto updateUserDto) {
-        userService.updateUser(updateUserDto);
+    @PutMapping
+    public ApiResponse<Void> updateUser(@RequestHeader String accessToken,
+                                         @RequestPart("imageFile") MultipartFile imageFile) throws IOException {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        userService.updateUser(userId, imageFile);
         return ApiResponse.success(null, ResponseCode.USER_UPDATED.getMessage());
     }
 
@@ -102,7 +105,7 @@ public class UserController {
     @Operation(summary = "특정 연예인의 노래 리스트 조회")
     @GetMapping("/celebrity/musicList")
     public ApiResponse<List<ResponseMusicDto>> getCelebrityMusic(@RequestHeader String accessToken, @RequestParam Long id) {
-        return ApiResponse.success(userService.getUserMusic(id, true), ResponseCode.MY_MUSIC_READ.getMessage());
+        return ApiResponse.success(userService.getUserMusic(id, true), ResponseCode.CELEBRITY_MUSIC_LISTED.getMessage());
     }
 
     //사용자 목소리 데이터 업로드
@@ -122,4 +125,12 @@ public class UserController {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(userService.checkTrained(userId), ResponseCode.CHECK_TRAINED.getMessage());
     }
+
+    //프로필 이미지 다운로드
+//    @Operation(summary = "프로필 이미지 다운로드")
+//    @GetMapping("/profileImage")
+//    public ApiResponse<ByteArrayResource> downloadProfileImage(@RequestHeader String accessToken) throws IOException {
+//        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+//        return ApiResponse.success(userService.downloadProfileImage(userId), ResponseCode.USER_READ.getMessage());
+//    }
 }
