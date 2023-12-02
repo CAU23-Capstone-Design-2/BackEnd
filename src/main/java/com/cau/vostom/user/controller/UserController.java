@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController @RequiredArgsConstructor
@@ -112,9 +113,9 @@ public class UserController {
     @Operation(summary = "사용자 목소리 데이터 업로드")
     @PostMapping("/voiceData")
     public ApiResponse<Void> uploadVoice(@RequestHeader String accessToken,
-                                              @RequestPart("voiceFiles") List<MultipartFile> voiceFiles) throws IOException {
+                                              @RequestPart("voiceFiles") MultipartFile[] voiceFiles) throws IOException {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        userService.uploadVoice(userId, voiceFiles);
+        userService.uploadVoice(userId, Arrays.asList(voiceFiles));
         return ApiResponse.success(null, ResponseCode.USER_VOICE_DATA_UPLOADED.getMessage());
     }
 
