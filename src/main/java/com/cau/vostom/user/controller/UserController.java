@@ -13,7 +13,9 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController @RequiredArgsConstructor
@@ -103,4 +105,21 @@ public class UserController {
         return ApiResponse.success(userService.getUserMusic(id, true), ResponseCode.MY_MUSIC_READ.getMessage());
     }
 
+    //사용자 목소리 데이터 업로드
+    @Operation(summary = "사용자 목소리 데이터 업로드")
+    @PostMapping("/voiceData")
+    public ApiResponse<Void> uploadVoice(@RequestHeader String accessToken,
+                                              @RequestParam("voiceFiles") List<MultipartFile> voiceFiles) throws IOException {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        userService.uploadVoice(userId, voiceFiles);
+        return ApiResponse.success(null, ResponseCode.USER_VOICE_DATA_UPLOADED.getMessage());
+    }
+
+    //사용자 목소리 학습 상태 확인
+    @Operation(summary = "사용자 목소리 학습 상태 확인")
+    @GetMapping("/checkTrained")
+    public ApiResponse<Integer> checkTrained(@RequestHeader String accessToken) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        return ApiResponse.success(userService.checkTrained(userId), ResponseCode.CHECK_TRAINED.getMessage());
+    }
 }

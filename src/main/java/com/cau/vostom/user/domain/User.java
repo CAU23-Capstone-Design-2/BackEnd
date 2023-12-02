@@ -65,17 +65,13 @@ public class User implements UserDetails {
         return user;
     }
 
+    public void setmodelCompleted(){
+        this.modelCompleted = 1;
+    }
     public void updateUser(String nickname) {
         this.nickname = nickname;
     }
 
-
-    /*
-    public void retryVoiceData(String modelPath, int modelCompleted) {
-        this.modelPath = modelPath;
-        this.modelCompleted = 2;
-    }
-    */
 
     //Jwt 설정을 위한 UserDetails 메소드
     @ElementCollection(fetch = FetchType.EAGER) //roles 컬렉션
