@@ -16,15 +16,20 @@ import com.cau.vostom.user.repository.UserRepository;
 import com.cau.vostom.util.api.ResponseCode;
 import com.cau.vostom.util.exception.UserException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -129,6 +134,33 @@ public class UserService {
         return myTeamMusic;
     }
 
+    //사용자 음성 데이터 업로드
+    @Transactional
+    public void uploadVoice(Long userId, List<MultipartFile> voiceFiles) throws IOException {
+        // 파일 저장 경로 생성
+        String uploadDirectory = "/home/snark/dev/jiwoo/RVC/RVC-Model/upload_voice/" + userId + "/";
+        File directory = new File(uploadDirectory);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        for (int i = 0; i < voiceFiles.size(); i++) {
+            MultipartFile voiceFile = voiceFiles.get(i);
+
+            // 파일 저장
+            String fileName = "voice" + (i + 1) + ".m4a";
+            String filePath = uploadDirectory + fileName;
+            log.info("\n\n파일 저장 경로: " + filePath + "\n\n");
+            File file = new File(filePath);
+            voiceFile.transferTo(file);
+        }
+
+        User user = getUserById(userId);
+        user.setmodelCompleted();
+        log.info("\n\nUser 정보 : " + user.getId() + " " + user.getNickname() + " " + user.getModelCompleted() + "\n\n");
+        userRepository.save(user);
+    }
+
 
     /*
     //학습 데이터 수정
@@ -140,17 +172,6 @@ public class UserService {
     }
    */
 
-    /*목소리 학습 요청
-    @Transactional
-    public void requestVoiceTrain(RequestVoiceTrainDto requestVoiceTrainDto){
-        User user = getUserById(requestVoiceTrainDto.getUserId());
-        //서버에 파일 업로드 <- 서버의 어디에 저장할 지 경로 지정,
-        //modelCompleted = 1
-        // runtime.exec('python3 train.py --voice_path={경로} --model_name='{kakao_id}')
-        //return 2
-        user.requestVoiceTrain(requestVoiceTrainDto.getModelCompleted(), requestVoiceTrainDto.getUserVoice());
-    }
-    */
 
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
