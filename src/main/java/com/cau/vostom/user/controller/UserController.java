@@ -114,4 +114,12 @@ public class UserController {
         userService.uploadVoice(userId, voiceFiles);
         return ApiResponse.success(null, ResponseCode.USER_VOICE_DATA_UPLOADED.getMessage());
     }
+
+    //사용자 목소리 학습 상태 확인
+    @Operation(summary = "사용자 목소리 학습 상태 확인")
+    @GetMapping("/checkTrained")
+    public ApiResponse<Integer> checkTrained(@RequestHeader String accessToken) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        return ApiResponse.success(userService.checkTrained(userId), ResponseCode.CHECK_TRAINED.getMessage());
+    }
 }
