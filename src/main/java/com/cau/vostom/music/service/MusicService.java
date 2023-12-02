@@ -54,6 +54,9 @@ public class MusicService {
             throw new UserException(ResponseCode.NOT_TEAM_MEMBER);
         }
         Music music = getMusicById(uploadMusicDto.getMusicId());
+        if(!Objects.equals(music.getUser().getId(), userId)) {
+            throw new UserException(ResponseCode.NOT_MUSIC_OWNER);
+        }
         Team team = teamRepository.findById(uploadMusicDto.getTeamId()).orElseThrow(() -> new MusicException(ResponseCode.TEAM_NOT_FOUND));
         TeamMusic teamMusic = TeamMusic.createGroupMusic(team, music);
 
