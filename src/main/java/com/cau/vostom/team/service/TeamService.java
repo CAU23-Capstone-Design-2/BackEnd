@@ -1,5 +1,6 @@
 package com.cau.vostom.team.service;
 
+import com.cau.vostom.music.repository.MusicLikesRepository;
 import com.cau.vostom.music.repository.MusicRepository;
 import com.cau.vostom.team.domain.Team;
 import com.cau.vostom.team.domain.TeamMusic;
@@ -31,6 +32,7 @@ public class TeamService {
     private final TeamUserRepository teamUserRepository;
     private final UserRepository userRepository;
     private final MusicRepository musicRepository;
+    private final MusicLikesRepository musicLikesRepository;
 
     //그룹 생성
     @Transactional
@@ -99,7 +101,7 @@ public class TeamService {
         List<ResponseTeamMusicDto> myTeamMusic = new ArrayList<>();
         List<TeamMusic> teamMusics = team.getTeamMusics();
         for(TeamMusic teamMusic : teamMusics) {
-            boolean isLiked = musicRepository.existsByUserIdAndId(userId,teamMusic.getMusic().getId());
+            boolean isLiked = musicLikesRepository.existsByUserIdAndMusicId(userId,teamMusic.getMusic().getId());
             int likeCount = teamMusic.getMusic().getLikes().size();
             myTeamMusic.add(ResponseTeamMusicDto.of(teamMusic.getId(), teamMusic.getMusic().getTitle(), teamMusic.getMusic().getMusicImage(), teamMusic.getMusic().getUser().getId(), teamMusic.getMusic().getUser().getNickname(), teamMusic.getMusic().getUser().getProfileImage(), teamMusic.getMusic().getFileUrl(), likeCount, isLiked));
         }

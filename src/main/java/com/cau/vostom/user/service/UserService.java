@@ -1,6 +1,7 @@
 package com.cau.vostom.user.service;
 
 import com.cau.vostom.music.domain.Music;
+import com.cau.vostom.music.repository.MusicLikesRepository;
 import com.cau.vostom.music.repository.MusicRepository;
 import com.cau.vostom.team.domain.TeamMusic;
 import com.cau.vostom.team.domain.TeamUser;
@@ -36,6 +37,7 @@ public class UserService {
     private final MusicRepository musicRepository;
     private final TeamUserRepository teamUserRepository;
     private final TeamMusicRepository teamMusicRepository;
+    private final MusicLikesRepository musicLikesRepository;
 
     //회원 정보 수정
     @Transactional
@@ -77,7 +79,7 @@ public class UserService {
             return List.of();
         }
         for(Music music : likedMusics) {
-            boolean isLiked = musicRepository.existsByUserIdAndId(userId, music.getId());
+            boolean isLiked = musicLikesRepository.existsByUserIdAndMusicId(userId, music.getId());
             int likeCount = music.getLikes().size();
             userLikedMusics.add(ResponseMusicDto.of(music.getUser().getId(), music.getUser().getNickname(), music.getUser().getProfileImage(), music.getId(), music.getTitle(), music.getMusicImage(), music.getFileUrl(), likeCount, isLiked));
         }
@@ -93,7 +95,7 @@ public class UserService {
         List<Music> musics = musicRepository.findAllByUserIdAndIsTrained(user.getId(), isTrained);
         List<ResponseMusicDto> userMusics = new ArrayList<>();
         for(Music music : musics) {
-            boolean isLiked = musicRepository.existsByUserIdAndId(userId, music.getId());
+            boolean isLiked = musicLikesRepository.existsByUserIdAndMusicId(userId, music.getId());
             int likeCount = music.getLikes().size();
             userMusics.add(ResponseMusicDto.of(music.getUser().getId(), music.getUser().getNickname(), music.getUser().getProfileImage(), music.getId(), music.getTitle(), music.getMusicImage(), music.getFileUrl(), likeCount, isLiked));
         }
@@ -126,7 +128,7 @@ public class UserService {
         for(TeamUser teamUser : teamUsers) {
             List<TeamMusic> teamMusics = teamUser.getTeam().getTeamMusics();
             for(TeamMusic teamMusic : teamMusics) {
-                boolean isLiked = musicRepository.existsByUserIdAndId(userId,teamMusic.getMusic().getId());
+                boolean isLiked = musicLikesRepository.existsByUserIdAndMusicId(userId,teamMusic.getMusic().getId());
                 int likeCount = teamMusic.getMusic().getLikes().size();
                 myTeamMusic.add(ResponseTeamMusicDto.of(teamMusic.getId(), teamMusic.getMusic().getTitle(), teamMusic.getMusic().getMusicImage(), teamMusic.getMusic().getUser().getId(), teamMusic.getMusic().getUser().getNickname(), teamMusic.getMusic().getUser().getProfileImage(), teamMusic.getMusic().getFileUrl(), likeCount, isLiked));
             }
