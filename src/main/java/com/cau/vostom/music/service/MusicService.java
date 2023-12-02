@@ -1,5 +1,6 @@
 package com.cau.vostom.music.service;
 
+import com.cau.vostom.music.domain.Cache;
 import com.cau.vostom.music.domain.Music;
 import com.cau.vostom.music.domain.MusicLikes;
 import com.cau.vostom.music.dto.request.DeleteMusicDto;
@@ -128,6 +129,7 @@ public class MusicService {
             log.info("\n\n캐시테이블에 존재하지 않는 음악인 경우");
             String preProcessCommand = "/home/snark/anaconda3/bin/conda run -n jiwoo-diffsvc python pre.py --url \"" + d_url + "\"";
             executeCommand(preProcessCommand);
+            cacheRepository.save(Cache.createCache((youtubeCode)));
             log.info("\n\npreProcessCommand 실행: " + preProcessCommand);
         }
 
