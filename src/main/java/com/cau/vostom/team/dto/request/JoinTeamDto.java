@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class JoinTeamDto {
     private Long teamId;
-    private Long userId;
 
-    public static JoinTeamDto of(Long teamId, Long userId) {
-        return new JoinTeamDto(teamId, userId);
+    public static JoinTeamDto of(Long teamId) {
+        return new JoinTeamDto(teamId);
     }
 }

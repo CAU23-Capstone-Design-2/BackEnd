@@ -45,11 +45,11 @@ public class TeamService {
 
     //그룹 가입
     @Transactional
-    public void joinTeam(JoinTeamDto joinTeamDto) {
+    public void joinTeam(Long userId, JoinTeamDto joinTeamDto) {
         if(!teamRepository.existsById(joinTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
-        if(teamUserRepository.existsByUserIdAndTeamId(joinTeamDto.getUserId(), joinTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_ALREADY_JOINED);
+        if(teamUserRepository.existsByUserIdAndTeamId(userId, joinTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_ALREADY_JOINED);
         Team team = getTeamById(joinTeamDto.getTeamId());
-        User user = getUserById(joinTeamDto.getUserId());
+        User user = getUserById(userId);
         TeamUser teamUser = TeamUser.createGroupUser(team, user, false);
         teamUserRepository.save(teamUser);
     }

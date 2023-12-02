@@ -60,7 +60,8 @@ public class TeamController {
     @Operation(summary = "그룹 가입")
     @PostMapping("/join")
     public ApiResponse<Void> joinTeam(@RequestHeader String accessToken, @RequestBody JoinTeamDto joinTeamDto) {
-        teamService.joinTeam(joinTeamDto);
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        teamService.joinTeam(userId, joinTeamDto);
         return ApiResponse.success(null, ResponseCode.TEAM_JOINED.getMessage());
     }
 
