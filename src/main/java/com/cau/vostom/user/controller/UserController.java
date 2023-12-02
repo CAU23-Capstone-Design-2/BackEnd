@@ -109,7 +109,7 @@ public class UserController {
     @Operation(summary = "사용자 목소리 데이터 업로드")
     @PostMapping("/voiceData")
     public ApiResponse<Void> uploadVoice(@RequestHeader String accessToken,
-                                              @RequestParam("voiceFiles") List<MultipartFile> voiceFiles) throws IOException {
+                                              @RequestPart("voiceFiles") List<MultipartFile> voiceFiles) throws IOException {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         userService.uploadVoice(userId, voiceFiles);
         return ApiResponse.success(null, ResponseCode.USER_VOICE_DATA_UPLOADED.getMessage());
