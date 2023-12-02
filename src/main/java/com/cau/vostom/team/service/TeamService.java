@@ -58,6 +58,9 @@ public class TeamService {
     @Transactional
     public void updateTeam(UpdateTeamDto updateTeamDto, Long userId) {
         Team team = getTeamById(updateTeamDto.getTeamId());
+        if(!teamUserRepository.existsByUserIdAndTeamId(userId, updateTeamDto.getTeamId())){
+            throw new UserException(ResponseCode.NOT_TEAM_MEMBER);
+        }
         if(!teamUserRepository.findByUserIdAndTeamId(userId, updateTeamDto.getTeamId()).isLeader()) throw new TeamException(ResponseCode.NOT_LEADER);
         team.updateGroup(updateTeamDto.getTeamName(), updateTeamDto.getTeamImage(), updateTeamDto.getTeamDescription());
         teamRepository.save(team);
