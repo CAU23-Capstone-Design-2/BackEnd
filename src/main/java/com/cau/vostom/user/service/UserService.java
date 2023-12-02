@@ -161,6 +161,13 @@ public class UserService {
         userRepository.save(user);
     }
 
+    //사용자 학습 완료 여부
+    @Transactional(readOnly = true)
+    public Integer checkTrained(Long userId) {
+        User user = getUserById(userId);
+        return user.getModelCompleted();
+    }
+
 
     /*
     //학습 데이터 수정
