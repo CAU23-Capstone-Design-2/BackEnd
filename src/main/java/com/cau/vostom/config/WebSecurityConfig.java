@@ -18,7 +18,7 @@ public class WebSecurityConfig {
 
     // swagger 관련 인증 제외
     private static final String[] AUTH_LIST = { // swagger 관련 URl
-            "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**"
+            "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui/**", "/api/dev/**"
     };
 
     @Bean

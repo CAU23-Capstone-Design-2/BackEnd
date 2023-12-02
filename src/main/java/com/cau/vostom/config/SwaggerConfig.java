@@ -28,7 +28,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Vostom API")
-                .description("Vostom API 설명서,\n jwt : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzAxNDMwOTA4LCJleHAiOjE3MDIyOTQ5MDh9.TxjMB8w3PBMhllekUqOvOpPtDFnFJ1Y91B4LFv_9kz4")
+                .description("Vostom API 설명서,\n 상현 kakaoId : 3045052405\n 명석 kakaoId : 3203208653")
                 .version("1.0")
                 .build();
     }
