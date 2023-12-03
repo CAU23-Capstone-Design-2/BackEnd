@@ -68,8 +68,8 @@ public class User implements UserDetails {
     public void setmodelCompleted(){
         this.modelCompleted = 1;
     }
-    public void updateUser(String nickname) {
-        this.nickname = nickname;
+    public void updateUser(String imageFile) {
+        this.profileImage = imageFile;
     }
 
 

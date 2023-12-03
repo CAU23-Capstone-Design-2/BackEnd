@@ -72,6 +72,7 @@ public enum ResponseCode {
     REQUESTED_MUSIC_READ(HttpStatus.OK, true, "요청중인 음악을 조회하였습니다."),
     USER_VOICE_DATA_UPLOADED(HttpStatus.OK, true, "학습 데이터가 업로드되었습니다."),
     CHECK_TRAINED(HttpStatus.OK, true, "사용자 학습 상태를 조회했습니다."),
+    CELEBRITY_MUSIC_LISTED(HttpStatus.OK, true, "연예인의 노래 리스트를 조회하였습니다."),
 
 
     // 201 Created

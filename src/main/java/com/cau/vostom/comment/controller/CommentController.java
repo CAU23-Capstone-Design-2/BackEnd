@@ -35,7 +35,8 @@ public class CommentController {
     @Operation(summary = "댓글 작성")
     @PostMapping
     public ApiResponse<Long> createComment(@RequestHeader String accessToken, @RequestBody CreateCommentDto createCommentDto) {
-        return ApiResponse.success(commentService.writeComment(createCommentDto), ResponseCode.COMMENT_CREATED.getMessage());
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        return ApiResponse.success(commentService.writeComment(userId, createCommentDto), ResponseCode.COMMENT_CREATED.getMessage());
     }
 
     @Operation(summary = "노래의 댓글 조회")

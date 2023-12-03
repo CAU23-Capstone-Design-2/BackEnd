@@ -43,7 +43,7 @@ public class TeamController {
     //그룹 상세 정보 조회
     @Operation(summary = "특정 그룹의 플레이 리스트 조회")
     @GetMapping("/playlist")
-    public ApiResponse<List<ResponseTeamMusicDto>> getTeamDetail(@RequestHeader String accessToken, @RequestBody Long id) {
+    public ApiResponse<List<ResponseTeamMusicDto>> getTeamDetail(@RequestHeader String accessToken, @RequestParam Long id) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(teamService.getTeamPlaylist(id, userId), ResponseCode.TEAM_DETAIL_READ.getMessage());
     }
@@ -60,7 +60,8 @@ public class TeamController {
     @Operation(summary = "그룹 가입")
     @PostMapping("/join")
     public ApiResponse<Void> joinTeam(@RequestHeader String accessToken, @RequestBody JoinTeamDto joinTeamDto) {
-        teamService.joinTeam(joinTeamDto);
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        teamService.joinTeam(userId, joinTeamDto);
         return ApiResponse.success(null, ResponseCode.TEAM_JOINED.getMessage());
     }
 

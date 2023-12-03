@@ -1,5 +1,6 @@
 package com.cau.vostom.team.service;
 
+import com.cau.vostom.music.repository.MusicLikesRepository;
 import com.cau.vostom.music.repository.MusicRepository;
 import com.cau.vostom.team.domain.Team;
 import com.cau.vostom.team.domain.TeamMusic;
@@ -31,6 +32,7 @@ public class TeamService {
     private final TeamUserRepository teamUserRepository;
     private final UserRepository userRepository;
     private final MusicRepository musicRepository;
+    private final MusicLikesRepository musicLikesRepository;
 
     //그룹 생성
     @Transactional
@@ -45,11 +47,11 @@ public class TeamService {
 
     //그룹 가입
     @Transactional
-    public void joinTeam(JoinTeamDto joinTeamDto) {
+    public void joinTeam(Long userId, JoinTeamDto joinTeamDto) {
         if(!teamRepository.existsById(joinTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
-        if(teamUserRepository.existsByUserIdAndTeamId(joinTeamDto.getUserId(), joinTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_ALREADY_JOINED);
+        if(teamUserRepository.existsByUserIdAndTeamId(userId, joinTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_ALREADY_JOINED);
         Team team = getTeamById(joinTeamDto.getTeamId());
-        User user = getUserById(joinTeamDto.getUserId());
+        User user = getUserById(userId);
         TeamUser teamUser = TeamUser.createGroupUser(team, user, false);
         teamUserRepository.save(teamUser);
     }
@@ -58,6 +60,9 @@ public class TeamService {
     @Transactional
     public void updateTeam(UpdateTeamDto updateTeamDto, Long userId) {
         Team team = getTeamById(updateTeamDto.getTeamId());
+        if(!teamUserRepository.existsByUserIdAndTeamId(userId, updateTeamDto.getTeamId())){
+            throw new UserException(ResponseCode.NOT_TEAM_MEMBER);
+        }
         if(!teamUserRepository.findByUserIdAndTeamId(userId, updateTeamDto.getTeamId()).isLeader()) throw new TeamException(ResponseCode.NOT_LEADER);
         team.updateGroup(updateTeamDto.getTeamName(), updateTeamDto.getTeamImage(), updateTeamDto.getTeamDescription());
         teamRepository.save(team);
@@ -96,7 +101,7 @@ public class TeamService {
         List<ResponseTeamMusicDto> myTeamMusic = new ArrayList<>();
         List<TeamMusic> teamMusics = team.getTeamMusics();
         for(TeamMusic teamMusic : teamMusics) {
-            boolean isLiked = musicRepository.existsByUserIdAndId(userId,teamMusic.getMusic().getId());
+            boolean isLiked = musicLikesRepository.existsByUserIdAndMusicId(userId,teamMusic.getMusic().getId());
             int likeCount = teamMusic.getMusic().getLikes().size();
             myTeamMusic.add(ResponseTeamMusicDto.of(teamMusic.getId(), teamMusic.getMusic().getTitle(), teamMusic.getMusic().getMusicImage(), teamMusic.getMusic().getUser().getId(), teamMusic.getMusic().getUser().getNickname(), teamMusic.getMusic().getUser().getProfileImage(), teamMusic.getMusic().getFileUrl(), likeCount, isLiked));
         }
