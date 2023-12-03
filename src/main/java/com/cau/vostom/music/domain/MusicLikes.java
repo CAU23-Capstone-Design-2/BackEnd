@@ -26,13 +26,13 @@ public class MusicLikes {
     @JoinColumn(name = "music_id")
     private Music music;
 
-    @CreatedDate
     private LocalDateTime likesDate;
 
     public static MusicLikes createMusicLikes(User user, Music music) {
         MusicLikes musicLikes = new MusicLikes();
         musicLikes.user = user;
         musicLikes.music = music;
+        musicLikes.likesDate = LocalDateTime.now();
         return musicLikes;
     }
 }

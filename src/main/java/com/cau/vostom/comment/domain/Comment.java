@@ -34,7 +34,6 @@ public class Comment {
 
     private String content;
 
-    @CreatedDate
     private LocalDateTime commentDate;
 
     public static Comment createComment(User user, Music music, String content) {
@@ -42,6 +41,7 @@ public class Comment {
         comment.user = user;
         comment.music = music;
         comment.content = content;
+        comment.commentDate = LocalDateTime.now();
         return comment;
     }
 
