@@ -11,9 +11,15 @@ import com.cau.vostom.util.api.ResponseCode;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 
 @RestController
@@ -77,5 +83,12 @@ public class MusicController {
         return ApiResponse.success(null, ResponseCode.MUSIC_TRAIN_REQUESTED.getMessage());
     }
 
+    // 음악 파일 스트리밍
+    @Operation(summary = "음악 파일 스트리밍")
+    @GetMapping(value = "/stream/{musicId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<StreamingResponseBody> streamMusic(@RequestHeader String accessToken, @PathVariable Long musicId) throws IOException {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        return musicService.streamMusic(userId, musicId);
+    }
 
 }
