@@ -20,6 +20,8 @@ import com.cau.vostom.util.exception.UserException;
 import com.nimbusds.jose.util.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,20 +47,22 @@ public class UserService {
     private final TeamMusicRepository teamMusicRepository;
     private final MusicLikesRepository musicLikesRepository;
 
+    @Value("${file.upload-dir}")
+    private String uploadDirectory;
+
     //사용자 프로필 사진 업데이트
     @Transactional
     public void updateUser(Long userId, MultipartFile imageFile) throws IOException {
         User user = getUserById(userId);
 
-        String uploadDirectory = "/home/snark/dev/jiwoo/RVC/RVC-Model/upload_profileImage/";
 
         log.info("\n\n파일 저장 경로: " + uploadDirectory + "\n\n");
         String extension = StringUtils.getFilenameExtension(imageFile.getOriginalFilename());
-        String fileName = uploadDirectory + userId + "." + extension;
-        File file = new File(fileName);
+        String fileName ="profile_" + userId + "." + extension;
+        File file = new File(uploadDirectory + fileName);
         imageFile.transferTo(file);
 
-        String filePath = "http://165.194.104.167:1100/api/user/profileImage/" + userId + "." + extension;
+        String filePath = "http://165.194.104.167:1100/api/user/profileImage/" + fileName;
         user.updateUser(filePath);
         userRepository.save(user);
     }
@@ -68,7 +72,7 @@ public class UserService {
    public ByteArrayResource downloadProfileImage(String fileName) throws IOException {
 
        // 프로필 이미지 파일 경로
-       String imagePath = "/home/snark/dev/jiwoo/RVC/RVC-Model/upload_profileImage/" + fileName;
+       String imagePath = uploadDirectory + fileName;
 
        // 프로필 이미지 파일을 읽어와서 Resource로 반환
         byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
