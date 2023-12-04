@@ -1,6 +1,7 @@
 package com.cau.vostom.user.service;
 
 import com.cau.vostom.music.domain.Music;
+import com.cau.vostom.music.domain.MusicLikes;
 import com.cau.vostom.music.repository.MusicLikesRepository;
 import com.cau.vostom.music.repository.MusicRepository;
 import com.cau.vostom.team.domain.TeamMusic;
@@ -52,32 +53,27 @@ public class UserService {
         String uploadDirectory = "/home/snark/dev/jiwoo/RVC/RVC-Model/upload_profileImage/";
 
         log.info("\n\n파일 저장 경로: " + uploadDirectory + "\n\n");
-        String fileName = uploadDirectory + userId + ".png";
+        String extension = StringUtils.getFilenameExtension(imageFile.getOriginalFilename());
+        String fileName = uploadDirectory + userId + "." + extension;
         File file = new File(fileName);
         imageFile.transferTo(file);
 
-        String filePath = "http://165.194.104.167/1100/api/user/profileImage" + userId + ".png";
+        String filePath = "http://165.194.104.167:1100/api/user/profileImage/" + userId + "." + extension;
         user.updateUser(filePath);
         userRepository.save(user);
     }
 
-//    //사용자 프로필 사진 다운로드
-//    @Transactional(readOnly = true)
-//    public ByteArrayResource downloadProfileImage(Long userId) throws IOException {
-//        User user = getUserById(userId);
-//
-//        // 사용자가 프로필 이미지를 가지고 있지 않은 경우
-//        if (user == null || user.getProfileImage() == null) {
-//            return null;
-//        }
-//
-//        // 프로필 이미지 파일 경로
-//        String imagePath = "/home/snark/dev/jiwoo/RVC/RVC-Model/upload_profileImage/" + userId + ".png";
-//
-//        // 프로필 이미지 파일을 읽어와서 Resource로 반환
-//        byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
-//        return new ByteArrayResource(imageBytes);
-//    }
+   //사용자 프로필 사진 다운로드
+   @Transactional(readOnly = true)
+   public ByteArrayResource downloadProfileImage(String fileName) throws IOException {
+
+       // 프로필 이미지 파일 경로
+       String imagePath = "/home/snark/dev/jiwoo/RVC/RVC-Model/upload_profileImage/" + fileName;
+
+       // 프로필 이미지 파일을 읽어와서 Resource로 반환
+        byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
+        return new ByteArrayResource(imageBytes);
+    }
 
     //회원 탈퇴
     @Transactional
@@ -105,12 +101,17 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<ResponseMusicDto> getUserLikedMusic(Long userId) {
         User user = getUserById(userId);
-        List<Music> likedMusics = musicRepository.findLikedMusicsByUserId(user.getId());
+        List<MusicLikes> likedMusics = musicLikesRepository.findAllByUserId(user.getId());
+        log.info("\n\n좋아요한 노래 개수 : " + likedMusics.size() + "\n\n");
+        log.info("\n\n좋아요한 노래 likedMusics : " + likedMusics + "\n\n");
         List<ResponseMusicDto> userLikedMusics = new ArrayList<>();
         if (likedMusics.isEmpty()) {// 좋아요한 노래가 없는 경우
             return List.of();
         }
-        for(Music music : likedMusics) {
+        for(MusicLikes musicLike : likedMusics) {
+            log.info("\n\n좋아요한 노래 musicID : " + musicLike.getId() + "\n\n");
+            Music music = musicLike.getMusic();
+            log.info("\n\n좋아요한 노래 music : " + music.getTitle() + "\n\n");
             boolean isLiked = musicLikesRepository.existsByUserIdAndMusicId(userId, music.getId());
             int likeCount = music.getLikes().size();
             userLikedMusics.add(ResponseMusicDto.of(music.getUser().getId(), music.getUser().getNickname(), music.getUser().getProfileImage(), music.getId(), music.getTitle(), music.getMusicImage(), music.getFileUrl(), likeCount, isLiked));
