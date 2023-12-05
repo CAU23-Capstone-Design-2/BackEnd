@@ -2,7 +2,6 @@ package com.cau.vostom.comment.service;
 
 import com.cau.vostom.comment.domain.Comment;
 import com.cau.vostom.comment.domain.CommentLikes;
-import com.cau.vostom.comment.dto.request.CreateCommentDto;
 import com.cau.vostom.comment.dto.request.RequestCommentLikeDto;
 import com.cau.vostom.comment.dto.response.ResponseMusicCommentDto;
 import com.cau.vostom.comment.dto.response.ResponseMyCommentDto;

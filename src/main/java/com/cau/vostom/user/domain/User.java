@@ -2,8 +2,8 @@ package com.cau.vostom.user.domain;
 
 import com.cau.vostom.comment.domain.Comment;
 import com.cau.vostom.comment.domain.CommentLikes;
+import com.cau.vostom.group.domain.GroupUser;
 import com.cau.vostom.music.domain.MusicLikes;
-import com.cau.vostom.team.domain.TeamUser;
 import com.cau.vostom.music.domain.Music;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -53,7 +53,7 @@ public class User implements UserDetails {
     private List<Music> musics = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
-    private List<TeamUser> teamUsers = new ArrayList<>();
+    private List<GroupUser> teamUsers = new ArrayList<>();
 
 
     public static User createUser(String nickname, String profileImage, Long kakaoId, int modelCompleted) {

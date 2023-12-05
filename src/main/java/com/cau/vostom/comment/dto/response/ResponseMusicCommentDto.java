@@ -1,6 +1,5 @@
 package com.cau.vostom.comment.dto.response;
 
-import com.cau.vostom.comment.domain.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

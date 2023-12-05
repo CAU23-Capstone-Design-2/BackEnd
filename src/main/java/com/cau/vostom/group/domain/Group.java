@@ -1,4 +1,4 @@
-package com.cau.vostom.team.domain;
+package com.cau.vostom.group.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,9 +15,9 @@ import java.util.List;
 @Getter @Setter @Entity 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "group_tb")
-public class Team {
+public class Group {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "team_id")
+    @Column(name = "group_id")
     private Long id;
 
     private String groupName;
@@ -29,17 +29,17 @@ public class Team {
     @CreatedDate
     private LocalDateTime createDate;
 
-    @OneToMany(mappedBy = "team", cascade = {CascadeType.REMOVE})
-    private List<TeamMusic> teamMusics = new ArrayList<>();
+    @OneToMany(mappedBy = "group", cascade = {CascadeType.REMOVE})
+    private List<GroupMusic> groupMusics = new ArrayList<>();
 
-    @OneToMany(mappedBy = "team", cascade = {CascadeType.REMOVE})
-    private List<TeamUser> teamUsers = new ArrayList<>();
+    @OneToMany(mappedBy = "group", cascade = {CascadeType.REMOVE})
+    private List<GroupUser> groupUsers = new ArrayList<>();
 
-    public static Team createGroup(String groupName, String groupInfo) {
-        Team team = new Team();
-        team.groupName = groupName;
-        team.groupInfo = groupInfo;
-        return team;
+    public static Group createGroup(String groupName, String groupInfo) {
+        Group group = new Group();
+        group.groupName = groupName;
+        group.groupInfo = groupInfo;
+        return group;
     }
 
     public void updateGroup(String groupName, String groupImagePath, String groupInfo) {

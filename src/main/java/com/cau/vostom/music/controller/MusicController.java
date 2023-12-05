@@ -3,7 +3,6 @@ package com.cau.vostom.music.controller;
 import com.cau.vostom.auth.component.JwtTokenProvider;
 import com.cau.vostom.music.dto.request.MusicLikeDto;
 import com.cau.vostom.music.dto.request.RequestMusicTrainDto;
-import com.cau.vostom.music.dto.request.UploadMusicDto;
 import com.cau.vostom.music.service.MusicService;
 import com.cau.vostom.util.api.ApiResponse;
 import com.cau.vostom.util.api.ResponseCode;
@@ -16,9 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 
 @RestController
@@ -39,22 +36,26 @@ public class MusicController {
         return ApiResponse.success(null, ResponseCode.MUSIC_DELETED.getMessage());
     }
 
+    /* 
     //그룹에 음악 추가
     @Operation(summary = "그룹에 음악 추가")
     @PutMapping("/group")
     public ApiResponse<Long> uploadMusicToTeam(@RequestHeader String accessToken, @RequestBody UploadMusicDto uploadMusicDto) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        return ApiResponse.success(musicService.uploadMusicToTeam(userId, uploadMusicDto), ResponseCode.MUSIC_UPLOADED.getMessage());
+        return ApiResponse.success(musicService.uploadMusicToGroup(userId, uploadMusicDto), ResponseCode.MUSIC_UPLOADED.getMessage());
     }
+    */
 
+    /* 
     //그룹에 업로드한 음악 삭제
     @Operation(summary = "그룹에 업로드한 음악 삭제")
     @DeleteMapping("/group")
     public ApiResponse<Void> deleteMusicToTeam(@RequestHeader String accessToken, @RequestBody UploadMusicDto uploadMusicDto) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        musicService.deleteMusicToTeam(userId, uploadMusicDto);
+        musicService.deleteMusicToGroup(userId, uploadMusicDto);
         return ApiResponse.success(null, ResponseCode.GROUP_MUSIC_DELETED.getMessage());
     }
+    */
 
     //좋아요 누르기
     @Operation(summary = "노래에 좋아요 누르기")

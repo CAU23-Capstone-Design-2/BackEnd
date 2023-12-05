@@ -15,8 +15,8 @@ public class GlobalExceptionHandler {
         return ApiResponse.fail(e.getResponseCode());
     }
 
-    @ExceptionHandler(TeamException.class)
-    public ApiResponse<Void> handleTeamException(TeamException e) {
+    @ExceptionHandler(GroupException.class)
+    public ApiResponse<Void> handleTeamException(GroupException e) {
         log.info("TeamException: {}", e.getMessage());
         return ApiResponse.fail(e.getResponseCode());
     }

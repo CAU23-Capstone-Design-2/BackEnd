@@ -1,5 +1,10 @@
 package com.cau.vostom.music.service;
 
+import com.cau.vostom.group.domain.Group;
+import com.cau.vostom.group.domain.GroupMusic;
+import com.cau.vostom.group.repository.GroupMusicRepository;
+import com.cau.vostom.group.repository.GroupRepository;
+import com.cau.vostom.group.repository.GroupUserRepository;
 import com.cau.vostom.music.domain.Cache;
 import com.cau.vostom.music.domain.Music;
 import com.cau.vostom.music.domain.MusicLikes;
@@ -9,11 +14,6 @@ import com.cau.vostom.music.dto.request.UploadMusicDto;
 import com.cau.vostom.music.repository.CacheRepository;
 import com.cau.vostom.music.repository.MusicLikesRepository;
 import com.cau.vostom.music.repository.MusicRepository;
-import com.cau.vostom.team.domain.Team;
-import com.cau.vostom.team.domain.TeamMusic;
-import com.cau.vostom.team.repository.TeamMusicRepository;
-import com.cau.vostom.team.repository.TeamRepository;
-import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.User;
 import com.cau.vostom.user.repository.UserRepository;
 import com.cau.vostom.util.api.ResponseCode;
@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -36,8 +35,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.util.Objects;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Slf4j
 @Service
@@ -45,37 +42,37 @@ import java.nio.file.Paths;
 public class MusicService {
 
     private final MusicRepository musicRepository;
-    private final TeamMusicRepository teamMusicRepository;
-    private final TeamRepository teamRepository;
-    private final TeamUserRepository teamUserRepository;
+    private final GroupMusicRepository groupMusicRepository;
+    private final GroupRepository groupRepository;
+    private final GroupUserRepository groupUserRepository;
     private final UserRepository userRepository;
     private final MusicLikesRepository musicLikesRepository;
     private final CacheRepository cacheRepository;
 
     // 그룹에 음악 업로드
     @Transactional
-    public Long uploadMusicToTeam(Long userId, UploadMusicDto uploadMusicDto) {
-        if (!teamUserRepository.existsByUserIdAndTeamId(userId, uploadMusicDto.getTeamId())) {
-            throw new UserException(ResponseCode.NOT_TEAM_MEMBER);
+    public Long uploadMusicToGroup(Long userId, UploadMusicDto uploadMusicDto) {
+        if (!groupUserRepository.existsByUserIdAndGroupId(userId, uploadMusicDto.getGroupId())) {
+            throw new UserException(ResponseCode.NOT_GROUP_MEMBER);
         }
         Music music = getMusicById(uploadMusicDto.getMusicId());
         if (!Objects.equals(music.getUser().getId(), userId)) {
             throw new UserException(ResponseCode.NOT_MUSIC_OWNER);
         }
-        Team team = teamRepository.findById(uploadMusicDto.getTeamId())
-                .orElseThrow(() -> new MusicException(ResponseCode.TEAM_NOT_FOUND));
-        TeamMusic teamMusic = TeamMusic.createGroupMusic(team, music);
+        Group group = groupRepository.findById(uploadMusicDto.getGroupId())
+                .orElseThrow(() -> new MusicException(ResponseCode.GROUP_NOT_FOUND));
+        GroupMusic groupMusic = GroupMusic.createGroupMusic(group, music);
 
-        return teamMusicRepository.save(teamMusic).getId();
+        return groupMusicRepository.save(groupMusic).getId();
     }
 
     // 그룹에 업로드한 음악 삭제
     @Transactional
-    public void deleteMusicToTeam(Long userId, UploadMusicDto uploadMusicDto) {
+    public void deleteMusicToGroup(Long userId, UploadMusicDto uploadMusicDto) {
         Music music = getMusicById(uploadMusicDto.getMusicId());
         if (!Objects.equals(userId, music.getUser().getId()))
             throw new UserException(ResponseCode.NOT_MUSIC_OWNER);
-        teamMusicRepository.deleteByMusicIdAndTeamId(uploadMusicDto.getMusicId(), uploadMusicDto.getTeamId());
+        groupMusicRepository.deleteByMusicIdAndGroupId(uploadMusicDto.getMusicId(), uploadMusicDto.getGroupId());
     }
 
     // 좋아요 누르기

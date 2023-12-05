@@ -1,6 +1,5 @@
 package com.cau.vostom.user.dto.response;
 
-import com.cau.vostom.music.domain.Music;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

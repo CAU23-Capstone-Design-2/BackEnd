@@ -1,7 +1,7 @@
 package com.cau.vostom.user.controller;
 
 import com.cau.vostom.auth.component.JwtTokenProvider;
-import com.cau.vostom.team.dto.response.ResponseTeamMusicDto;
+import com.cau.vostom.group.dto.response.ResponseGroupMusicDto;
 import com.cau.vostom.user.dto.request.*;
 import com.cau.vostom.user.dto.response.ResponseCelebrityDto;
 import com.cau.vostom.user.dto.response.ResponseMusicDto;
@@ -18,11 +18,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @RestController @RequiredArgsConstructor
 @Api(tags = {"User"})
 @RequestMapping("/api/user")
@@ -36,6 +38,7 @@ public class UserController {
     @PutMapping
     public ApiResponse<Void> updateUser(@RequestHeader String accessToken,
                                          @RequestPart("imageFile") MultipartFile imageFile) throws IOException {
+        log.info("userController.updateUser()");
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         userService.updateUser(userId, imageFile);
         return ApiResponse.success(null, ResponseCode.USER_UPDATED.getMessage());
@@ -45,6 +48,7 @@ public class UserController {
     @Operation(summary = "회원 탈퇴", description = "deleteUserDto를 받아서 처리하고 반환데이터는 null")
     @DeleteMapping
     public ApiResponse<Void> deleteUser(@RequestBody DeleteUserDto deleteUserDto) {
+        log.info("userController.deleteUser()");
         userService.deleteUser(deleteUserDto);
         return ApiResponse.success(null, ResponseCode.USER_DELETED.getMessage());
     }
@@ -62,6 +66,7 @@ public class UserController {
     @Operation(summary = "유저 프로필 정보 조회")
     @GetMapping("/profile")
     public ApiResponse<ResponseUserDto> getUser(@RequestHeader String accessToken) {
+        log.info("userController.getUser()");
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(userService.getUserProfile(userId), ResponseCode.USER_READ.getMessage());
     }
@@ -70,6 +75,7 @@ public class UserController {
     @Operation(summary = "내가 좋아요 한 노래 조회")
     @GetMapping("/likedMusic")
     public ApiResponse<List<ResponseMusicDto>> getUserLikedMusic(@RequestHeader String accessToken) {
+        log.info("userController.getUserLikedMusic()");
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(userService.getUserLikedMusic(userId), ResponseCode.MUSIC_LIKED_READ.getMessage());
     }
@@ -78,6 +84,7 @@ public class UserController {
     @Operation(summary = "내 노래 조회")
     @GetMapping("/music")
     public ApiResponse<List<ResponseMusicDto>> getUserMusic(@RequestHeader String accessToken) {
+        log.info("userController.getUserMusic()");
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(userService.getUserMusic(userId, true), ResponseCode.MY_MUSIC_READ.getMessage());
     }
@@ -86,22 +93,25 @@ public class UserController {
     @Operation(summary = "요청 중인 내 노래 조회")
     @GetMapping("/music/request")
     public ApiResponse<List<ResponseMusicDto>> getUserMusicRequest(@RequestHeader String accessToken) {
+        log.info("userController.getUserMusicRequest()");
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(userService.getUserMusic(userId, false), ResponseCode.REQUESTED_MUSIC_READ.getMessage());
     }
 
     //내 그룹 노래 조회
     @Operation(summary = "내 그룹 노래 조회")
-    @GetMapping("/teamMusic")
-    public ApiResponse<List<ResponseTeamMusicDto>> getUserTeamMusic(@RequestHeader String accessToken) {
+    @GetMapping("/groupMusic")
+    public ApiResponse<List<ResponseGroupMusicDto>> getUserGroupMusic(@RequestHeader String accessToken) {
+        log.info("userController.getUserGroupMusic()");
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        return ApiResponse.success(userService.getUserTeamMusic(userId), ResponseCode.TEAM_MUSIC_READ.getMessage());
+        return ApiResponse.success(userService.getUserGroupMusic(userId), ResponseCode.GROUP_MUSIC_READ.getMessage());
     }
 
     //연예인 리스트 조회
     @Operation(summary = "연예인 리스트 조회")
     @GetMapping("/celebrityList")
     public ApiResponse<List<ResponseCelebrityDto>> getCelebrityList(@RequestHeader String accessToken){
+        log.info("userController.getCelebrityList()");
         return ApiResponse.success(userService.getCelebrityList(), ResponseCode.CELEBRITY_LISTED.getMessage());
     }
 
@@ -109,6 +119,7 @@ public class UserController {
     @Operation(summary = "특정 연예인의 노래 리스트 조회")
     @GetMapping("/celebrity/musicList")
     public ApiResponse<List<ResponseMusicDto>> getCelebrityMusic(@RequestHeader String accessToken, @RequestParam Long id) {
+        log.info("userController.getCelebrityMusic()");
         return ApiResponse.success(userService.getUserMusic(id, true), ResponseCode.CELEBRITY_MUSIC_LISTED.getMessage());
     }
 

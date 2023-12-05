@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 //그룹에 음악 업로드
 public class UploadMusicDto {
-    private Long teamId;
+    private Long groupId;
     private Long musicId;
 
-    public static UploadMusicDto of(Long teamId, Long musicId) {
-        return new UploadMusicDto(teamId, musicId);
+    public static UploadMusicDto of(Long groupId, Long musicId) {
+        return new UploadMusicDto(groupId, musicId);
     }
 }

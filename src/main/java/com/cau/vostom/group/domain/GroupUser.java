@@ -1,4 +1,4 @@
-package com.cau.vostom.team.domain;
+package com.cau.vostom.group.domain;
 
 import com.cau.vostom.user.domain.User;
 import lombok.AccessLevel;
@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 
 @Getter @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TeamUser {
+public class GroupUser {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "team_user_id")
+    @Column(name = "group_user_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
+    @JoinColumn(name = "group_id")
+    private Group group;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -29,11 +29,11 @@ public class TeamUser {
     @CreatedDate
     private LocalDateTime joinDate;
 
-    public static TeamUser createGroupUser(Team team, User user, boolean isLeader) {
-        TeamUser teamUser = new TeamUser();
-        teamUser.team = team;
-        teamUser.user = user;
-        teamUser.isLeader = isLeader;
-        return teamUser;
+    public static GroupUser createGroupUser(Group group, User user, boolean isLeader) {
+        GroupUser groupUser = new GroupUser();
+        groupUser.group = group;
+        groupUser.user = user;
+        groupUser.isLeader = isLeader;
+        return groupUser;
     }
 }

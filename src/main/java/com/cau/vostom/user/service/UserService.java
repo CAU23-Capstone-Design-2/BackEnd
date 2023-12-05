@@ -1,14 +1,13 @@
 package com.cau.vostom.user.service;
 
+import com.cau.vostom.group.domain.GroupMusic;
+import com.cau.vostom.group.domain.GroupUser;
+import com.cau.vostom.group.dto.response.ResponseGroupMusicDto;
+import com.cau.vostom.group.repository.GroupUserRepository;
 import com.cau.vostom.music.domain.Music;
 import com.cau.vostom.music.domain.MusicLikes;
 import com.cau.vostom.music.repository.MusicLikesRepository;
 import com.cau.vostom.music.repository.MusicRepository;
-import com.cau.vostom.team.domain.TeamMusic;
-import com.cau.vostom.team.domain.TeamUser;
-import com.cau.vostom.team.dto.response.ResponseTeamMusicDto;
-import com.cau.vostom.team.repository.TeamMusicRepository;
-import com.cau.vostom.team.repository.TeamUserRepository;
 import com.cau.vostom.user.domain.User;
 import com.cau.vostom.user.dto.request.*;
 import com.cau.vostom.user.dto.response.ResponseCelebrityDto;
@@ -17,7 +16,6 @@ import com.cau.vostom.user.dto.response.ResponseUserDto;
 import com.cau.vostom.user.repository.UserRepository;
 import com.cau.vostom.util.api.ResponseCode;
 import com.cau.vostom.util.exception.UserException;
-import com.nimbusds.jose.util.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -43,8 +42,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final MusicRepository musicRepository;
-    private final TeamUserRepository teamUserRepository;
-    private final TeamMusicRepository teamMusicRepository;
+    private final GroupUserRepository groupUserRepository;
     private final MusicLikesRepository musicLikesRepository;
 
     @Value("${file.upload-dir}")
@@ -58,7 +56,8 @@ public class UserService {
 
         log.info("\n\n파일 저장 경로: " + uploadDirectory + "\n\n");
         String extension = StringUtils.getFilenameExtension(imageFile.getOriginalFilename());
-        String fileName ="profile_" + userId + "." + extension;
+        String uuid = UUID.randomUUID().toString().substring(0, 8);
+        String fileName ="profile_" + userId + "_" +  uuid + "." + extension;
         File file = new File(uploadDirectory + fileName);
         imageFile.transferTo(file);
 
@@ -86,12 +85,6 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    // 회원 중복 체크
-    private void validateUser(Long kakaoId) {
-        if(userRepository.existsById((kakaoId))) {
-            throw new UserException(ResponseCode.USER_ALREADY_EXISTS);
-        }
-    }
 
     //회원 조회
     @Transactional(readOnly = true)
@@ -155,22 +148,25 @@ public class UserService {
 
     //내 그룹 노래 조회
     @Transactional(readOnly = true)
-    public List<ResponseTeamMusicDto> getUserTeamMusic(Long userId) {
+    public List<ResponseGroupMusicDto> getUserGroupMusic(Long userId) {
         User user = getUserById(userId);
-        List<TeamUser> teamUsers = teamUserRepository.findAllByUserId(user.getId());
-        if(teamUsers.isEmpty()) { //그룹에 속해 있지 않은 경우
+        List<GroupUser> groupUsers = groupUserRepository.findAllByUserId(user.getId());
+        if(groupUsers.isEmpty()) { //그룹에 속해 있지 않은 경우
+            log.info("\n\n그룹에 속해 있지 않은 경우\n\n");
             return List.of();
         }
-        List<ResponseTeamMusicDto> myTeamMusic = new ArrayList<>();
-        for(TeamUser teamUser : teamUsers) {
-            List<TeamMusic> teamMusics = teamUser.getTeam().getTeamMusics();
-            for(TeamMusic teamMusic : teamMusics) {
-                boolean isLiked = musicLikesRepository.existsByUserIdAndMusicId(userId,teamMusic.getMusic().getId());
-                int likeCount = teamMusic.getMusic().getLikes().size();
-                myTeamMusic.add(ResponseTeamMusicDto.of(teamMusic.getId(), teamMusic.getMusic().getTitle(), teamMusic.getMusic().getMusicImage(), teamMusic.getMusic().getUser().getId(), teamMusic.getMusic().getUser().getNickname(), teamMusic.getMusic().getUser().getProfileImage(), teamMusic.getMusic().getFileUrl(), likeCount, isLiked));
+        List<ResponseGroupMusicDto> myGroupMusics = new ArrayList<>();
+        for(GroupUser groupUser : groupUsers) {
+            log.info("groupUser : " + groupUser.getGroup().getId());
+            List<GroupMusic> groupMusics = groupUser.getGroup().getGroupMusics();
+            for(GroupMusic groupMusic : groupMusics) {
+                log.info("groupMusic : " + groupMusic.getMusic().getTitle());
+                boolean isLiked = musicLikesRepository.existsByUserIdAndMusicId(userId,groupMusic.getMusic().getId());
+                int likeCount = groupMusic.getMusic().getLikes().size();
+                myGroupMusics.add(ResponseGroupMusicDto.of( groupMusic.getMusic().getTitle(), groupMusic.getMusic().getMusicImage(), groupMusic.getMusic().getUser().getId(), groupMusic.getMusic().getUser().getNickname(), groupMusic.getMusic().getUser().getProfileImage(), groupMusic.getMusic().getFileUrl(), likeCount, isLiked));
             }
         }
-        return myTeamMusic;
+        return myGroupMusics;
     }
 
     //사용자 음성 데이터 업로드
