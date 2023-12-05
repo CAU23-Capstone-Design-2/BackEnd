@@ -19,12 +19,20 @@ import com.cau.vostom.util.api.ResponseCode;
 import com.cau.vostom.util.exception.TeamException;
 import com.cau.vostom.util.exception.UserException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
+@Slf4j
 @Service @RequiredArgsConstructor
 public class TeamService {
 
@@ -34,16 +42,48 @@ public class TeamService {
     private final MusicRepository musicRepository;
     private final MusicLikesRepository musicLikesRepository;
 
+    @Value("${file.upload-dir}")
+    private String uploadDirectory;
+
     //그룹 생성
     @Transactional
     public Long createTeam(CreateTeamDto createTeamDto, Long userId) {
-        Team team = Team.createGroup(createTeamDto.getTeamName(), createTeamDto.getTeamImage(), createTeamDto.getTeamDescription());
-        User user = getUserById(userId);
+        log.info("createTeam");
+        log.info("TeamName : " + createTeamDto.getTeamName() + "\n\n");
+        log.info("TeamDescription : " + createTeamDto.getTeamDescription() + "\n\n");
+        log.info("TeamImage : " + createTeamDto.getTeamImage().getOriginalFilename() + "\n\n");
+
+        // 그룹 명, 그룹 설명 저장
+        Team team = Team.createGroup(createTeamDto.getTeamName(),createTeamDto.getTeamDescription());
+
+        // 그룹 이미지는 업로드 후 경로 저장
+        MultipartFile imageFile = createTeamDto.getTeamImage();
+        String extension = imageFile.getOriginalFilename().substring(imageFile.getOriginalFilename().lastIndexOf("."));
+        String fileName = saveImage(imageFile, extension);
+        String filePath = "http://165.194.104.167:1100/api/group/profileImage/" + fileName;
+        team.setGroupImagePath(filePath);
         Long teamId = teamRepository.save(team).getId();
+
+        User user = getUserById(userId);
         TeamUser teamUser = TeamUser.createGroupUser(team, user, true);
         teamUserRepository.save(teamUser);
         return teamId;
     }
+
+       //사용자 프로필 사진 다운로드
+    @Transactional(readOnly = true)
+    public ByteArrayResource downloadProfileImage(String fileName) throws IOException {
+        log.info("downloadProfileImage");
+        log.info("fileName : " + fileName + "\n\n");
+        // 프로필 이미지 파일 경로
+        String imagePath = uploadDirectory + fileName;
+        log.info("imagePath : " + imagePath + "\n\n");
+
+        // 프로필 이미지 파일을 읽어와서 Resource로 반환
+            byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
+            return new ByteArrayResource(imageBytes);
+        }
+
 
     //그룹 가입
     @Transactional
@@ -59,13 +99,30 @@ public class TeamService {
     //그룹 정보 수정
     @Transactional
     public void updateTeam(UpdateTeamDto updateTeamDto, Long userId) {
+        log.info("updateTeam");
+        log.info("TeamId: " + updateTeamDto.getTeamId() + "\n\n");
+        log.info("TeamName : " + updateTeamDto.getTeamName() + "\n\n");
+        log.info("TeamDescription : " + updateTeamDto.getTeamDescription() + "\n\n");
+        log.info("TeamImage : " + updateTeamDto.getTeamImage().getOriginalFilename() + "\n\n");
+        if(!teamRepository.existsById(updateTeamDto.getTeamId())) throw new TeamException(ResponseCode.TEAM_NOT_FOUND);
         Team team = getTeamById(updateTeamDto.getTeamId());
         if(!teamUserRepository.existsByUserIdAndTeamId(userId, updateTeamDto.getTeamId())){
             throw new UserException(ResponseCode.NOT_TEAM_MEMBER);
         }
         if(!teamUserRepository.findByUserIdAndTeamId(userId, updateTeamDto.getTeamId()).isLeader()) throw new TeamException(ResponseCode.NOT_LEADER);
-        team.updateGroup(updateTeamDto.getTeamName(), updateTeamDto.getTeamImage(), updateTeamDto.getTeamDescription());
-        teamRepository.save(team);
+        if(updateTeamDto.getTeamImage() != null) {
+            MultipartFile imageFile = updateTeamDto.getTeamImage();
+            String extension = imageFile.getOriginalFilename().substring(imageFile.getOriginalFilename().lastIndexOf("."));
+            String fileName = saveImage(imageFile, extension);
+            String filePath = "http://165.194.104.167:1100/api/group/profileImage/" + fileName;
+            team.updateGroup(updateTeamDto.getTeamName(), filePath, updateTeamDto.getTeamDescription());
+            teamRepository.save(team);
+            return;
+        }else{
+            team.updateGroup(updateTeamDto.getTeamName(), team.getGroupImagePath(), updateTeamDto.getTeamDescription());
+            teamRepository.save(team);
+            return;
+        }
     }
 
     //모든 그룹 정보 조회
@@ -75,7 +132,7 @@ public class TeamService {
         List<ResponseTeamDto> allTeamInfo = new ArrayList<>();
         for(Team team : teams) {
             TeamUser teamLeader = teamUserRepository.findByTeamIdAndIsLeader(team.getId(), true);
-            allTeamInfo.add(ResponseTeamDto.of(team.getId(), team.getGroupName(), team.getGroupImage(), team.getGroupInfo(), team.getTeamUsers().size(), teamLeader.getUser().getId(), teamLeader.getUser().getNickname(), teamLeader.getUser().getProfileImage()));
+            allTeamInfo.add(ResponseTeamDto.of(team.getId(), team.getGroupName(), team.getGroupImagePath(), team.getGroupInfo(), team.getTeamUsers().size(), teamLeader.getUser().getId(), teamLeader.getUser().getNickname(), teamLeader.getUser().getProfileImage()));
         }
         return allTeamInfo;
     }
@@ -89,7 +146,7 @@ public class TeamService {
         for(TeamUser teamUser : teamUsers) {
             Team team = teamUser.getTeam();
             TeamUser teamLeader = teamUserRepository.findByTeamIdAndIsLeader(team.getId(), true);
-            myTeamInfo.add(ResponseTeamDto.of(team.getId(), team.getGroupName(), team.getGroupImage(), team.getGroupInfo(), team.getTeamUsers().size(), teamLeader.getUser().getId(), teamLeader.getUser().getNickname(), teamLeader.getUser().getProfileImage()));
+            myTeamInfo.add(ResponseTeamDto.of(team.getId(), team.getGroupName(), team.getGroupImagePath(), team.getGroupInfo(), team.getTeamUsers().size(), teamLeader.getUser().getId(), teamLeader.getUser().getNickname(), teamLeader.getUser().getProfileImage()));
         }
         return myTeamInfo;
     }
@@ -130,6 +187,18 @@ public class TeamService {
 
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserException(ResponseCode.USER_NOT_FOUND));
+    }
+
+    private String saveImage(MultipartFile imageFile, String extension) {
+        String fileName = "group_profile_" + imageFile.getOriginalFilename() + extension;
+        try {
+            log.info("\n\n파일 저장\n\n");
+            log.info("fileName : " + fileName + "\n\n");
+            imageFile.transferTo(new java.io.File(uploadDirectory + fileName));
+        } catch (Exception e) {
+            throw new TeamException(ResponseCode.FILE_UPLOAD_FAILED);
+        }
+        return fileName;
     }
 
 }

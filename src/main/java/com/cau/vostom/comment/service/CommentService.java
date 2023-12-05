@@ -15,6 +15,8 @@ import com.cau.vostom.user.repository.UserRepository;
 import com.cau.vostom.util.api.ResponseCode;
 import com.cau.vostom.util.exception.UserException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CommentService {
@@ -107,6 +110,8 @@ public class CommentService {
     //댓글 수정
     @Transactional
     public void updateComment(Long userId, Long commentId, String content) {
+        log.info("\n\n댓글 수정\n\n");
+        log.info("content : " + content + "\n\n");
         Comment comment = getCommentById(commentId);
         if(!Objects.equals(comment.getUser().getId(), userId)) throw new UserException(ResponseCode.NOT_COMMENT_OWNER);
         comment.updateComment(content);

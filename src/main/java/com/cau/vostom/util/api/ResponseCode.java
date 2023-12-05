@@ -37,6 +37,7 @@ public enum ResponseCode {
 
     // 500 Internal Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "서버에 오류가 발생하였습니다."),
+    FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, false, "파일 업로드에 실패하였습니다."),
 
     // 200 OK
     USER_LOGINED(HttpStatus.OK, true, "로그인 되었습니다."),

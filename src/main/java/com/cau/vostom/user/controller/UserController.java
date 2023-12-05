@@ -13,6 +13,9 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -127,11 +130,21 @@ public class UserController {
         return ApiResponse.success(userService.checkTrained(userId), ResponseCode.CHECK_TRAINED.getMessage());
     }
 
-    //프로필 이미지 다운로드
-//    @Operation(summary = "프로필 이미지 다운로드")
-//    @GetMapping("/profileImage")
-//    public ApiResponse<ByteArrayResource> downloadProfileImage(@RequestHeader String accessToken) throws IOException {
-//        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-//        return ApiResponse.success(userService.downloadProfileImage(userId), ResponseCode.USER_READ.getMessage());
-//    }
+    @Operation(summary = "프로필 이미지 다운로드")
+    @GetMapping(value = "/profileImage/{fileName}", produces = { "image/jpeg", "image/png" })
+    public ResponseEntity<ByteArrayResource> downloadProfileImage(@PathVariable String fileName) throws IOException {
+        ByteArrayResource resource = userService.downloadProfileImage(fileName);
+
+        HttpHeaders headers = new HttpHeaders();
+        if (fileName.contains(".jpg")) {
+            headers.setContentType(MediaType.IMAGE_JPEG);
+        } else if (fileName.contains(".png")) {
+            headers.setContentType(MediaType.IMAGE_PNG);
+        }
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(resource.contentLength())
+                .body(resource);
+    }
 }

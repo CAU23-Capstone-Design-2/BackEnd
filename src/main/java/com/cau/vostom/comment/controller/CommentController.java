@@ -11,10 +11,13 @@ import com.cau.vostom.util.api.ResponseCode;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @Api(tags = {"Comment"})
@@ -35,6 +38,8 @@ public class CommentController {
     @Operation(summary = "댓글 작성")
     @PostMapping
     public ApiResponse<Long> createComment(@RequestHeader String accessToken, @RequestBody CreateCommentDto createCommentDto) {
+        log.info("CommentController createComment");
+        log.info("content : " + createCommentDto.getContent());
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(commentService.writeComment(userId, createCommentDto), ResponseCode.COMMENT_CREATED.getMessage());
     }
@@ -77,6 +82,8 @@ public class CommentController {
     @Operation(summary = "댓글 수정")
     @PutMapping
     public ApiResponse<Void> updateComment(@RequestHeader String accessToken, @RequestParam String id, @RequestBody String content) {
+        log.info("CommentController updateComment");
+        log.info("content : " + content);
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         commentService.updateComment(userId, Long.parseLong(id), content);
         return ApiResponse.success(null, ResponseCode.COMMENT_UPDATED.getMessage());
