@@ -3,7 +3,6 @@ package com.cau.vostom.music.service;
 import com.cau.vostom.music.domain.Cache;
 import com.cau.vostom.music.domain.Music;
 import com.cau.vostom.music.domain.MusicLikes;
-import com.cau.vostom.music.dto.request.DeleteMusicDto;
 import com.cau.vostom.music.dto.request.MusicLikeDto;
 import com.cau.vostom.music.dto.request.RequestMusicTrainDto;
 import com.cau.vostom.music.dto.request.UploadMusicDto;
@@ -102,8 +101,10 @@ public class MusicService {
 
     // 음악 삭제
     @Transactional
-    public void deleteMusic(DeleteMusicDto deleteMusicDto) {
-        Music music = getMusicById(deleteMusicDto.getMusicId());
+    public void deleteMusic(Long userId, Long musicId) {
+        Music music = getMusicById(musicId);
+        if (!Objects.equals(music.getUser().getId(), userId))
+            throw new UserException(ResponseCode.NOT_MUSIC_OWNER);
         musicRepository.delete(music);
     }
 
