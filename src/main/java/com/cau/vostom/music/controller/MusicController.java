@@ -1,7 +1,6 @@
 package com.cau.vostom.music.controller;
 
 import com.cau.vostom.auth.component.JwtTokenProvider;
-import com.cau.vostom.music.dto.request.DeleteMusicDto;
 import com.cau.vostom.music.dto.request.MusicLikeDto;
 import com.cau.vostom.music.dto.request.RequestMusicTrainDto;
 import com.cau.vostom.music.dto.request.UploadMusicDto;
@@ -33,9 +32,10 @@ public class MusicController {
 
     //내 음악 삭제
     @Operation(summary = "내 음악 삭제")
-    @DeleteMapping
-    public ApiResponse<Void> deleteMusic(DeleteMusicDto deleteMusicDto) {
-        musicService.deleteMusic(deleteMusicDto);
+    @DeleteMapping("/{musicId}")
+    public ApiResponse<Void> deleteMusic(@RequestHeader String accessToken, @PathVariable Long musicId) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        musicService.deleteMusic(userId, musicId);
         return ApiResponse.success(null, ResponseCode.MUSIC_DELETED.getMessage());
     }
 
