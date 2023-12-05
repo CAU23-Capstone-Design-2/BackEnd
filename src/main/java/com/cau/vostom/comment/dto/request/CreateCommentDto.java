@@ -8,10 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateCommentDto {
-    private Long coverSongId;
     private String content;
 
-    public static CreateCommentDto of(Long coverSongId, String content) {
-        return new CreateCommentDto(coverSongId, content);
+    public static CreateCommentDto of(String content) {
+        return new CreateCommentDto(content);
     }
 }

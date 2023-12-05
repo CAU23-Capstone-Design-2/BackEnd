@@ -37,55 +37,59 @@ public class CommentController {
     //댓글 작성
     @Operation(summary = "댓글 작성")
     @PostMapping
-    public ApiResponse<Long> createComment(@RequestHeader String accessToken, @RequestBody CreateCommentDto createCommentDto) {
+    public ApiResponse<Long> createComment(@RequestHeader String accessToken,  @RequestParam Long id, @RequestBody CreateCommentDto createCommentDto) {
         log.info("CommentController createComment");
         log.info("content : " + createCommentDto.getContent());
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        return ApiResponse.success(commentService.writeComment(userId, createCommentDto), ResponseCode.COMMENT_CREATED.getMessage());
+        return ApiResponse.success(commentService.writeComment(userId, id, createCommentDto.getContent()), ResponseCode.COMMENT_CREATED.getMessage());
     }
+
+    //댓글 수정
+    @Operation(summary = "댓글 수정")
+    @PutMapping
+    public ApiResponse<Void> updateComment(@RequestHeader String accessToken, @RequestParam Long id, @RequestBody CreateCommentDto createCommentDto) {
+        log.info("CommentController updateComment");
+        log.info("content : " + createCommentDto.getContent());
+        //content = content.substring(1, content.length() - 1);
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        commentService.updateComment(userId, id, createCommentDto.getContent());
+        return ApiResponse.success(null, ResponseCode.COMMENT_UPDATED.getMessage());
+    }
+
 
     @Operation(summary = "노래의 댓글 조회")
     @GetMapping("/music")
-    public ApiResponse<List<ResponseMusicCommentDto>> getMusicComment(@RequestHeader String accessToken, @RequestParam String id) {
+    public ApiResponse<List<ResponseMusicCommentDto>> getMusicComment(@RequestHeader String accessToken, @RequestParam Long id) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        return ApiResponse.success(commentService.getMusicComment(Long.parseLong(id), userId), ResponseCode.MUSIC_COMMENT_READ.getMessage());
+        return ApiResponse.success(commentService.getMusicComment(id, userId), ResponseCode.MUSIC_COMMENT_READ.getMessage());
     }
 
     //댓글 좋아요
     @Operation(summary = "댓글 좋아요")
     @PostMapping("/like")
-    public ApiResponse<Void> likeComment(@RequestHeader String accessToken, @RequestParam String id) {
+    public ApiResponse<Void> likeComment(@RequestHeader String accessToken, @RequestParam Long id) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        commentService.likeComment(RequestCommentLikeDto.of(userId, Long.parseLong(id)));
+        commentService.likeComment(RequestCommentLikeDto.of(userId, id));
         return ApiResponse.success(null, ResponseCode.COMMENT_LIKE_CREATED.getMessage());
     }
 
     //댓글 좋아요 취소
     @Operation(summary = "댓글 좋아요 취소")
     @DeleteMapping("/like/undo")
-    public ApiResponse<Void> deleteLike(@RequestHeader String accessToken, @RequestParam String id) {
+    public ApiResponse<Void> deleteLike(@RequestHeader String accessToken, @RequestParam Long id) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        commentService.unlikeComment(RequestCommentLikeDto.of(userId, Long.parseLong(id)));
+        commentService.unlikeComment(RequestCommentLikeDto.of(userId, id));
         return ApiResponse.success(null, ResponseCode.COMMENT_LIKE_UNDO.getMessage());
     }
 
     //댓글 삭제
     @Operation(summary = "댓글 삭제")
     @DeleteMapping
-    public ApiResponse<Void> deleteComment(@RequestHeader String accessToken, @RequestParam String id) {
+    public ApiResponse<Void> deleteComment(@RequestHeader String accessToken, @RequestParam Long id) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        commentService.deleteComment(userId, Long.parseLong(id));
+        commentService.deleteComment(userId, id);
         return ApiResponse.success(null, ResponseCode.COMMENT_DELETED.getMessage());
     }
 
-    //댓글 수정
-    @Operation(summary = "댓글 수정")
-    @PutMapping
-    public ApiResponse<Void> updateComment(@RequestHeader String accessToken, @RequestParam String id, @RequestBody String content) {
-        log.info("CommentController updateComment");
-        log.info("content : " + content);
-        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        commentService.updateComment(userId, Long.parseLong(id), content);
-        return ApiResponse.success(null, ResponseCode.COMMENT_UPDATED.getMessage());
-    }
 }
+

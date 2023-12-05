@@ -36,10 +36,10 @@ public class CommentService {
 
     //댓글 쓰기
     @Transactional
-    public Long writeComment(Long userId, CreateCommentDto createCommentDto) {
+    public Long writeComment(Long userId, Long musicId, String content) {
         User user = getUserById(userId);
-        Music music = getMusicById(createCommentDto.getCoverSongId());
-        Comment comment = Comment.createComment(user, music, createCommentDto.getContent());
+        Music music = getMusicById(musicId);
+        Comment comment = Comment.createComment(user, music, content);
         return commentRepository.save(comment).getId();
     }
 
