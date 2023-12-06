@@ -3,8 +3,7 @@ package com.cau.vostom.group.service;
 import com.cau.vostom.group.domain.Group;
 import com.cau.vostom.group.domain.GroupMusic;
 import com.cau.vostom.group.domain.GroupUser;
-import com.cau.vostom.group.dto.request.CreateGroupDto;
-import com.cau.vostom.group.dto.request.UpdateGroupDto;
+import com.cau.vostom.group.dto.request.RequestGroupDto;
 import com.cau.vostom.group.dto.response.ResponseGroupDto;
 import com.cau.vostom.group.dto.response.ResponseGroupMusicDto;
 import com.cau.vostom.group.repository.GroupMusicRepository;
@@ -52,7 +51,7 @@ public class GroupService {
 
     // 그룹 생성
     @Transactional
-    public Long createGroup(CreateGroupDto createGroupDto, Long userId, MultipartFile imageFile) {
+    public Long createGroup(RequestGroupDto createGroupDto, Long userId, MultipartFile imageFile) {
         log.info("createGroup");
         log.info("GroupName : " + createGroupDto.getGroupName() + "\n\n");
         log.info("GroupDescription : " + createGroupDto.getGroupDescription() + "\n\n");
@@ -70,6 +69,29 @@ public class GroupService {
         User user = getUserById(userId);
         GroupUser groupUser = GroupUser.createGroupUser(group, user, true);
         groupUserRepository.save(groupUser);
+        return groupId;
+    }
+
+    // 그룹 정보 수정
+    @Transactional
+    public Long updateGroup(RequestGroupDto requestGroupDto, Long userId, MultipartFile imageFile, Long groupId) {
+        log.info("updateGroup");
+        log.info("GroupName : " + requestGroupDto.getGroupName() + "\n\n");
+        log.info("GroupDescription : " + requestGroupDto.getGroupDescription() + "\n\n");
+        log.info("GroupImage : " + imageFile.getOriginalFilename() + "\n\n");
+
+        if (!groupRepository.existsById(groupId))
+            throw new GroupException(ResponseCode.GROUP_NOT_FOUND);
+        Group group = getGroupById(groupId);
+        if (!groupUserRepository.existsByUserIdAndGroupId(userId, groupId)) {
+            throw new UserException(ResponseCode.NOT_GROUP_MEMBER);
+        }
+        if (!groupUserRepository.findByUserIdAndGroupId(userId, groupId).isLeader())
+            throw new GroupException(ResponseCode.NOT_LEADER);
+        String fileName = saveImage(imageFile);
+        String filePath = "http://165.194.104.167:1100/api/groups/profileImage/" + fileName;
+        group.updateGroup(requestGroupDto.getGroupName(), filePath, requestGroupDto.getGroupDescription());
+        groupRepository.save(group);
         return groupId;
     }
 
@@ -100,36 +122,6 @@ public class GroupService {
         groupUserRepository.save(groupUser);
     }
 
-    // 그룹 정보 수정
-    @Transactional
-    public void updateGroup(UpdateGroupDto updateGroupDto, Long groupId, Long userId) {
-        log.info("updateGroup");
-        log.info("groupId: " + groupId + "\n\n");
-        log.info("groupName : " + updateGroupDto.getGroupName() + "\n\n");
-        log.info("groupDescription : " + updateGroupDto.getGroupDescription() + "\n\n");
-        log.info("groupImage : " + updateGroupDto.getGroupImage().getOriginalFilename() + "\n\n");
-        if (!groupRepository.existsById(groupId))
-            throw new GroupException(ResponseCode.GROUP_NOT_FOUND);
-        Group group = getGroupById(groupId);
-        if (!groupUserRepository.existsByUserIdAndGroupId(userId, groupId)) {
-            throw new UserException(ResponseCode.NOT_GROUP_MEMBER);
-        }
-        if (!groupUserRepository.findByUserIdAndGroupId(userId, groupId).isLeader())
-            throw new GroupException(ResponseCode.NOT_LEADER);
-        if (updateGroupDto.getGroupImage() != null) {
-            MultipartFile imageFile = updateGroupDto.getGroupImage();
-            String fileName = saveImage(imageFile);
-            String filePath = "http://165.194.104.167:1100/api/groups/profileImage/" + fileName;
-            group.updateGroup(updateGroupDto.getGroupName(), filePath, updateGroupDto.getGroupDescription());
-            groupRepository.save(group);
-            return;
-        } else {
-            group.updateGroup(updateGroupDto.getGroupName(), group.getGroupImagePath(),
-                    updateGroupDto.getGroupDescription());
-            groupRepository.save(group);
-            return;
-        }
-    }
 
     // 모든 그룹 정보 조회
     @Transactional(readOnly = true)

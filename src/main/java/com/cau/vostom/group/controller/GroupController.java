@@ -1,8 +1,7 @@
 package com.cau.vostom.group.controller;
 
 import com.cau.vostom.auth.component.JwtTokenProvider;
-import com.cau.vostom.group.dto.request.CreateGroupDto;
-import com.cau.vostom.group.dto.request.UpdateGroupDto;
+import com.cau.vostom.group.dto.request.RequestGroupDto;
 import com.cau.vostom.group.dto.response.ResponseGroupDto;
 import com.cau.vostom.group.dto.response.ResponseGroupMusicDto;
 import com.cau.vostom.group.service.GroupService;
@@ -67,7 +66,7 @@ public class GroupController {
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ApiResponse<Long> createGroup(@RequestHeader String accessToken, 
                                         @RequestPart MultipartFile groupImage,
-                                        @RequestPart CreateGroupDto createGroupDto ) throws IOException{
+                                        @RequestPart RequestGroupDto createGroupDto ) throws IOException{
         log.info("groupConteroller.createGroup()");
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         return ApiResponse.success(groupService.createGroup(createGroupDto, userId, groupImage ), ResponseCode.GROUP_CREATED.getMessage());
@@ -76,12 +75,13 @@ public class GroupController {
     //그룹 정보 수정
     @Operation(summary = "그룹 정보 수정")
     @PutMapping("/{groupId}")
-    public ApiResponse<Void> updateGroup(@RequestHeader String accessToken, @PathVariable Long groupId,  
-                                                    @RequestBody UpdateGroupDto updateGroupDto) {
+    public ApiResponse<Long> updateGroup(@RequestHeader String accessToken, 
+                                         @PathVariable Long groupId,
+                                         @RequestPart MultipartFile groupImage,
+                                         @RequestPart RequestGroupDto requestGroupDto ) throws IOException{
         log.info("groupController.updateGroup()");
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        groupService.updateGroup(updateGroupDto, groupId, userId);
-        return ApiResponse.success(null, ResponseCode.GROUP_UPDATED.getMessage());
+        return ApiResponse.success(groupService.updateGroup(requestGroupDto, userId, groupImage, groupId), ResponseCode.GROUP_UPDATED.getMessage());
     }
 
 

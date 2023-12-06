@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateGroupDto{
+public class RequestGroupDto{
     private String groupName;
     private String groupDescription;
-    public static CreateGroupDto of(String groupName, String groupDescription) {
-        return new CreateGroupDto(groupName, groupDescription);
+    public static RequestGroupDto of(String groupName, String groupDescription) {
+        return new RequestGroupDto(groupName, groupDescription);
     }
 }

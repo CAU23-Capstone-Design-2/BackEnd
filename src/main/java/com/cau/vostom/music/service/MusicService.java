@@ -180,7 +180,9 @@ public class MusicService {
                     outputStream.write(buffer, 0, bytesRead);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+//                e.printStackTrace();
+                System.out.println("Connection Reset By Peer");
+                System.out.println("스트리밍 종료");
             }
         };
 
