@@ -168,12 +168,15 @@ public class MusicService {
      *   3. 그룹에 소속된 사용자
      * 
      */
+
+    
     public ResponseEntity<StreamingResponseBody> streamMusic(Long userId, Long musicId) throws IOException{
         User user = getUserById(userId);
         Music music = getMusicById(musicId);
         checkValidation(user,music);
         String musicDirectoryPath = "/home/snark/dev/jiwoo/RVC/RVC-Model/inference_result/";
-        String filePath = musicDirectoryPath + music.getFileUrl();
+        String fileUrl = music.getFileUrl();
+        String filePath = musicDirectoryPath + fileUrl;
 
         StreamingResponseBody responseBody = outputStream -> {
             try (InputStream inputStream = new FileInputStream(filePath)) {
@@ -183,18 +186,18 @@ public class MusicService {
                     outputStream.write(buffer, 0, bytesRead);
                 }
             } catch (IOException e) {
-//                e.printStackTrace();
+                e.printStackTrace();
                 System.out.println("Connection Reset By Peer");
                 System.out.println("스트리밍 종료");
+            } finally {
+                outputStream.flush();
+                outputStream.close();
             }
         };
 
-
-        
         return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=\"" + music.getFileUrl() + "\"")
+                .header("Content-Disposition", "attachment; filename=\"" + fileUrl + "\"")
                 .body(responseBody);
-
 
     }
 
@@ -204,7 +207,7 @@ public class MusicService {
         ProcessBuilder processBuilder = new ProcessBuilder(command.split("\\s+"));
         processBuilder.directory(new File(newDirectoryPath));
         processBuilder.redirectErrorStream(true);
-        Process process = processBuilder.start();
+        Process process = processBuilder.start();   
 
         // 프로세스의 출력 및 에러 스트림을 읽어오기
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
