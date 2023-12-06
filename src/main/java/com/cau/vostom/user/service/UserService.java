@@ -163,7 +163,7 @@ public class UserService {
                 log.info("groupMusic : " + groupMusic.getMusic().getTitle());
                 boolean isLiked = musicLikesRepository.existsByUserIdAndMusicId(userId,groupMusic.getMusic().getId());
                 int likeCount = groupMusic.getMusic().getLikes().size();
-                myGroupMusics.add(ResponseGroupMusicDto.of( groupMusic.getMusic().getTitle(), groupMusic.getMusic().getMusicImage(), groupMusic.getMusic().getUser().getId(), groupMusic.getMusic().getUser().getNickname(), groupMusic.getMusic().getUser().getProfileImage(), groupMusic.getMusic().getFileUrl(), likeCount, isLiked));
+                myGroupMusics.add(ResponseGroupMusicDto.of( groupMusic.getMusic().getId(),groupMusic.getMusic().getTitle(), groupMusic.getMusic().getMusicImage(), groupMusic.getMusic().getUser().getId(), groupMusic.getMusic().getUser().getNickname(), groupMusic.getMusic().getUser().getProfileImage(), groupMusic.getMusic().getFileUrl(), likeCount, isLiked));
             }
         }
         return myGroupMusics;

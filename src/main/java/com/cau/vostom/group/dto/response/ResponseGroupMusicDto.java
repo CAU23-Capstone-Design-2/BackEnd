@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ResponseGroupMusicDto {
+    private Long id;
     private String title; //
     private String albumArtUri; //커버곡 사진
     private Long userId; //커버곡 유저 아이디
@@ -16,7 +17,7 @@ public class ResponseGroupMusicDto {
     private int likeCount;
     private boolean likedByUser;
 
-    public static ResponseGroupMusicDto of(String title, String albumArtUri, Long userId, String userName, String userImage, String contentUri, int likeCount, boolean isLike) {
-        return new ResponseGroupMusicDto(title, albumArtUri, userId, userName, userImage, contentUri, likeCount, isLike);
+    public static ResponseGroupMusicDto of(Long id, String title, String albumArtUri, Long userId, String userName, String userImage, String contentUri, int likeCount, boolean isLike) {
+        return new ResponseGroupMusicDto(id, title, albumArtUri, userId, userName, userImage, contentUri, likeCount, isLike);
     }
 }

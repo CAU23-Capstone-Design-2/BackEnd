@@ -191,6 +191,7 @@ public class GroupService {
             boolean isLiked = musicLikesRepository.existsByUserIdAndMusicId(userId, groupMusic.getMusic().getId());
             int likeCount = groupMusic.getMusic().getLikes().size();
             myGroupMusic.add(ResponseGroupMusicDto.of(
+                groupMusic.getMusic().getId(),
                 groupMusic.getMusic().getTitle(),
                 groupMusic.getMusic().getMusicImage(), groupMusic.getMusic().getUser().getId(),
                 groupMusic.getMusic().getUser().getNickname(), groupMusic.getMusic().getUser().getProfileImage(),
@@ -246,6 +247,7 @@ public class GroupService {
     }
 
     // 그룹에 노래 추가
+    @Transactional
     public Long addSongToGroup(Long userId, Long groupId, Long musicId) {
         if(!groupUserRepository.existsByUserIdAndGroupId(userId, groupId)) {
             throw new UserException(ResponseCode.NOT_GROUP_MEMBER);
@@ -261,6 +263,7 @@ public class GroupService {
     }
 
     // 그룹에 노래 삭제
+    @Transactional
     public void removeSongFromGroup(Long userId, Long groupId, Long musicId) {
         Music music = getMusicById(musicId);
         if(!Objects.equals(userId, music.getUser().getId()))
