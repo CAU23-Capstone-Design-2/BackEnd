@@ -117,7 +117,10 @@ public class MusicService {
         String youtubeCode = d_url.split("v=")[1].split("&")[0];
         log.info("\n\n유튜브 코드 파싱하기: " + youtubeCode);
 
-
+        // fileUrl이 이미 있으면 예외 발생
+        if (musicRepository.existsByFileUrl(userId.toString() + '_' + youtubeCode + ".mp3")) {
+            throw new MusicException(ResponseCode.MUSIC_ALREADY_EXISTS);
+        }
         
         Music music = musicRepository.save(
                 Music.createMusic(getUserById(userId), title, imgUrl, userId.toString() + '_' + youtubeCode + ".mp3"));

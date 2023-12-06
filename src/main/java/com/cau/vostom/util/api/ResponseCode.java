@@ -34,6 +34,7 @@ public enum ResponseCode {
     GROUP_ALREADY_JOINED(HttpStatus.CONFLICT, false, "이미 가입한 그룹입니다."),
     LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT, false, "이미 좋아요한 음악입니다."),
     LIKE_ALREADY_DELETED(HttpStatus.CONFLICT, false, "이미 좋아요한 음악입니다."),
+    MUSIC_ALREADY_EXISTS(HttpStatus.CONFLICT, false, "이미 존재하는 음악입니다."),
 
     // 500 Internal Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, "서버에 오류가 발생하였습니다."),

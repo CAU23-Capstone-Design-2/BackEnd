@@ -11,7 +11,7 @@ public interface MusicRepository extends JpaRepository<Music, Long>{
 
     List<Music> findAllByUserIdAndIsTrained(Long userId, boolean isTrained);
     List<Music> findLikedMusicsByUserId(Long userId);
-
+    boolean existsByFileUrl(String fileUrl);
     boolean existsByUserIdAndId(Long userId, Long musicId);
 
 
