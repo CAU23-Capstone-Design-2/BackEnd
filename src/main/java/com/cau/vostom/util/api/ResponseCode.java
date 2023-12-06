@@ -77,6 +77,7 @@ public enum ResponseCode {
     CELEBRITY_MUSIC_LISTED(HttpStatus.OK, true, "연예인의 노래 리스트를 조회하였습니다."),
     SONG_ADDED(HttpStatus.OK, true, "노래가 추가되었습니다."),
     SONG_REMOVED(HttpStatus.OK, true, "노래가 삭제되었습니다."),
+    CRAWL_SUCCESS(HttpStatus.OK, true, "크롤링이 완료되었습니다."),
 
     // 201 Created
     USER_CREATED(HttpStatus.CREATED, true, "사용자가 생성되었습니다.");

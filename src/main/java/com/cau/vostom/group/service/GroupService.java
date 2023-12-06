@@ -248,6 +248,9 @@ public class GroupService {
         if(!Objects.equals(music.getUser().getId(), userId)) {
             throw new UserException(ResponseCode.NOT_MUSIC_OWNER);
         }
+        if(groupMusicRepository.existsByMusicIdAndGroupId(musicId, groupId)) {
+            throw new GroupException(ResponseCode.MUSIC_ALREADY_EXISTS);
+        }
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new MusicException(ResponseCode.GROUP_NOT_FOUND));
         GroupMusic groupMusic = GroupMusic.createGroupMusic(group, music);
 

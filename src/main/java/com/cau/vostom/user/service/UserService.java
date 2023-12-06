@@ -160,9 +160,15 @@ public class UserService {
             log.info("groupUser : " + groupUser.getGroup().getId());
             List<GroupMusic> groupMusics = groupUser.getGroup().getGroupMusics();
             for(GroupMusic groupMusic : groupMusics) {
+                // music를 빼고
+                long musicId = groupMusic.getMusic().getId();
                 log.info("groupMusic : " + groupMusic.getMusic().getTitle());
                 boolean isLiked = musicLikesRepository.existsByUserIdAndMusicId(userId,groupMusic.getMusic().getId());
                 int likeCount = groupMusic.getMusic().getLikes().size();
+                // 넣기 전에 myGroupMusic에 musicid가 있으면 넣지 않는다.
+                if(myGroupMusics.stream().anyMatch(myGroupMusic -> myGroupMusic.getId() == musicId)) {
+                    continue;
+                }
                 myGroupMusics.add(ResponseGroupMusicDto.of( groupMusic.getMusic().getId(),groupMusic.getMusic().getTitle(), groupMusic.getMusic().getMusicImage(), groupMusic.getMusic().getUser().getId(), groupMusic.getMusic().getUser().getNickname(), groupMusic.getMusic().getUser().getProfileImage(), groupMusic.getMusic().getFileUrl(), likeCount, isLiked));
             }
         }
