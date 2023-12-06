@@ -84,6 +84,8 @@ public class GroupService {
             throw new GroupException(ResponseCode.GROUP_NOT_FOUND);
         Group group = getGroupById(groupId);
         if (!groupUserRepository.existsByUserIdAndGroupId(userId, groupId)) {
+            System.out.println("그룹에 속해있지 않습니다.");
+            System.out.println("userId : " + userId + ", groupId : " + groupId);
             throw new UserException(ResponseCode.NOT_GROUP_MEMBER);
         }
         if (!groupUserRepository.findByUserIdAndGroupId(userId, groupId).isLeader())
@@ -150,8 +152,6 @@ public class GroupService {
     // 내 그룹 정보 조회
     @Transactional(readOnly = true)
     public List<ResponseGroupDto> getMyGroup(Long userId) {
-        if (!groupUserRepository.existsByUserId(userId))
-            throw new UserException(ResponseCode.USER_NOT_FOUND);
         List<GroupUser> groupUsers = groupUserRepository.findByUserId(userId);
         List<ResponseGroupDto> myGroupInfo = new ArrayList<>();
         for (GroupUser groupUser : groupUsers) {
