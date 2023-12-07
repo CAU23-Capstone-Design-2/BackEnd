@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cau.vostom.auth.component.JwtTokenProvider;
 import com.cau.vostom.auth.dto.ResponseJwtDto;
-import com.cau.vostom.dev.service.CrawllerService;
 import com.cau.vostom.dev.service.DevKakaoAuthService;
 import com.cau.vostom.util.api.ApiResponse;
 import com.cau.vostom.util.api.ResponseCode;
@@ -23,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 public class DevController {
 
     private final DevKakaoAuthService devKakaoAuthService;
-    private final CrawllerService crawllerService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Operation(summary = "개발용 로그인", description = "개발용 사용자 회원가입, 토큰 발급")
