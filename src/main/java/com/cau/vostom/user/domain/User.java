@@ -65,6 +65,9 @@ public class User implements UserDetails {
         return user;
     }
 
+    public void retryVoiceData(){
+        this.modelCompleted = 0;
+    }
     public void setmodelCompleted(){
         this.modelCompleted = 1;
     }
