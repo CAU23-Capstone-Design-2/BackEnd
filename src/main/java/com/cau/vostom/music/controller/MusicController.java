@@ -3,6 +3,7 @@ package com.cau.vostom.music.controller;
 import com.cau.vostom.auth.component.JwtTokenProvider;
 import com.cau.vostom.music.dto.request.MusicLikeDto;
 import com.cau.vostom.music.dto.request.RequestMusicTrainDto;
+import com.cau.vostom.music.dto.response.ResponseMusicInfoDto;
 import com.cau.vostom.music.service.MusicService;
 import com.cau.vostom.util.api.ApiResponse;
 import com.cau.vostom.util.api.ResponseCode;
@@ -34,6 +35,14 @@ public class MusicController {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
         musicService.deleteMusic(userId, musicId);
         return ApiResponse.success(null, ResponseCode.MUSIC_DELETED.getMessage());
+    }
+
+    //음악 정보 조회
+    @Operation(summary = "음악 정보 조회")
+    @GetMapping("/{musicId}")
+    public ApiResponse<ResponseMusicInfoDto> getMusic(@RequestHeader String accessToken, @PathVariable Long musicId) {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        return ApiResponse.success(musicService.getMusicInfo(userId, musicId), ResponseCode.MUSIC_FOUND.getMessage());
     }
 
     /* 
