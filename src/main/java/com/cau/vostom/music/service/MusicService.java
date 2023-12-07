@@ -88,20 +88,24 @@ public class MusicService {
 
     // 좋아요 누르기
     @Transactional
-    public void likeMusic(MusicLikeDto musicLikeDto) {
-        User user = getUserById(musicLikeDto.getUserId());
-        Music music = getMusicById(musicLikeDto.getId());
-        MusicLikes musicLikes = MusicLikes.createMusicLikes(user, music);
+    public void likeMusic(Long userId, Long musicId) {
+        log.info("*******");
+        User user = getUserById(userId);
+        Music music = getMusicById(musicId);
+        log.info("\n\nmusicId: " + music.getId() + "\n\n");
+        log.info("\n\nuserId: " + user.getId() + "\n\n");
         if (musicLikesRepository.existsByUserIdAndMusicId(user.getId(), music.getId()))
             throw new UserException(ResponseCode.LIKE_ALREADY_EXISTS);
+        MusicLikes musicLikes = MusicLikes.createMusicLikes(user, music);
         musicLikesRepository.save(musicLikes);
     }
 
     // 좋아요 취소
     @Transactional
-    public void unlikeMusic(MusicLikeDto musicLikeDto) {
-        User user = getUserById(musicLikeDto.getUserId());
-        Music music = getMusicById(musicLikeDto.getId());
+    public void unlikeMusic(Long userId, Long musicId) {
+        log.info("######");
+        User user = getUserById(userId);
+        Music music = getMusicById(musicId);
         if (!(musicLikesRepository.existsByUserIdAndMusicId(user.getId(), music.getId())))
             throw new UserException(ResponseCode.LIKE_ALREADY_DELETED);
         musicLikesRepository.deleteByUserIdAndMusicId(user.getId(), music.getId());

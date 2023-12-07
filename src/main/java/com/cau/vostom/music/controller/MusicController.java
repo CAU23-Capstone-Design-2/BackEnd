@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.io.IOException;
 
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @Api(tags = {"Music"})
@@ -69,18 +70,20 @@ public class MusicController {
     //좋아요 누르기
     @Operation(summary = "노래에 좋아요 누르기")
     @PostMapping("/like")
-    public ApiResponse<Void> like(@RequestHeader String accessToken, @RequestParam String id) {
+    public ApiResponse<Void> like(@RequestHeader String accessToken, @RequestParam Long id) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        musicService.likeMusic(MusicLikeDto.of(userId, Long.parseLong(id)));
+        log.info("\nmusicId:" + id);
+        musicService.likeMusic(userId, id);
         return ApiResponse.success(null, ResponseCode.MUSIC_LIKE_CREATED.getMessage());
     }
 
     //좋아요 취소
     @Operation(summary = "노래 좋아요 취소")
     @DeleteMapping("/like/undo")
-    public ApiResponse<Void> deleteLike(@RequestHeader String accessToken, @RequestParam String id) {
+    public ApiResponse<Void> deleteLike(@RequestHeader String accessToken, @RequestParam Long id) {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
-        musicService.unlikeMusic(MusicLikeDto.of(userId, Long.parseLong(id)));
+        log.info("\nmusicId:" + id);
+        musicService.unlikeMusic(userId, id);
         return ApiResponse.success(null, ResponseCode.MUSIC_LIKE_UNDO.getMessage());
     }
 
