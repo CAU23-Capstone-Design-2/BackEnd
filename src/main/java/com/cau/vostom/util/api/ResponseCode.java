@@ -33,7 +33,7 @@ public enum ResponseCode {
     USER_ALREADY_EXISTS(HttpStatus.CONFLICT, false, "이미 존재하는 사용자입니다."),
     GROUP_ALREADY_JOINED(HttpStatus.CONFLICT, false, "이미 가입한 그룹입니다."),
     LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT, false, "이미 좋아요한 음악입니다."),
-    LIKE_ALREADY_DELETED(HttpStatus.CONFLICT, false, "이미 좋아요한 음악입니다."),
+    LIKE_ALREADY_DELETED(HttpStatus.CONFLICT, false, "이미 좋아요 취소한 음악입니다."),
     MUSIC_ALREADY_EXISTS(HttpStatus.CONFLICT, false, "이미 존재하는 음악입니다."),
 
     // 500 Internal Server Error
