@@ -11,6 +11,7 @@ import com.cau.vostom.music.domain.MusicLikes;
 import com.cau.vostom.music.dto.request.MusicLikeDto;
 import com.cau.vostom.music.dto.request.RequestMusicTrainDto;
 import com.cau.vostom.music.dto.request.UploadMusicDto;
+import com.cau.vostom.music.dto.response.ResponseMusicInfoDto;
 import com.cau.vostom.music.repository.CacheRepository;
 import com.cau.vostom.music.repository.MusicLikesRepository;
 import com.cau.vostom.music.repository.MusicRepository;
@@ -73,6 +74,16 @@ public class MusicService {
         if (!Objects.equals(userId, music.getUser().getId()))
             throw new UserException(ResponseCode.NOT_MUSIC_OWNER);
         groupMusicRepository.deleteByMusicIdAndGroupId(uploadMusicDto.getMusicId(), uploadMusicDto.getGroupId());
+    }
+
+    //노래 정보 조회
+    @Transactional(readOnly = true)
+    public ResponseMusicInfoDto getMusicInfo(Long userId, Long musicId) {
+        Music music = getMusicById(musicId);
+        boolean isLiked = musicLikesRepository.existsByUserIdAndMusicId(userId, musicId);
+        int likeCount = getMusicById(musicId).getLikes().size();
+        return ResponseMusicInfoDto.of(musicId, music.getTitle(), music.getMusicImage(), music.getFileUrl(),
+                likeCount, isLiked);
     }
 
     // 좋아요 누르기
