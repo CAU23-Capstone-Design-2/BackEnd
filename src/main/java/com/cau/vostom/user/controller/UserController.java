@@ -53,15 +53,15 @@ public class UserController {
         return ApiResponse.success(null, ResponseCode.USER_DELETED.getMessage());
     }
 
-    /*
-    @Operation(summary = "학습 데이터 수정")
-    @PutMapping("/retry")
-    public ApiResponse<Void> retryVoiceData(RetryVoiceDataDto retryVoiceDataDto) {
-        userService.retryVoiceData(retryVoiceDataDto);
-        return ApiResponse.success(null, ResponseCode.USER_VOICE_DATA_UPDATED.getMessage());
+    //사용자 목소리 재학습
+    @Operation(summary = "사용자 목소리 재학습")
+    @PutMapping("/retrain")
+    public ApiResponse<Void> retrainUser(@RequestHeader String accessToken) {
+        log.info("userController.retrainUser()");
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(accessToken));
+        userService.retryTraining(userId);
+        return ApiResponse.success(null, ResponseCode.USER_RETRAINED.getMessage());
     }
-
-     */
 
     @Operation(summary = "유저 프로필 정보 조회")
     @GetMapping("/profile")
