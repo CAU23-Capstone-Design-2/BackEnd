@@ -209,16 +209,13 @@ public class UserService {
         return user.getModelCompleted();
     }
 
-
-    /*
-    //학습 데이터 수정
+    //사용자 목소리 재학습
     @Transactional
-    public void retryVoiceData(RetryVoiceDataDto retryVoiceDataDto) {
-        User user = getUserById(retryVoiceDataDto.getUserId());
-        user.retryVoiceData(retryVoiceDataDto.getModelPath(), 2);
+    public void retryTraining(Long userId){
+        User user = getUserById(userId);
+        user.retryVoiceData();
         userRepository.save(user);
     }
-   */
 
 
     private User getUserById(Long userId) {
